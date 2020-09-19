@@ -305,7 +305,7 @@ For example, if we imagine a user with token "12345" is trying to read messages 
 |Iteration|Code and report due                  |Demonstration to tutor(s)      |Assessment weighting of project (%)|
 |---------|-------------------------------------|-------------------------------|-----------------------------------|
 |   1     |8pm Sunday 4th October (**week 3**)   |In YOUR **week 4** laboratory  |30%                                |
-|   2     |8pm Monday 27th October (**week 7**)   |In YOUR **week 7** laboratory  |40%                                |
+|   2     |8pm Monday 26th October (**week 7**)   |In YOUR **week 7** laboratory  |40%                                |
 |   3     |8pm Sunday 15th November (**week 9**)   |In YOUR **week 10** laboratory |30%                                |
 
 There is no late penalty, as we do not accept late submissions.

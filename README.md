@@ -2,6 +2,8 @@
 
 ## Changelog
 
+* 23/09: `token` language elaborated on slightly in 6.4
+
 * Nothing yet.
 
 ## Contents
@@ -125,9 +127,11 @@ A number of files have been added to your `/src/` folder in your repository. The
 
 They do not contain any real implementation, but do contain some stub code to give you a feel for what the different functions should return. You will replace these stubs with actual implementations as you develop.
 
-#### 3.3.1. `auth.py`
+#### 3.3.1. `auth.py` and tokens
 
 Elements of securely storing passwords, and returning intelligent tokens, are not required for iteration 1. You can simply store passwords plainly, and tokens can just be a user's "ID" or "email" (up to you). We will discuss ways to improve the quality and methods of these capabilities in iteration 2.
+
+More information about tokens can be found in `6.4`.
 
 #### 3.3.2 Test writing guidelines
 
@@ -282,7 +286,9 @@ Either an `InputError` or `AccessError` is thrown when something goes wrong. All
 
 One exception is that, even though it's not listed in the table, for all functions except `auth_register` and `auth_login`, an `AccessError` is thrown when the token passed in is not a valid token.
 
-### 6.4. Token (Not required for iteration 1)
+### 6.4. Token
+
+*A very very basic notion of a token is necessary in iteration 1, but the proper implementation is not required in iteration 1*
 
 Many of these functions (nearly all of them) need to be called from the perspective of a user who is logged in already. When calling these "authorised" functions, we need to know:
 1) Which user is calling it
@@ -290,7 +296,7 @@ Many of these functions (nearly all of them) need to be called from the perspect
 
 We could solve this trivially by storing the user ID of the logged in user on the front end, and every time the front end (from Sally and Bob) calls your background, they just sent a user ID. This solves our first problem (1), but doesn't solve our second problem! Because someone could just "hack" the front end and change their user id and then log themselves in as someone else.
 
-To solve this when a user logs in or registers the backend should return a "token" (an authorisation hash) that the front end will store and pass into most of your functions in future. When these "authorised" functions are called, you can check if a token is valid, and determine the user ID.
+To solve this when a user logs in or registers the backend should return a "token" (an authorisation hash) that the front end will store and pass into most of your functions in future. When these "authorised" functions are called, those tokens returned from register/login will be passed into those functions, and from there you can check if a token is valid, and determine the user ID.
 
 ### 6.5. Pagination (Not required for iteration 1)
 The behaviour in which channel_messages returns data is called **pagination**. It's a commonly used method when it comes to getting theoretially unbounded amounts of data from a server to display on a page in chunks. Most of the timelines you know and love - Facebook, Instagram, LinkedIn - do this.

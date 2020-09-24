@@ -279,6 +279,7 @@ These interface specifications come from Sally and Bob, who are building the fro
 |user_profile_sethandle|(token, handle_str)|{}|**InputError** when any of:<ul><li>handle_str must be between 3 and 20 characters</li><li>handle is already used by another user</li></ul>|Update the authorised user's handle (i.e. display name)|
 |users_all|(token)|{ users}|N/A|Returns a list of all users and their associated details|
 |search|(token, query_str)|{ messages }|N/A|Given a query string, return a collection of messages in all of the channels that the user has joined that match the query|
+|clear|()|{}|N/A|Resets the internal data of the application to it's initial state|
 
 ### 6.3. Errors for all functions
 

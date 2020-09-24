@@ -5,6 +5,7 @@
 * 23/09: `token` language elaborated on slightly in 6.4
 * 23/09: Removing the "that the authorised user is part of" from the `InputError` in `channel_invite`
 * 25/09: Added *inclusively* to constraints on some string lengths
+* 25/09: IMPORTANT - added a `clear` function to the specficiation. It's been added to `src/other.py`. This function needs to be implemented for iteration 1, though it's very easy and you would have need to anyway - we're simply formalising it. It's at the bottom of the interface table.
 
 ## Contents
 
@@ -123,7 +124,7 @@ A number of files have been added to your `/src/` folder in your repository. The
  * `channels.py`
  * `user.py` (not *required* for iteration 1)
  * `message.py` (not *required* for iteration 1)
- * `other.py` (not *required* for iteration 1)
+ * `other.py` (all except `clear` are not *required* for iteration 1)
 
 They do not contain any real implementation, but do contain some stub code to give you a feel for what the different functions should return. You will replace these stubs with actual implementations as you develop.
 

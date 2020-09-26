@@ -2,7 +2,10 @@
 
 ## Changelog
 
-* Nothing yet.
+* 23/09: `token` language elaborated on slightly in 6.4
+* 23/09: Removing the "that the authorised user is part of" from the `InputError` in `channel_invite`
+* 25/09: Added *inclusively* to constraints on some string lengths
+* 25/09: IMPORTANT - added a `clear` function to the specficiation. It's been added to `src/other.py`. This function needs to be implemented for iteration 1, though it's very easy and you would have need to anyway - we're simply formalising it. It's at the bottom of the interface table.
 
 ## Contents
 
@@ -121,13 +124,15 @@ A number of files have been added to your `/src/` folder in your repository. The
  * `channels.py`
  * `user.py` (not *required* for iteration 1)
  * `message.py` (not *required* for iteration 1)
- * `other.py` (not *required* for iteration 1)
+ * `other.py` (all except `clear` are not *required* for iteration 1)
 
 They do not contain any real implementation, but do contain some stub code to give you a feel for what the different functions should return. You will replace these stubs with actual implementations as you develop.
 
-#### 3.3.1. `auth.py`
+#### 3.3.1. `auth.py` and tokens
 
 Elements of securely storing passwords, and returning intelligent tokens, are not required for iteration 1. You can simply store passwords plainly, and tokens can just be a user's "ID" or "email" (up to you). We will discuss ways to improve the quality and methods of these capabilities in iteration 2.
+
+More information about tokens can be found in `6.4`.
 
 #### 3.3.2 Test writing guidelines
 
@@ -255,8 +260,8 @@ These interface specifications come from Sally and Bob, who are building the fro
 |------------|-------------|----------|-----------|----------|
 |auth_login|(email, password)|{ u_id, token }|**InputError** when any of:<ul><li>Email entered is not a valid email using the method provided [here](https://www.geeksforgeeks.org/check-if-email-address-valid-or-not-in-python/) (unless you feel you have a better method)</li><li>Email entered does not belong to a user</li><li>Password is not correct</li></ul> | Given a registered users' email and password and generates a valid token for the user to remain authenticated |
 |auth_logout|(token)|{ is_success }|N/A|Given an active token, invalidates the taken to log the user out. If a valid token is given, and the user is successfully logged out, it returns true, otherwise false. |
-|auth_register|(email, password, name_first, name_last)|{ u_id, token }|**InputError** when any of:<ul><li>Email entered is not a valid email using the method provided [here](https://www.geeksforgeeks.org/check-if-email-address-valid-or-not-in-python/) (unless you feel you have a better method).</li><li>Email address is already being used by another user</li><li>Password entered is less than 6 characters long</li><li>name_first not is between 1 and 50 characters in length</li><li>name_last is not between 1 and 50 characters in length</ul>|Given a user's first and last name, email address, and password, create a new account for them and return a new token for authentication in their session. A handle is generated that is the concatentation of a lowercase-only first name and last name. If the concatenation is longer than 20 characters, it is cutoff at 20 characters. If the handle is already taken, you may modify the handle in any way you see fit to make it unique. |
-|channel_invite|(token, channel_id, u_id)|{}|**InputError** when any of:<ul><li>channel_id does not refer to a valid channel that the authorised user is part of.</li><li>u_id does not refer to a valid user</li></ul>**AccessError** when<ul><li>the authorised user is not already a member of the channel</li>|Invites a user (with user id u_id) to join a channel with ID channel_id. Once invited the user is added to the channel immediately|
+|auth_register|(email, password, name_first, name_last)|{ u_id, token }|**InputError** when any of:<ul><li>Email entered is not a valid email using the method provided [here](https://www.geeksforgeeks.org/check-if-email-address-valid-or-not-in-python/) (unless you feel you have a better method).</li><li>Email address is already being used by another user</li><li>Password entered is less than 6 characters long</li><li>name_first not is between 1 and 50 characters inclusively in length</li><li>name_last is not between 1 and 50 characters inclusively in length</ul>|Given a user's first and last name, email address, and password, create a new account for them and return a new token for authentication in their session. A handle is generated that is the concatentation of a lowercase-only first name and last name. If the concatenation is longer than 20 characters, it is cutoff at 20 characters. If the handle is already taken, you may modify the handle in any way you see fit to make it unique. |
+|channel_invite|(token, channel_id, u_id)|{}|**InputError** when any of:<ul><li>channel_id does not refer to a valid channel.</li><li>u_id does not refer to a valid user</li></ul>**AccessError** when<ul><li>the authorised user is not already a member of the channel</li>|Invites a user (with user id u_id) to join a channel with ID channel_id. Once invited the user is added to the channel immediately|
 |channel_details|(token, channel_id)|{ name, owner_members, all_members }|**InputError** when any of:<ul><li>Channel ID is not a valid channel</li></ul>**AccessError** when<ul><li>Authorised user is not a member of channel with channel_id</li></ul>|Given a Channel with ID channel_id that the authorised user is part of, provide basic details about the channel|
 |channel_messages|(token, channel_id, start)|{ messages, start, end }|**InputError** when any of:<ul><li>Channel ID is not a valid channel</li><li>start is greater than the total number of messages in the channel</li></ul>**AccessError** when<ul><li>Authorised user is not a member of channel with channel_id</li></ul>|Given a Channel with ID channel_id that the authorised user is part of, return up to 50 messages between index "start" and "start + 50". Message with index 0 is the most recent message in the channel. This function returns a new index "end" which is the value of "start + 50", or, if this function has returned the least recent messages in the channel, returns -1 in "end" to indicate there are no more messages to load after this return.|
 |channel_leave|(token, channel_id)|{}|**InputError** when any of:<ul><li>Channel ID is not a valid channel</li></ul>**AccessError** when<ul><li>Authorised user is not a member of channel with channel_id</li></ul>|Given a channel ID, the user removed as a member of this channel|
@@ -270,11 +275,12 @@ These interface specifications come from Sally and Bob, who are building the fro
 |message_remove|(token, message_id)|{}|**InputError** when any of:<ul><li>Message (based on ID) no longer exists</li></ul>**AccessError** when none of the following are true:<ul><li>Message with message_id was sent by the authorised user making this request</li><li>The authorised user is an admin or owner of this channel or the flockr</li></ul>|Given a message_id for a message, this message is removed from the channel|
 |message_edit|(token, message_id, message)|{}|**AccessError** when none of the following are true:<ul><li>Message with message_id was sent by the authorised user making this request</li><li>The authorised user is an admin or owner of this channel or the flockr</li></ul>|Given a message, update it's text with new text. If the new message is an empty string, the message is deleted.|
 |user_profile|(token, u_id)|{ user }|**InputError** when any of:<ul><li>User with u_id is not a valid user</li></ul>|For a valid user, returns information about their email, first name, last name, and handle|
-|user_profile_setname|(token, name_first, name_last)|{}|**InputError** when any of:<ul><li>name_first is not between 1 and 50 characters in length</li><li>name_last is not between 1 and 50 characters in length</ul></ul>|Update the authorised user's first and last name|
+|user_profile_setname|(token, name_first, name_last)|{}|**InputError** when any of:<ul><li>name_first is not between 1 and 50 characters inclusively in length</li><li>name_last is not between 1 and 50 characters inclusively in length</ul></ul>|Update the authorised user's first and last name|
 |user_profile_setemail|(token, email)|{}|**InputError** when any of:<ul><li>Email entered is not a valid email using the method provided [here](https://www.geeksforgeeks.org/check-if-email-address-valid-or-not-in-python/) (unless you feel you have a better method).</li><li>Email address is already being used by another user</li>|Update the authorised user's email address|
 |user_profile_sethandle|(token, handle_str)|{}|**InputError** when any of:<ul><li>handle_str must be between 3 and 20 characters</li><li>handle is already used by another user</li></ul>|Update the authorised user's handle (i.e. display name)|
 |users_all|(token)|{ users}|N/A|Returns a list of all users and their associated details|
 |search|(token, query_str)|{ messages }|N/A|Given a query string, return a collection of messages in all of the channels that the user has joined that match the query|
+|clear|()|{}|N/A|Resets the internal data of the application to it's initial state|
 
 ### 6.3. Errors for all functions
 
@@ -282,7 +288,9 @@ Either an `InputError` or `AccessError` is thrown when something goes wrong. All
 
 One exception is that, even though it's not listed in the table, for all functions except `auth_register` and `auth_login`, an `AccessError` is thrown when the token passed in is not a valid token.
 
-### 6.4. Token (Not required for iteration 1)
+### 6.4. Token
+
+*A very very basic notion of a token is necessary in iteration 1, but the proper implementation is not required in iteration 1*
 
 Many of these functions (nearly all of them) need to be called from the perspective of a user who is logged in already. When calling these "authorised" functions, we need to know:
 1) Which user is calling it
@@ -290,7 +298,7 @@ Many of these functions (nearly all of them) need to be called from the perspect
 
 We could solve this trivially by storing the user ID of the logged in user on the front end, and every time the front end (from Sally and Bob) calls your background, they just sent a user ID. This solves our first problem (1), but doesn't solve our second problem! Because someone could just "hack" the front end and change their user id and then log themselves in as someone else.
 
-To solve this when a user logs in or registers the backend should return a "token" (an authorisation hash) that the front end will store and pass into most of your functions in future. When these "authorised" functions are called, you can check if a token is valid, and determine the user ID.
+To solve this when a user logs in or registers the backend should return a "token" (an authorisation hash) that the front end will store and pass into most of your functions in future. When these "authorised" functions are called, those tokens returned from register/login will be passed into those functions, and from there you can check if a token is valid, and determine the user ID.
 
 ### 6.5. Pagination (Not required for iteration 1)
 The behaviour in which channel_messages returns data is called **pagination**. It's a commonly used method when it comes to getting theoretially unbounded amounts of data from a server to display on a page in chunks. Most of the timelines you know and love - Facebook, Instagram, LinkedIn - do this.
@@ -305,7 +313,7 @@ For example, if we imagine a user with token "12345" is trying to read messages 
 |Iteration|Code and report due                  |Demonstration to tutor(s)      |Assessment weighting of project (%)|
 |---------|-------------------------------------|-------------------------------|-----------------------------------|
 |   1     |8pm Sunday 4th October (**week 3**)   |In YOUR **week 4** laboratory  |30%                                |
-|   2     |8pm Monday 27th October (**week 7**)   |In YOUR **week 7** laboratory  |40%                                |
+|   2     |8pm Monday 26th October (**week 7**)   |In YOUR **week 7** laboratory  |40%                                |
 |   3     |8pm Sunday 15th November (**week 9**)   |In YOUR **week 10** laboratory |30%                                |
 
 There is no late penalty, as we do not accept late submissions.

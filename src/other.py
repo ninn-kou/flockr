@@ -1,3 +1,6 @@
+def clear():
+    pass
+
 def users_all(token):
     return {
         'users': [

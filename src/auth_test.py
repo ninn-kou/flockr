@@ -4,6 +4,7 @@
 import auth
 import pytest
 from error import InputError
+from data import users
 
 """
 auth_register()

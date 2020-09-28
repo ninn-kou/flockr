@@ -64,7 +64,7 @@ def test_auth_register():
     # - a valid token is returned
     # this will be automatically tested by the 
     # auth_login() test working at all
-
+    
     # a unique handle is produced
     list = []
     data.init_users()

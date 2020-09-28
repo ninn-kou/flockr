@@ -164,7 +164,6 @@ def handle_variabliser(handle, variabliser_num, variabliser, users):
 
     # check if the handle is unique
     check = check_in_users('handle_str', users, handle)
-
     # if not modify it further
     if check != None:
         # check if there are any variabliser characters to iterate through
@@ -173,17 +172,18 @@ def handle_variabliser(handle, variabliser_num, variabliser, users):
             variabliser = string.ascii_letters + string.digits
             # need to modify it further
             variabliser_num += 1
+            
         # if true, try other variable characters
         else:
             # variabilise the string accordingly
             handle = handle[0:(-1 * variabliser_num)]
+            
             for x in range(variabliser_num):
                 character = random.choice(variabliser)
                 variabliser.replace(character, '')
                 handle = handle + character
         
         handle = handle_variabliser(handle, variabliser_num, variabliser, users)
-    
     return handle
 
 # generates a unique handle
@@ -220,7 +220,7 @@ def auth_register(email, password, name_first, name_last):
         'email': email,
         'name_first': name_first,
         'name_last': name_last,
-        'handle_str': ''
+        'handle_str': handle
     }
     data.append_users(user)
 

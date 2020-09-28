@@ -4,17 +4,8 @@ import re
 import random
 import string
 
-# dict that holds token objects
-# tokens stored locally in a dict
-
-# this is implemented wrong reee
-"""
-{
-    'u_id': u_id,
-    'token': token
-}
-"""
-# following values stored locally for "security reasons"
+# Joseph Jeong is the only one that touched this sofar
+# 29 SEP 2020
 
 # stores tokens in a dict with the u_id used as key
 # every token is unique

@@ -4,7 +4,7 @@
 import auth
 import pytest
 from error import InputError
-from data import users
+import data
 
 """
 auth_register()
@@ -128,11 +128,14 @@ THEREFORE, TEST EVERYTHING BELOW:
 """
 
 def test_auth_login():
+    # initialise the users data
+    data.init_users()
 
-    auth_login_test = auth.auth_register('tests@example.com', 'password', 'Test Person', 'Bam')
+    # register a user
+    auth_register_test = auth.auth_register('tests@example.com', 'password', 'Test Person', 'Bam')
 
     # - Dict structure -> {u_id, token}
-    auth.auth_login('test@example.com', 'password')
+    auth_login_test = auth.auth_login('test@example.com', 'password')
     assert type(auth_login_test) is dict
     assert auth_login_test['u_id']
     assert auth_login_test['token']
@@ -144,10 +147,10 @@ def test_auth_login():
     assert type(auth_login_test['token']) is str
 
     # - The correct u_id is returned
-    # no actual way to check this until some implementation of data.py is created
+    assert auth_login_test['u_id'] == auth_register_test['u_id']
 
     # - a valid token is returned
-    # no actual way to check this until some implementation of data.py is created
+    assert len(auth_login_test['token']) == 20
 
     # - spits out 'InputError' if:
     # - email is not a valid email (check with regex)
@@ -156,13 +159,15 @@ def test_auth_login():
     with pytest.raises(InputError):
         auth.auth_login('invalid@example', 'password')
 
-
     # - email is not in data structure i.e. user isn't registered
-    # no actual way to check this until some implementation of data.py is created
-
+    with pytest.raises(InputError):
+        # this was never registered previously
+        auth.auth_login('nottest@example.com', 'password')
 
     # - password is not correct (we love storing raw passwords)
-    # no actual way to check this until some implementation of data.py is created
+    # correct password is 'password'
+    with pytest.raises(InputError):
+        auth.auth_login('tests@example.com', 'incorrect_password')
 
 """
 auth_logout()

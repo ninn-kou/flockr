@@ -52,7 +52,8 @@ def test_auth_register():
 
     # - u_id is unique when multiple users are entered
     # creates a large  number of u_id's and make sure none of them conflict
-    array_size = 500
+    # tested it up to 10,000 array_size but takes a while, can go higher for sure
+    array_size = 1000
     array = [0] * array_size
 
     i = 0

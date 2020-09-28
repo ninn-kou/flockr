@@ -103,9 +103,6 @@ def test_auth_register():
     with pytest.raises(InputError):
         auth.auth_register('validemailagain2@example.com', 'password', 'Test', '')
 
-
-
-
 """
 auth_login()
 Allows a registered user to validate themselves

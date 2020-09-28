@@ -1,5 +1,7 @@
 # a collection of data structures used between programs
 
+
+###########################################################################
 """
 The User Data Structure
 NOT SURE 
@@ -21,3 +23,15 @@ Issue is:
 
 """
 users = []
+
+# initialise the users list
+def init_users():
+    global users 
+
+def append_users(user):
+    users.append(user)
+
+# def pop_users(user):
+#     users.pop(user)
+
+########################################################################################

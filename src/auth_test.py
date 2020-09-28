@@ -4,7 +4,7 @@
 import auth
 import pytest
 from error import InputError
-from data import users
+import data
 
 """
 auth_register()
@@ -26,6 +26,7 @@ THEREFORE, TEST EVERYTHING BELOW:
 - token is a string
 - u_id is unique when multiple users are entered
 - a valid token is returned
+- a unique handle is produced
 - spits out 'InputError' if: (raise InputError)
     - email is not a valid email (check with regex)
     - email address is already used
@@ -51,6 +52,7 @@ def test_auth_register():
 
     # - u_id is unique when multiple users are entered
     # creates a large  number of u_id's and make sure none of them conflict
+    # tested it up to 10,000 array_size but takes a while, can go higher for sure
     array_size = 1000
     array = [0] * array_size
 
@@ -63,8 +65,14 @@ def test_auth_register():
     # - a valid token is returned
     # this will be automatically tested by the 
     # auth_login() test working at all
-
     
+    # a unique handle is produced
+    list = []
+    data.init_users()
+    for user in data.users:
+        list.append(user['handle_str'])
+    assert (len(list) == len(set(list)))
+
     ##########################################################################
     # - spits out 'InputError' if: (raise InputError)
     # - email is not a valid email (check with regex)
@@ -103,9 +111,6 @@ def test_auth_register():
     with pytest.raises(InputError):
         auth.auth_register('validemailagain2@example.com', 'password', 'Test', '')
 
-
-
-
 """
 auth_login()
 Allows a registered user to validate themselves
@@ -128,11 +133,14 @@ THEREFORE, TEST EVERYTHING BELOW:
 """
 
 def test_auth_login():
+    # initialise the users data
+    data.init_users()
 
-    auth_login_test = auth.auth_register('tests@example.com', 'password', 'Test Person', 'Bam')
+    # register a user
+    auth_register_test = auth.auth_register('tests@example.com', 'password', 'Test Person', 'Bam')
 
     # - Dict structure -> {u_id, token}
-    auth.auth_login('test@example.com', 'password')
+    auth_login_test = auth.auth_login('tests@example.com', 'password')
     assert type(auth_login_test) is dict
     assert auth_login_test['u_id']
     assert auth_login_test['token']
@@ -144,10 +152,10 @@ def test_auth_login():
     assert type(auth_login_test['token']) is str
 
     # - The correct u_id is returned
-    # no actual way to check this until some implementation of data.py is created
+    assert auth_login_test['u_id'] == auth_register_test['u_id']
 
     # - a valid token is returned
-    # no actual way to check this until some implementation of data.py is created
+    assert len(auth_login_test['token']) == 20
 
     # - spits out 'InputError' if:
     # - email is not a valid email (check with regex)
@@ -156,13 +164,15 @@ def test_auth_login():
     with pytest.raises(InputError):
         auth.auth_login('invalid@example', 'password')
 
-
     # - email is not in data structure i.e. user isn't registered
-    # no actual way to check this until some implementation of data.py is created
-
+    with pytest.raises(InputError):
+        # this was never registered previously
+        auth.auth_login('nottest@example.com', 'password')
 
     # - password is not correct (we love storing raw passwords)
-    # no actual way to check this until some implementation of data.py is created
+    # correct password is 'password'
+    with pytest.raises(InputError):
+        auth.auth_login('tests@example.com', 'incorrect_password')
 
 """
 auth_logout()
@@ -178,26 +188,20 @@ THEREFORE, TEST EVERYTHING BELOW:
 """
 
 def test_auth_logout():
-    auth.auth_register('valid@example.com', 'password', 'Mate', 'Old')
-    registration = auth.auth_login('valid@example.com', 'password')
+    data.init_users()
+
+    registration = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old')
+    # registration = auth.auth_login('valid@example.com', 'password')
     token = registration['token']
+
     # - returns false when invalid token
     invalid_token = '500000'
     if (invalid_token == token):
         raise Exception('The token in program is actually valid')
     
     is_success = auth.auth_logout(invalid_token)
-    assert is_success['is_success']
-    is_success = is_success['is_success']
-    assert type(is_success) == bool
-    assert is_success == False
+    assert is_success['is_success'] == False
 
     # - returns true when valid token
     is_success = auth.auth_logout(token)
-    assert is_success['is_success']
-    is_success = is_success['is_success']
-    assert type(is_success) == bool
-    assert is_success == True
-
-
-test_auth_logout()
+    assert is_success['is_success'] == True

@@ -1,5 +1,7 @@
 # a collection of data structures used between programs
 
+
+###########################################################################
 """
 The User Data Structure
 NOT SURE 
@@ -20,7 +22,16 @@ Issue is:
 2. How to find each user in the list? Is u_id just used as a list address?
 
 """
+users = []
 
+# initialise the users list
 def init_users():
     global users 
-    users = []
+
+def append_users(user):
+    users.append(user)
+
+# def pop_users(user):
+#     users.pop(user)
+
+########################################################################################

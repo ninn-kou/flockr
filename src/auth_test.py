@@ -51,7 +51,7 @@ def test_auth_register():
 
     # - u_id is unique when multiple users are entered
     # creates a large  number of u_id's and make sure none of them conflict
-    array_size = 1000
+    array_size = 5
     array = [0] * array_size
 
     i = 0
@@ -132,7 +132,7 @@ def test_auth_login():
     auth_register_test = auth.auth_register('tests@example.com', 'password', 'Test Person', 'Bam')
 
     # - Dict structure -> {u_id, token}
-    auth_login_test = auth.auth_login('test@example.com', 'password')
+    auth_login_test = auth.auth_login('tests@example.com', 'password')
     assert type(auth_login_test) is dict
     assert auth_login_test['u_id']
     assert auth_login_test['token']
@@ -180,26 +180,24 @@ THEREFORE, TEST EVERYTHING BELOW:
 """
 
 def test_auth_logout():
-    auth.auth_register('valid@example.com', 'password', 'Mate', 'Old')
-    registration = auth.auth_login('valid@example.com', 'password')
+    data.init_users()
+
+    registration = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old')
+    # registration = auth.auth_login('valid@example.com', 'password')
     token = registration['token']
+
     # - returns false when invalid token
     invalid_token = '500000'
     if (invalid_token == token):
         raise Exception('The token in program is actually valid')
     
     is_success = auth.auth_logout(invalid_token)
-    assert is_success['is_success']
-    is_success = is_success['is_success']
-    assert type(is_success) == bool
-    assert is_success == False
+    assert is_success['is_success'] == False
 
     # - returns true when valid token
     is_success = auth.auth_logout(token)
-    assert is_success['is_success']
-    is_success = is_success['is_success']
-    assert type(is_success) == bool
-    assert is_success == True
+    assert is_success['is_success'] == True
 
-
-test_auth_logout()
+# data.init_users()
+# test_auth_register()
+# print(data.users)

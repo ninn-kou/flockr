@@ -20,4 +20,7 @@ Issue is:
 2. How to find each user in the list? Is u_id just used as a list address?
 
 """
-users = []
+
+def init_users():
+    global users 
+    users = []

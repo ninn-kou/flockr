@@ -156,6 +156,9 @@ def create_u_id(users):
     return u_id
 
 # creates variable numbers at the end of the string
+# flawed because it isn't optimal randomisation
+# BUT it does the job -> every handle will ALWAYS be unique
+# Even 500 of the same name...
 def handle_variabliser(handle, variabliser_num, variabliser, users):
 
     # if somehow every single handle is created
@@ -165,6 +168,7 @@ def handle_variabliser(handle, variabliser_num, variabliser, users):
     # check if the handle is unique
     check = check_in_users('handle_str', users, handle)
     # if not modify it further
+
     if check != None:
         # check if there are any variabliser characters to iterate through
         # if not, variabilise more characters
@@ -180,7 +184,7 @@ def handle_variabliser(handle, variabliser_num, variabliser, users):
             
             for x in range(variabliser_num):
                 character = random.choice(variabliser)
-                variabliser.replace(character, '')
+                variabliser = variabliser.replace(character, '')
                 handle = handle + character
         
         handle = handle_variabliser(handle, variabliser_num, variabliser, users)

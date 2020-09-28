@@ -26,6 +26,7 @@ THEREFORE, TEST EVERYTHING BELOW:
 - token is a string
 - u_id is unique when multiple users are entered
 - a valid token is returned
+- a unique handle is produced
 - spits out 'InputError' if: (raise InputError)
     - email is not a valid email (check with regex)
     - email address is already used
@@ -64,7 +65,13 @@ def test_auth_register():
     # this will be automatically tested by the 
     # auth_login() test working at all
 
-    
+    # a unique handle is produced
+    list = []
+    data.init_users()
+    for user in data.users:
+        list.append(user['handle_str'])
+    assert (len(list) == len(set(list)))
+
     ##########################################################################
     # - spits out 'InputError' if: (raise InputError)
     # - email is not a valid email (check with regex)
@@ -197,7 +204,3 @@ def test_auth_logout():
     # - returns true when valid token
     is_success = auth.auth_logout(token)
     assert is_success['is_success'] == True
-
-# data.init_users()
-# test_auth_register()
-# print(data.users)

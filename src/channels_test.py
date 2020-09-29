@@ -1,6 +1,40 @@
 from channels_create import *
 
 def test_channels_list():
+data = {
+    'user': [
+        { 
+            'u_id': ,
+            'name_first':'',
+            'name_last':'',
+            'token':'',
+        }
+    ]
+    'channels': [
+        {
+            'name':'',
+            'channel_id':'',
+            'is public' = ,
+            'owner_members':[
+                {
+                    'u_id': ,
+                    'name_first': '',
+                    'name_last': '',
+                }
+            ]
+            'all_members':[
+                {
+                    'u_id': ,
+                    'name_first': '',
+                    'name_last': '',
+                }
+            ]
+            'messages':[
+                
+            ]
+        }  
+    ]
+}
     token = '12345'
     channels = test_channels_list(token)
     assert channels == [{'channel_id': 1,'name': 'My Channel'}]

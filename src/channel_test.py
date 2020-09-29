@@ -137,7 +137,7 @@ def test_channel_non_member_invite():
     with pytest.raises(AccessError):
         channel_invite(u_token3,channel_test_id, u_id2)
 
-def test_channel_invite_invalid_userId():
+def test_channel_repeate_invite():
     '''
     This test is using for check when the user has been in the program
     '''

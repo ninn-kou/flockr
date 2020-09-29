@@ -57,3 +57,27 @@ def test_channel_invite_work():
     assert u_id1 ==  channel_test_details[['all_members'][0]['u_id']]
     assert u_id2 ==  channel_test_details[['all_members'][1]['u_id']]
 
+
+def test_channel_invite_invalid_channelId():
+    '''
+    This test is using for check when the channel id we had is invalid
+    inputError
+    '''
+    # create 2 users 
+    user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
+    user1 = auth_login("test1@test.com","check_test")
+    u_id1 = user1['u_id']
+    u_token1 = user1['token']
+
+    user2 = auth_register("test2@test.com","check_test","steve","TAN")
+    user2 = auth_login("test2@test.com","check_test")
+    u_id2 = user2['u_id']
+    u_token2 = user2['token']
+
+    # create channel for testing
+    channel_test = channels_create(u_token1,"channel_test",True)
+    channel_test_id = channel_test['channel_id']
+
+    # testing for channel invite fuction for invalid channel id inputError
+    with pytest.raises(InputError):
+        channel_invite(u_token1,channel_test_id + 0xf, u_id2)

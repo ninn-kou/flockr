@@ -35,3 +35,31 @@ def append_users(user):
 #     users.pop(user)
 
 ########################################################################################
+
+"""
+the struct using for channel 
+channels = [    
+    channel:  { 
+        'name': 'Hayden',
+        'channel_id':
+        'owner': [
+            {
+                'u_id': 1,
+                'name_first': 'Hayden',
+                'name_last': 'Jacobs',
+            }
+        ],
+        'all_members': [
+            {
+                'u_id': 1,
+                'name_first': 'Hayden',
+                'name_last': 'Jacobs',
+            }
+        ],   
+        'is public': True,
+        'messages':[]  
+    }
+]
+
+"""
+channels = []

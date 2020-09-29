@@ -24,9 +24,10 @@
 
 * when the user create the channel, the user became the owenr automaticlly.
 * It is assumed that the channel struct is like this:
-    channel = {
+    channel = { 
         'name': 'Hayden',
-        'owner_members': [
+        'channel_id':' '
+        'owner': [
             {
                 'u_id': 1,
                 'name_first': 'Hayden',
@@ -40,6 +41,6 @@
                 'name_last': 'Jacobs',
             }
         ],   
-        'public': True,
+        'is public': True,
         'messages':[]  
     }

@@ -6,29 +6,28 @@ from error import InputError, AccessError
 from data import *
 import pytest
 
-# Xingyu TAN working on channel_test.py for channel_invite fuction
+# Xingyu TAN working on channel_details.py for channel_details fuction
 # 29 SEP 2020
 
 """
-channel_invite()
-the fuction Invites a user (with user id u_id) to join a channel with ID channel_id. 
+channel_details()
+Given a Channel with ID channel_id that the authorised user is part of
 
 RETURNS:
-none
+provide basic details about the channel
 
 
 THEREFORE, TEST EVERYTHING BELOW:
 1. inputError
 - the channel id we had is invalid
 
-- the user id we had is invalid
 
 2. accessError
 - the auth user is not in this channel.
 
 """
 
-def test_channel_invite_work():
+def test_channel_details_work():
     '''
     this test is using for check the fuction can work normally when no Errors bring.
     '''
@@ -57,108 +56,3 @@ def test_channel_invite_work():
     assert u_id1 ==  channel_test_details[['all_members'][0]['u_id']]
     assert u_id2 ==  channel_test_details[['all_members'][1]['u_id']]
 
-
-def test_channel_invite_invalid_channelId():
-    '''
-    This test is using for check when the channel id we had is invalid
-    inputError
-    '''
-    # create 2 users 
-    user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
-    user1 = auth_login("test1@test.com","check_test")
-    u_id1 = user1['u_id']
-    u_token1 = user1['token']
-
-    user2 = auth_register("test2@test.com","check_test","steve","TAN")
-    user2 = auth_login("test2@test.com","check_test")
-    u_id2 = user2['u_id']
-    u_token2 = user2['token']
-
-    # create channel for testing
-    channel_test = channels_create(u_token1,"channel_test",True)
-    channel_test_id = channel_test['channel_id']
-
-    # testing for channel invite fuction for invalid channel id inputError
-    with pytest.raises(InputError):
-        channel_invite(u_token1,channel_test_id + 0xf, u_id2)
-
-
-def test_channel_invite_invalid_userId():
-    '''
-    This test is using for check when the user id we had is invalid
-    inputError
-    '''
-    # create 2 users 
-    user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
-    user1 = auth_login("test1@test.com","check_test")
-    u_id1 = user1['u_id']
-    u_token1 = user1['token']
-
-    user2 = auth_register("test2@test.com","check_test","steve","TAN")
-    user2 = auth_login("test2@test.com","check_test")
-    u_id2 = user2['u_id']
-    u_token2 = user2['token']
-
-    # create channel for testing
-    channel_test = channels_create(u_token1,"channel_test",True)
-    channel_test_id = channel_test['channel_id']
-
-    # testing for channel invite fuction for invalid user id inputError
-    with pytest.raises(InputError):
-        channel_invite(u_token1,channel_test_id, u_id2 + 0xf)
-
-def test_channel_non_member_invite():
-    '''
-    This test is using for check when the authorised user 
-    is not already a member of the channel
-    AccessError 
-    '''
-    # create 2 users and author people 
-    user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
-    user1 = auth_login("test1@test.com","check_test")
-    u_id1 = user1['u_id']
-    u_token1 = user1['token']
-
-    user2 = auth_register("test2@test.com","check_test","steve","TAN")
-    user2 = auth_login("test2@test.com","check_test")
-    u_id2 = user2['u_id']
-    u_token2 = user2['token']
-
-    user3 = auth_register("test3@test.com","check_test","test","TAN")
-    user3 = auth_login("test3@test.com","check_test")
-    u_id3 = user3['u_id']
-    u_token3 = user3['token']
-
-    # create channel for testing
-    channel_test = channels_create(u_token1,"channel_test",True)
-    channel_test_id = channel_test['channel_id']
-
-    # testing for channel invite fuction for invalid token people.
-    with pytest.raises(AccessError):
-        channel_invite(u_token3,channel_test_id, u_id2)
-
-def test_channel_repeate_invite():
-    '''
-    This test is using for check when the user has been in the program
-    '''
-    # create 2 users 
-    user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
-    user1 = auth_login("test1@test.com","check_test")
-    u_id1 = user1['u_id']
-    u_token1 = user1['token']
-
-    user2 = auth_register("test2@test.com","check_test","steve","TAN")
-    user2 = auth_login("test2@test.com","check_test")
-    u_id2 = user2['u_id']
-    u_token2 = user2['token']
-
-    # create channel for testing
-    channel_test = channels_create(u_token1,"channel_test",True)
-    channel_test_id = channel_test['channel_id']
-    
-    # invite people first time
-    channel_invite(u_token1,channel_test_id,u_id2)
- 
-    # testing for invite people second time
-    with pytest.raises(InputError):
-        channel_invite(u_token1,channel_test_id, u_id2)

@@ -106,3 +106,35 @@ def test_channel_invite_invalid_userId():
     # testing for channel invite fuction for invalid channel id inputError
     with pytest.raises(InputError):
         channel_invite(u_token1,channel_test_id, u_id2 + 0xf)
+
+def test_channel_invite_invalid_userId():
+    '''
+    This test is using for check when the authorised user 
+    is not already a member of the channel
+    AccessError 
+    '''
+    # create 2 users and author people 
+    user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
+    user1 = auth_login("test1@test.com","check_test")
+    u_id1 = user1['u_id']
+    u_token1 = user1['token']
+
+    user2 = auth_register("test2@test.com","check_test","steve","TAN")
+    user2 = auth_login("test2@test.com","check_test")
+    u_id2 = user2['u_id']
+    u_token2 = user2['token']
+
+    user3 = auth_register("test3@test.com","check_test","test","TAN")
+    user3 = auth_login("test3@test.com","check_test")
+    u_id3 = user3['u_id']
+    u_token3 = user3['token']
+
+    # create channel for testing
+    channel_test = channels_create(u_token1,"channel_test",True)
+    channel_test_id = channel_test['channel_id']
+
+    # testing for channel invite fuction for invalid token people
+    # just  
+    with pytest.raises(AccessError):
+        channel_invite(u_token3,channel_test_id, u_id2)
+

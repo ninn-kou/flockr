@@ -58,19 +58,19 @@ def channels_list(token):
     #get the u_id of the authorised user
     i = 0
     user_id = 0
-    for i in range(len(data[user]):
-        if data[user][i][token] == token:
-            user_id = data[user][i][u_id]
+    for i in range(len(data['user']):
+        if data['user'][i]['token'] == token:
+            user_id = data['user'][i]['u_id']
             break
     #make a loop to check each channels       
     i = 0
     channel_list = []
-    for i in range(len(data[channels][i]):
+    for i in range(len(data['channels'][i]):
         j = 0
         #check if the user in this channel
-        for j in range(len(data[channels][i][all_members]:
-            if data[channels][i][all_members][j][u_id] == user_id:        
-                channel_list.append(data[channel][i])
+        for j in range(len(data['channels'][i]['all_members']:
+            if data['channels'][i]['all_members'][j]['u_id'] == user_id:        
+                channel_list.append(data['channel'][i])
         
     return channel_list
 def channels_listall(token):
@@ -85,7 +85,7 @@ def channels_listall(token):
     }
 '''
     #just return all channels? sure about that?
-    return data[channels]
+    return data['channels']
 def channels_create(token, name, is_public):
 '''
     return {
@@ -96,9 +96,9 @@ def channels_create(token, name, is_public):
         print("name is too lone")
         exit(1)
         
-    channel_id = len(data[channels]) + 1
-    channel_new[channel_id] = channel_id
-    channel_new[name] = name
-    channel_new[is_public] = is_public
-    data[channels].append(channel_new)
+    channel_id = len(data['channels']) + 1
+    channel_new['channel_id'] = channel_id
+    channel_new['name'] = name
+    channel_new['is_public'] = is_public
+    data['channels'].append(channel_new)
     return channel_id

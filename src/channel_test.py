@@ -1,54 +1,30 @@
-'''
-    the file using for channel testing
-'''
-import pytest
-import data
+# this file is using for pytest of channel.py .
+import auth
 import channel
-from error import InputError 
-
-###########################################################################################
-##                                test of channel_addowner                               ##
-###########################################################################################
-# Standard situation
-def test_channel_addowner0():
-    # Need the get functions
-    # Where to put
-    token = get_token()
-    channel_id = get_cid()
-    u_id = get_uid()
-
-    assert(channel.channel_addowner(token, channel_id, u_id)) is True
-
-# Channel ID is not a valid channel
-def test_channel_addowner1():
-    token = get_token()
-    channel_id = "XXXXXXXX"
-    u_id = get_uid()
-
-    with pytest.raises(InputError):
-        channel.channel_addowner(token, channel_id, u_id)
-
-# user(u_id) is already the owner
-#### Need array in Dict
+import channels
+import pytest
+from error import InputError, AccessError
+import data
 
 
-# user(u_id) is not a valid flocker
+# Xingyu TAN working on channel_test.py for channel_invite fuction
+# 29 SEP 2020
 
-###########################################################################################
-##                             test of channel_removeowner                               ##
-###########################################################################################
+"""
+channel_invite()
+the fuction Invites a user (with user id u_id) to join a channel with ID channel_id. 
 
-# Standard situation
-def test_channel_removeowner0():
-    channel_detail = {token = "XXXX", channel_id = "XXXXXXXX", u_id = "XXX"}
-    pop_token = channel_detail.pop('token')
-    pop_cid = channel_detail.pop('channel_id')
-    pop_uid = channel_detail.pop('u_id')
+RETURNS:
+none
 
-    assert(channel_detail = {token = "", channel_id = "", u_id = ""})
 
-# Channel ID is not a valid channel
+THEREFORE, TEST EVERYTHING BELOW:
+1. inputError
+- the channel id we had is invalid
 
-# user(u_id) is not the owner
+- the user id we had is invalid
 
-# user(u_id) is not in the channel
+2. accessError
+- the auth user is not in this channel.
+
+"""

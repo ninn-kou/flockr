@@ -1,104 +1,97 @@
+#import data
 '''
-data = {
-    'user': [
-        { 
-            'u_id': ,
-            'name_first':'',
-            'name_last':'',
-            'token':'',
-        },
-        ...
-    ]
-    'channels': [
-        {
-            'name':'',
-            'channel_id':'',
-            'is public' = ,
-            'owner_members':[
-                {
-                    'u_id': ,
-                    'name_first': '',
-                    'name_last': '',
-                },
-                ...
-            ]
-            'all_members':[
-                {
-                    'u_id': ,
-                    'name_first': '',
-                    'name_last': '',
-                },
-                ...
-            ]
-            'messages':[
-                {
-                    'message_id': ,
-                    'u_id': ,
-                    'message': '',
-                    'time_created': ,
-                },
-                ...
-            ]
-        },
-        ...   
-    ]
-}
-'''
-def channels_list(token):
-'''
-    return {
-        'channels': [
-        	{
-        		'channel_id': 1,
-        		'name': 'My Channel',
-        	}
-        ],
+user= [
+    { 
+        'u_id':1 ,
+        'name_first':'Liuyuzi',
+        'name_last':'He',
+        'token':'12345'
+    }, {
+        'u_id':2 ,
+        'name_first':'Steve',
+        'name_last':'Tan',
+        'token':'67890'
     }
-'''
+]
+channels= [
+    {
+        'name':'Team4R',
+        'channel_id':'1',
+        'is_public' : True,
+        'owner_members':[
+            {
+                'u_id': 1,
+                'name_first': 'Liuyuzi',
+                'name_last': 'He',
+            }
+        ],
+        'all_members':[
+            {
+                'u_id': 1,
+                'name_first': 'liuyuzi',
+                'name_last': 'He',
+            }
+        ]
+        
+    }, {
+        'name':'Team4W',
+        'channel_id':'2',
+        'is_public' :True,
+        'owner_members':[
+            {
+                'u_id': 2,
+                'name_first': 'Steve',
+                'name_last': 'Tan',
+            }
+        ],
+        'all_members':[
+            {
+                'u_id': 2,
+                'name_first': 'Steve',
+                'name_last': 'Tan',
+            }
+        ]
+    }
+]
+'''    
+def channels_list(token):
     #get the u_id of the authorised user
+    global user
+    global channels
     i = 0
     user_id = 0
-    for i in range(len(data['user']):
-        if data['user'][i]['token'] == token:
-            user_id = data['user'][i]['u_id']
+    for i in range(len(user)):
+        if user[i]['token'] == token:
+            user_id = user[i]['u_id']
             break
+            
     #make a loop to check each channels       
     i = 0
     channel_list = []
-    for i in range(len(data['channels'][i]):
+    for i in range(len(channels)):
         j = 0
         #check if the user in this channel
-        for j in range(len(data['channels'][i]['all_members']:
-            if data['channels'][i]['all_members'][j]['u_id'] == user_id:        
-                channel_list.append(data['channel'][i])
+        for j in range(len(channels[i]['all_members'])):
+            if channels[i]['all_members'][j]['u_id'] == user_id:        
+                channel_list.append(channels[i])
         
     return channel_list
 def channels_listall(token):
-'''
-    return {
-        'channels': [
-        	{
-        		'channel_id': 1,
-        		'name': 'My Channel',
-        	}
-        ],
-    }
-'''
+
     #just return all channels? sure about that?
-    return data['channels']
+    return channels
 def channels_create(token, name, is_public):
-'''
-    return {
-        'channel_id': 1,
-    }
-'''
+
     if len(name) > 20:
         print("name is too lone")
         exit(1)
         
-    channel_id = len(data['channels']) + 1
+    channel_id = len(channels) + 1
+    channel_new = {}
     channel_new['channel_id'] = channel_id
     channel_new['name'] = name
     channel_new['is_public'] = is_public
-    data['channels'].append(channel_new)
+    channels.append(channel_new)
     return channel_id
+    
+

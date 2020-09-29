@@ -1,51 +1,68 @@
-import auth
-import channels
-import pytest
-import data
+from channels import *
 
 def test_channels_list():
-data = {
-    'user': [
+    user = [
         { 
-            'u_id': ,
-            'name_first':'',
-            'name_last':'',
-            'token':'',
+            'u_id':1 ,
+            'name_first':'Liuyuzi',
+            'name_last':'He',
+            'token':'12345'
+        }, {
+            'u_id':2 ,
+            'name_first':'Steve',
+            'name_last':'Tan',
+            'token':'67890'
         }
     ]
-    'channels': [
+    channels= [
         {
-            'name':'',
-            'channel_id':'',
-            'is public' = ,
+            'name':'Team4R',
+            'channel_id':'1',
+            'is_public' : True,
             'owner_members':[
                 {
-                    'u_id': ,
-                    'name_first': '',
-                    'name_last': '',
+                    'u_id': 1,
+                    'name_first': 'Liuyuzi',
+                    'name_last': 'He',
                 }
-            ]
+            ],
             'all_members':[
                 {
-                    'u_id': ,
-                    'name_first': '',
-                    'name_last': '',
+                    'u_id': 1,
+                    'name_first': 'liuyuzi',
+                    'name_last': 'He',
                 }
             ]
-            'messages':[
-                
+            
+        }, {
+            'name':'Team4W',
+            'channel_id':'2',
+            'is_public' :True,
+            'owner_members':[
+                {
+                    'u_id': 2,
+                    'name_first': 'Steve',
+                    'name_last': 'Tan',
+                }
+            ],
+            'all_members':[
+                {
+                    'u_id': 2,
+                    'name_first': 'Steve',
+                    'name_last': 'Tan',
+                }
             ]
-        }  
+        }
     ]
-}
-    token = '12345'
-    channels = test_channels_list(token)
-    assert channels == [{'channel_id': 1,'name': 'My Channel'}]
+  
     
+    assert channels_list('12345') == [{'name': 'Team4R', 'channel_id': '1', 'is_public': True, 'owner_members': [{'u_id': 1, 'name_first': 'Liuyuzi', 'name_last': 'He'}], 'all_members': [{'u_id': 1, 'name_first': 'liuyuzi', 'name_last': 'He'}]}]
+'''    
 def test_channels_listall():
+    
     token = '12345'
-    channels = test_channels_listall(token)
-    assert channels == [{'channel_id': 1,'name': 'My Channel'}]
+    channels = channels_listall(token)
+    assert channels == [{'name': 'Team4R', 'channel_id': '1', 'is_public': True, 'owner_members': [{'u_id': 1, 'name_first': 'Liuyuzi', 'name_last': 'He'}], 'all_members': [{'u_id': 1, 'name_first': 'liuyuzi', 'name_last': 'He'}]},{'name': 'Team4W', 'channel_id': '2', 'is_public': True, 'owner_members': [{'u_id': 2, 'name_first': 'Steve', 'name_last': 'Tan'}], 'all_members': [{'u_id': 2, 'name_first': 'Steve', 'name_last': 'Tan'}]}]
     
 def channels_create():
     token = '12345'
@@ -53,3 +70,4 @@ def channels_create():
     is_public = True
     channel_id = channels_create(token, name, is_public)
     assert channel_id == 1
+'''

@@ -1,4 +1,7 @@
-from channels_create import *
+import auth
+import channels
+import pytest
+import data
 
 def test_channels_list():
 data = {

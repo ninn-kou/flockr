@@ -1,59 +1,4 @@
 #import data
-'''
-user= [
-    { 
-        'u_id':1 ,
-        'name_first':'Liuyuzi',
-        'name_last':'He',
-        'token':'12345'
-    }, {
-        'u_id':2 ,
-        'name_first':'Steve',
-        'name_last':'Tan',
-        'token':'67890'
-    }
-]
-channels= [
-    {
-        'name':'Team4R',
-        'channel_id':'1',
-        'is_public' : True,
-        'owner_members':[
-            {
-                'u_id': 1,
-                'name_first': 'Liuyuzi',
-                'name_last': 'He',
-            }
-        ],
-        'all_members':[
-            {
-                'u_id': 1,
-                'name_first': 'liuyuzi',
-                'name_last': 'He',
-            }
-        ]
-        
-    }, {
-        'name':'Team4W',
-        'channel_id':'2',
-        'is_public' :True,
-        'owner_members':[
-            {
-                'u_id': 2,
-                'name_first': 'Steve',
-                'name_last': 'Tan',
-            }
-        ],
-        'all_members':[
-            {
-                'u_id': 2,
-                'name_first': 'Steve',
-                'name_last': 'Tan',
-            }
-        ]
-    }
-]
-'''    
 def channels_list(token):
     #get the u_id of the authorised user
     global user
@@ -85,13 +30,24 @@ def channels_create(token, name, is_public):
     if len(name) > 20:
         print("name is too lone")
         exit(1)
+     
+    owner_id = 
+    owner_FN =
+    owner_LN = 
         
     channel_id = len(channels) + 1
     channel_new = {}
     channel_new['channel_id'] = channel_id
     channel_new['name'] = name
-    channel_new['is_public'] = is_public
+    channel_new['public'] = is_public
+    channel_new['owner']['u_id'] = owner_id
+    channel_new['owner']['FirstN'] = owner_FN
+    channel_new['owner']['LastN'] = owner_LN
+    channel_new['all_members']['u_id'] = owner_id
+    channel_new['all_members']['FirstN'] = owner_FN
+    channel_new['all_members']['LastN'] = owner_LN
     channels.append(channel_new)
+    
     return channel_id
     
 

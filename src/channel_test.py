@@ -103,11 +103,11 @@ def test_channel_invite_invalid_userId():
     channel_test = channels_create(u_token1,"channel_test",True)
     channel_test_id = channel_test['channel_id']
 
-    # testing for channel invite fuction for invalid channel id inputError
+    # testing for channel invite fuction for invalid user id inputError
     with pytest.raises(InputError):
         channel_invite(u_token1,channel_test_id, u_id2 + 0xf)
 
-def test_channel_invite_invalid_userId():
+def test_channel_non_member_invite():
     '''
     This test is using for check when the authorised user 
     is not already a member of the channel
@@ -133,8 +133,7 @@ def test_channel_invite_invalid_userId():
     channel_test = channels_create(u_token1,"channel_test",True)
     channel_test_id = channel_test['channel_id']
 
-    # testing for channel invite fuction for invalid token people
-    # just  
+    # testing for channel invite fuction for invalid token people.
     with pytest.raises(AccessError):
         channel_invite(u_token3,channel_test_id, u_id2)
 

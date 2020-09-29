@@ -28,4 +28,3 @@ THEREFORE, TEST EVERYTHING BELOW:
 - the auth user is not in this channel.
 
 """
-def 

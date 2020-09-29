@@ -137,3 +137,28 @@ def test_channel_non_member_invite():
     with pytest.raises(AccessError):
         channel_invite(u_token3,channel_test_id, u_id2)
 
+def test_channel_invite_invalid_userId():
+    '''
+    This test is using for check when the user has been in the program
+    '''
+    # create 2 users 
+    user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
+    user1 = auth_login("test1@test.com","check_test")
+    u_id1 = user1['u_id']
+    u_token1 = user1['token']
+
+    user2 = auth_register("test2@test.com","check_test","steve","TAN")
+    user2 = auth_login("test2@test.com","check_test")
+    u_id2 = user2['u_id']
+    u_token2 = user2['token']
+
+    # create channel for testing
+    channel_test = channels_create(u_token1,"channel_test",True)
+    channel_test_id = channel_test['channel_id']
+    
+    # invite people first time
+    channel_invite(u_token1,channel_test_id,u_id2)
+ 
+    # testing for invite people second time
+    with pytest.raises(InputError):
+        channel_invite(u_token1,channel_test_id, u_id2)

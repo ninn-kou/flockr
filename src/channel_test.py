@@ -53,8 +53,33 @@ def test_channel_details_work():
 
     # Assuming we the fuction running correctly, then we do check the channel details 
     # expecially, the member infomation
-    assert u_id1 ==  channel_test_details[['all_members'][0]['u_id']]
-    assert u_id2 ==  channel_test_details[['all_members'][1]['u_id']]
+    #assert u_id1 ==  channel_test_details[['all_members'][0]['u_id']]
+    #assert u_id2 ==  channel_test_details[['all_members'][1]['u_id']]
+    check_dic:  { 
+        'name': 'channel_test',
+        'owner_members': [
+            {
+                'u_id': u_id1,
+                'name_first': 'Xingyu',
+                'name_last': 'TAN',
+            }
+        ],
+        'all_members': [
+            {
+                'u_id': u_id1,
+                'name_first': 'Xingyu',
+                'name_last': 'TAN',
+            },
+            {
+                'u_id': u_id2,
+                'name_first': 'steve',
+                'name_last': 'TAN',
+            }
+        ],
+    }
+
+    assert (channel_test_details == check_dic)
+
 
 def test_channel_details_invalid_channelId():
     '''

@@ -110,7 +110,56 @@ def test_channel_non_member_call_details():
 
     # testing for channel invite fuction for invalid token people.
     with pytest.raises(AccessError):
-        channel_messages(u_token3,channel_test_id,0)
+        channel_messages(u_token3,channel_test_id,0)1
+
+def test_channel_nornal_test():
+    '''
+    this test using for check if the channel fuction can return correctly
+    1. -1 : for no more message after start
+    2. check the fuction can return the message correctly.
+    2.1 the [0] always the top fresh one 
+    3. 0< number && number <= 50: exist messages after start and no more than 50 messages.
+    4. 50 : the exist messages after start more than 50, just return the top 50 ones.
+    '''
+    # create 2 users 
+    user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
+    user1 = auth_login("test1@test.com","check_test")
+    u_token1 = user1['token']
+
+    user2 = auth_register("test2@test.com","check_test","steve","TAN")
+    user2 = auth_login("test2@test.com","check_test")
+    u_id2 = user2['u_id']
+    u_token2 = user2['token']
+
+    # create channel for testing
+    channel_test = channels_create(u_token1,"channel_test",True)
+    channel_test_id = channel_test['channel_id']
+
+    # 1. return -1 : for no more message after start
+    check_return_negative_one = channel_messages(u_token1,channel_test_id,0)
+    assert check_return_negative_one['end'] == -1
+
+    # 2. check the fuction can return the message correctly.
+    for i in range(1,3):
+        check_message_id = message_send(u_token1, channel_test_id, 'hi steve')['message_id']
+        check_work_msg = channel_messages(u_token1,channel_test_id,0)
+        # check the uodatest msg in [0]
+        assert(check_work_msg['messages'][0]['message_id'] == check_message_id)
+
+        #3. 0< number && number <= 50: exist messages after start and no more than 50 messages.
+        assert(check_work_msg['end'] == 50)
+    
+    # 4. 50 : the exist messages after start more than 50, just return the top 50 ones.
+    for i in range(1,50):
+        message_send(u_token1, channel_test_id, 'list more than 50 msgs')['message_id']
+        
+    # update the last one 
+    check_message_id = message_send(u_token1, channel_test_id, 'update the last one')['message_id']
+    check_work_msg = channel_messages(u_token1,channel_test_id,0)
+    # check the uodatest msg in [0] is the last update one.
+    assert(check_work_msg['messages'][0]['message_id'] == check_message_id)
+
+
 
 
 

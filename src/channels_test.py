@@ -1,8 +1,11 @@
-import auth
+from auth import 
 import channels 
 import pytest
 import data
-
+from error import InputError
+import re
+import random
+import string
 
 def test_channels_create():
     #create a user and take its  id and token
@@ -14,8 +17,13 @@ def test_channels_create():
     #create a channel in channels and return its channel id
     channel_1_id = channels_create(u1_token,'team',True)
     assert channel_1_id is int
+    assert data.channels[-1]['name'] == 'team'
+    assert data.channels[-1]['channel_id'] == channel_1_id
+    assert data.channels[-1]['public'] == True
+    assert data.channels[-1]['owner'] == [{'u_id':u1_id,'name_first':'FirstN','name_last':'LastN'}]
+    assert data.channels[-1]['all_members'] == [{'u_id':u1_id,'name_first':'FirstN','name_last':'LastN'}]
  
-def test_channels_listall = channels_listall(u1_token):
+def test_channels_listall = channels_listall():
     #create two user and take their id and token
     user1 = auth_register('12345@test.com', 'password', 'FirstN', 'LastN')
     user1 = auth_login('12345@test.com', 'password')
@@ -76,7 +84,7 @@ def test_channels_listall = channels_listall(u1_token):
         }
     ]
 
-def test_channels_list = channels_list(u1_token):
+def test_channels_list = channels_list():
     #create two user and take their id and token
     user1 = auth_register('12345@test.com', 'password', 'FirstN', 'LastN')
     user1 = auth_login('12345@test.com', 'password')

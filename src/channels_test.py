@@ -8,12 +8,19 @@ import random
 import string
 
 def test_channels_create():
+    #initialise the channels list
+    data.init_channels()
+    
     #create a user and take its  id and token
     user1 = auth.auth_register('12345@test.com', 'password', 'FirstN', 'LastN')
     user1 = auth.auth_login('12345@test.com', 'password')
     u1_id = user1['u_id']
     u1_token = user1['token']
     
+    #check the error when the channelname is too long
+    with pytest.raises(InputError):
+        channels.channels_create(u1_token,'A_very_very_very_ver_long_name',True)
+        
     #create a channel in channels and return its channel id
     channel_1_id = channels.channels_create(u1_token,'team',True)
     assert channel_1_id is int
@@ -24,6 +31,9 @@ def test_channels_create():
     assert data.channels[-1]['all_members'] == [{'u_id':u1_id,'name_first':'FirstN','name_last':'LastN'}]
  
 def test_channels_listall():
+    #initialise the channels list
+    data.init_channels()
+    
     #create two user and take their id and token
     user1 = auth.auth_register('12345@test.com', 'password', 'FirstN', 'LastN')
     user1 = auth.auth_login('12345@test.com', 'password')
@@ -85,6 +95,9 @@ def test_channels_listall():
     ]
 
 def test_channels_list():
+    #initialise the channels list
+    data.init_channels()
+    
     #create two user and take their id and token
     user1 = auth.auth_register('12345@test.com', 'password', 'FirstN', 'LastN')
     user1 = auth.auth_login('12345@test.com', 'password')

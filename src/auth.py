@@ -215,7 +215,8 @@ def auth_register(email, password, name_first, name_last):
         'email': email,
         'name_first': name_first,
         'name_last': name_last,
-        'handle_str': handle
+        'handle_str': handle,
+        'token': token,
     }
     data.append_users(user)
 

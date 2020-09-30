@@ -25,8 +25,8 @@ THEREFORE, TEST EVERYTHING BELOW:
 
 """
 ######  help  fuction  ####
-global data.users
-global data.channels
+global users
+global channels
 def token_into_user_id(token):
     
    

@@ -54,8 +54,8 @@ def test_channel_invite_work():
 
     # Assuming we the fuction running correctly, then we do check the channel details 
     # expecially, the member infomation
-    assert u_id1 ==  channel_test_details[['all_members'][0]['u_id']]
-    assert u_id2 ==  channel_test_details[['all_members'][1]['u_id']]
+    assert u_id1 ==  channel_test_details['all_members'][0]['u_id']
+    assert u_id2 ==  channel_test_details['all_members'][1]['u_id']
 
 
 def test_channel_invite_invalid_channelId():

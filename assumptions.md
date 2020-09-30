@@ -44,3 +44,5 @@
         'is public': True,
         'messages':[]  
     }
+
+* channl message: for each channel, the new message is inserted in the begaining of message list.

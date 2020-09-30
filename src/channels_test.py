@@ -1,73 +1,121 @@
-from channels import *
+import auth
+import channels 
+import pytest
+import data
 
-def test_channels_list():
-    user = [
-        { 
-            'u_id':1 ,
-            'name_first':'Liuyuzi',
-            'name_last':'He',
-            'token':'12345'
-        }, {
-            'u_id':2 ,
-            'name_first':'Steve',
-            'name_last':'Tan',
-            'token':'67890'
-        }
-    ]
-    channels= [
+
+def test_channels_create():
+    #create a user and take its  id and token
+    user1 = auth_register('12345@test.com', 'password', 'FirstN', 'LastN')
+    user1 = auth_login('12345@test.com', 'password')
+    u1_id = user1['u_id']
+    u1_token = user1['token']
+    
+    #create a channel in channels and return its channel id
+    channel_1_id = channels_create(u1_token,'team',True)
+    assert channel_1_id is int
+ 
+def test_channels_listall = channels_listall(u1_token):
+    #create two user and take their id and token
+    user1 = auth_register('12345@test.com', 'password', 'FirstN', 'LastN')
+    user1 = auth_login('12345@test.com', 'password')
+    u1_id = user1['u_id']
+    u1_token = user1['token']
+    
+    user2 = auth_register('23456@test.com', 'password', 'FirstN2', 'LastN2')
+    user2 = auth_login('23456@test.com', 'password')
+    u2_id = user2['u_id']
+    u2_token = user2['token']
+    
+    #create a channel by user1 in channels and return its channel id
+    channel_1_id = channels_create(u1_token,'team',True)
+    
+    #create a channel by user2 in channels and return its channel id
+    channel_2_id = channels_create(u2_token,'team2',True)
+    
+    #check if the function return them all
+    channel_listall = channels_listall(u1_token)
+    
+    assert channel_listall == [
         {
-            'name':'Team4R',
-            'channel_id':'1',
-            'is_public' : True,
-            'owner_members':[
+            'name':'team',
+            'channel_id':channel_1_id,
+            'public':'True',
+            'owner':[
                 {
-                    'u_id': 1,
-                    'name_first': 'Liuyuzi',
-                    'name_last': 'He',
+                    'u_id': u1_id,
+                    'name_first': 'FirstN',
+                    'name_last': 'LastN'
                 }
             ],
             'all_members':[
                 {
-                    'u_id': 1,
-                    'name_first': 'liuyuzi',
-                    'name_last': 'He',
+                    'u_id': u1_id,
+                    'name_first': 'FirstN',
+                    'name_last': 'LastN'
                 }
             ]
-            
-        }, {
-            'name':'Team4W',
-            'channel_id':'2',
-            'is_public' :True,
-            'owner_members':[
+        } , {
+            'name':'team2',
+            'channel_id':channel_2_id,
+            'public':'True',
+            'owner':[
                 {
-                    'u_id': 2,
-                    'name_first': 'Steve',
-                    'name_last': 'Tan',
+                    'u_id': u2_id,
+                    'name_first': 'FirstN2',
+                    'name_last': 'LastN2'
                 }
             ],
             'all_members':[
                 {
-                    'u_id': 2,
-                    'name_first': 'Steve',
-                    'name_last': 'Tan',
+                    'u_id': u2_id,
+                    'name_first': 'FirstN2',
+                    'name_last': 'LastN2'
                 }
             ]
         }
     ]
-  
+
+def test_channels_list = channels_list(u1_token):
+    #create two user and take their id and token
+    user1 = auth_register('12345@test.com', 'password', 'FirstN', 'LastN')
+    user1 = auth_login('12345@test.com', 'password')
+    u1_id = user1['u_id']
+    u1_token = user1['token']
     
-    assert channels_list('12345') == [{'name': 'Team4R', 'channel_id': '1', 'is_public': True, 'owner_members': [{'u_id': 1, 'name_first': 'Liuyuzi', 'name_last': 'He'}], 'all_members': [{'u_id': 1, 'name_first': 'liuyuzi', 'name_last': 'He'}]}]
-'''    
-def test_channels_listall():
+    user2 = auth_register('23456@test.com', 'password', 'FirstN2', 'LastN2')
+    user2 = auth_login('23456@test.com', 'password')
+    u2_id = user2['u_id']
+    u2_token = user2['token']
     
-    token = '12345'
-    channels = channels_listall(token)
-    assert channels == [{'name': 'Team4R', 'channel_id': '1', 'is_public': True, 'owner_members': [{'u_id': 1, 'name_first': 'Liuyuzi', 'name_last': 'He'}], 'all_members': [{'u_id': 1, 'name_first': 'liuyuzi', 'name_last': 'He'}]},{'name': 'Team4W', 'channel_id': '2', 'is_public': True, 'owner_members': [{'u_id': 2, 'name_first': 'Steve', 'name_last': 'Tan'}], 'all_members': [{'u_id': 2, 'name_first': 'Steve', 'name_last': 'Tan'}]}]
+    #create a channel by user1 in channels and return its channel id
+    channel_1_id = channels_create(u1_token,'team',True)
     
-def channels_create():
-    token = '12345'
-    name = 'name'
-    is_public = True
-    channel_id = channels_create(token, name, is_public)
-    assert channel_id == 1
-'''
+    #create a channel by user2 in channels and return its channel id
+    channel_2_id = channels_create(u2_token,'team2',True)
+    #channel_listall = channels_listall(u1_token)
+    
+    #check if it only return the autherised one
+    channel_list1 = channels_list(u1_token)
+    assert channel_list1 == [
+        {
+            'name':'team',
+            'channel_id':channel_1_id,
+            'public':'True',
+            'owner':[
+                {
+                    'u_id': u1_id,
+                    'name_first': 'FirstN',
+                    'name_last': 'LastN'
+                }
+            ],
+            'all_members':[
+                {
+                    'u_id': u1_id,
+                    'name_first': 'FirstN',
+                    'name_last': 'LastN'
+                }
+            ]
+        }
+    ]
+

@@ -110,7 +110,7 @@ def test_channel_non_member_call_details():
 
     # testing for channel invite fuction for invalid token people.
     with pytest.raises(AccessError):
-        channel_messages(u_token3,channel_test_id,0)1
+        channel_messages(u_token3,channel_test_id,0)
 
 def test_channel_nornal_test():
     '''

@@ -3,7 +3,7 @@ from channel import channel_invite, channel_details, channel_messages
 from channels import channels_create
 from auth import auth_login, auth_register, auth_logout 
 from error import InputError, AccessError
-from data import *
+import  data 
 import pytest
 
 # Xingyu TAN working on channel_test.py for channel_invite fuction
@@ -64,13 +64,13 @@ def test_channel_invite_invalid_channelId():
     inputError
     '''
     # create 2 users 
-    user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
-    user1 = auth_login("test1@test.com","check_test")
+    user1 = auth_register("test5@test.com","check_test","Xingyu","TAN")
+    user1 = auth_login("test5@test.com","check_test")
     u_id1 = user1['u_id']
     u_token1 = user1['token']
 
-    user2 = auth_register("test2@test.com","check_test","steve","TAN")
-    user2 = auth_login("test2@test.com","check_test")
+    user2 = auth_register("test6@test.com","check_test","steve","TAN")
+    user2 = auth_login("test6@test.com","check_test")
     u_id2 = user2['u_id']
     u_token2 = user2['token']
 
@@ -89,13 +89,13 @@ def test_channel_invite_invalid_userId():
     inputError
     '''
     # create 2 users 
-    user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
-    user1 = auth_login("test1@test.com","check_test")
+    user1 = auth_register("test3@test.com","check_test","Xingyu","TAN")
+    user1 = auth_login("test3@test.com","check_test")
     u_id1 = user1['u_id']
     u_token1 = user1['token']
 
-    user2 = auth_register("test2@test.com","check_test","steve","TAN")
-    user2 = auth_login("test2@test.com","check_test")
+    user2 = auth_register("test4@test.com","check_test","steve","TAN")
+    user2 = auth_login("test4@test.com","check_test")
     u_id2 = user2['u_id']
     u_token2 = user2['token']
 
@@ -114,18 +114,18 @@ def test_channel_non_member_invite():
     AccessError 
     '''
     # create 2 users and author people 
-    user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
-    user1 = auth_login("test1@test.com","check_test")
+    user1 = auth_register("test11@test.com","check_test","Xingyu","TAN")
+    user1 = auth_login("test11@test.com","check_test")
     u_id1 = user1['u_id']
     u_token1 = user1['token']
 
-    user2 = auth_register("test2@test.com","check_test","steve","TAN")
-    user2 = auth_login("test2@test.com","check_test")
+    user2 = auth_register("test22@test.com","check_test","steve","TAN")
+    user2 = auth_login("test22@test.com","check_test")
     u_id2 = user2['u_id']
     u_token2 = user2['token']
 
-    user3 = auth_register("test3@test.com","check_test","test","TAN")
-    user3 = auth_login("test3@test.com","check_test")
+    user3 = auth_register("test33@test.com","check_test","test","TAN")
+    user3 = auth_login("test33@test.com","check_test")
     u_id3 = user3['u_id']
     u_token3 = user3['token']
 
@@ -142,13 +142,13 @@ def test_channel_repeate_invite():
     This test is using for check when the user has been in the program
     '''
     # create 2 users 
-    user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
-    user1 = auth_login("test1@test.com","check_test")
+    user1 = auth_register("test41@test.com","check_test","Xingyu","TAN")
+    user1 = auth_login("test41@test.com","check_test")
     u_id1 = user1['u_id']
     u_token1 = user1['token']
 
-    user2 = auth_register("test2@test.com","check_test","steve","TAN")
-    user2 = auth_login("test2@test.com","check_test")
+    user2 = auth_register("test42@test.com","check_test","steve","TAN")
+    user2 = auth_login("test42@test.com","check_test")
     u_id2 = user2['u_id']
     u_token2 = user2['token']
 

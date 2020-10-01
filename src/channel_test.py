@@ -3,8 +3,9 @@ from channel import channel_invite, channel_details, channel_messages
 from channels import channels_create
 from auth import auth_login, auth_register, auth_logout 
 from error import InputError, AccessError
-import  data 
+import data 
 import pytest
+import other
 
 
 #########################################################################
@@ -39,6 +40,7 @@ def test_channel_invite_work():
     this test is using for check the fuction can work normally when no Errors bring.
     '''
     # create 2 users 
+    other.clear()
     user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test1@test.com","check_test")
     u_id1 = user1['u_id']
@@ -81,6 +83,8 @@ def test_channel_repeate_invite():
     '''
 
     # create 2 users 
+    other.clear()
+
     user1 = auth_register("test41@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test41@test.com","check_test")
     u_id1 = user1['u_id']
@@ -121,6 +125,8 @@ def test_channel_invite_invalid_channelId_input_error():
     inputError
     '''
     # create 2 users 
+    other.clear()
+
     user1 = auth_register("test5@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test5@test.com","check_test")
     u_id1 = user1['u_id']
@@ -146,6 +152,8 @@ def test_channel_invite_invalid_userId_input_error():
     inputError
     '''
     # create 2 users 
+    other.clear()
+
     user1 = auth_register("test3@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test3@test.com","check_test")
     u_id1 = user1['u_id']
@@ -172,6 +180,8 @@ def test_channel_non_member_invite():
     AccessError 
     '''
     # create 2 users and author people 
+    other.clear()
+
     user1 = auth_register("test11@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test11@test.com","check_test")
     u_id1 = user1['u_id']

@@ -78,3 +78,11 @@ channels = [
 
 """
 channels = []
+
+# initialise the channels list
+def init_channels():
+    global channels 
+
+#add a channel in the channels list
+def append_channels(channel):
+    channels.append(channel)

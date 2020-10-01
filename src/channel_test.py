@@ -1,5 +1,5 @@
 # this file is using for pytest of channel.py .
-from channel import channel_invite, channel_details, channel_messages 
+from channel import channel_invite, channel_details, channel_messages
 from channels import channels_create
 from auth import auth_login, auth_register, auth_logout 
 from error import InputError, AccessError
@@ -44,19 +44,29 @@ def test_channel_invite_work():
     u_token2 = user2['token']
 
     # create channel for testing
-    channel_test = channels_create(u_token1,"channel_test",True)
-    channel_test_id = channel_test['channel_id']
+    channel_test_id = channels_create(u_token1,"channel_test",True)
+
 
     # testing for channel invite fuction
     channel_invite(u_token1,channel_test_id,u_id2)
-    channel_test_details = channel_details(u_token1,channel_test_id)
+
 
 
     # Assuming we the fuction running correctly, then we do check the channel details 
     # expecially, the member infomation
-    assert u_id1 ==  channel_test_details['all_members'][0]['u_id']
-    assert u_id2 ==  channel_test_details['all_members'][1]['u_id']
-
+    channel_member_num = 0
+    data.init_channels()
+    
+    for i in data.channels:
+        if i['channel_id'] == channel_test_id:
+            channel_member_num = len(i['all_members'])
+            break
+    
+    assert channel_member_num ==2
+    
+    assert u_id1 ==  i['all_members'][0]['u_id']
+    assert u_id2 ==  i['all_members'][1]['u_id']
+    
 
 def test_channel_invite_invalid_channelId():
     '''
@@ -75,8 +85,8 @@ def test_channel_invite_invalid_channelId():
     u_token2 = user2['token']
 
     # create channel for testing
-    channel_test = channels_create(u_token1,"channel_test",True)
-    channel_test_id = channel_test['channel_id']
+    channel_test_id = channels_create(u_token1,"channel_test",True)
+    
 
     # testing for channel invite fuction for invalid channel id inputError
     with pytest.raises(InputError):
@@ -100,8 +110,8 @@ def test_channel_invite_invalid_userId():
     u_token2 = user2['token']
 
     # create channel for testing
-    channel_test = channels_create(u_token1,"channel_test",True)
-    channel_test_id = channel_test['channel_id']
+    channel_test_id = channels_create(u_token1,"channel_test",True)
+
 
     # testing for channel invite fuction for invalid user id inputError
     with pytest.raises(InputError):
@@ -130,8 +140,8 @@ def test_channel_non_member_invite():
     u_token3 = user3['token']
 
     # create channel for testing
-    channel_test = channels_create(u_token1,"channel_test",True)
-    channel_test_id = channel_test['channel_id']
+    channel_test_id = channels_create(u_token1,"channel_test",True)
+
 
     # testing for channel invite fuction for invalid token people.
     with pytest.raises(AccessError):
@@ -153,8 +163,8 @@ def test_channel_repeate_invite():
     u_token2 = user2['token']
 
     # create channel for testing
-    channel_test = channels_create(u_token1,"channel_test",True)
-    channel_test_id = channel_test['channel_id']
+    channel_test_id = channels_create(u_token1,"channel_test",True)
+
     
     # invite people first time
     channel_invite(u_token1,channel_test_id,u_id2)

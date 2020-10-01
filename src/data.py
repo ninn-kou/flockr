@@ -14,7 +14,8 @@ users = [
         'name_first':'',
         'name_last':'',
         'handle_str': '',
-        'token': ''
+        'token': '',
+        'password': ''
     }
 ]
 
@@ -28,15 +29,28 @@ users = []
 # initialise the users list
 def init_users():
     global users 
-
+# append user to list
 def append_users(user):
     users.append(user)
 
-# def pop_users(user):
-#     users.pop(user)
+# add token to user
+def add_token(token_object):
+    for user in users:
+        if token_object['u_id'] == user['u_id']:
+            user['token'] = token_object['token']
+            return user
+    return None
 
-########################################################################################
+# remove token from user
+def remove_token(token):
+    for user in users:
+        if token == user['token']:
+            user.pop('token', None)
+            return user
+    return None
 
+
+##########################################################################################
 """
 the struct using for channel 
 channels = [    
@@ -64,3 +78,11 @@ channels = [
 
 """
 channels = []
+
+# initialise the channels list
+def init_channels():
+    global channels 
+
+#add a channel in the channels list
+def append_channels(channel):
+    channels.append(channel)

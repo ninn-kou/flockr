@@ -6,10 +6,15 @@ from error import InputError, AccessError
 import data 
 import pytest
 import other
+<<<<<<< HEAD
 from message import message_send
 
 
 
+=======
+
+
+>>>>>>> test/features/channel_details
 #########################################################################
 #
 #                     test for channel_invite function

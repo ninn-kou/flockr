@@ -60,10 +60,6 @@ def create_u_id(users):
 # Even 10,000 of the same name...
 def handle_variabliser(handle, variabliser_num, variabliser, users):
 
-    # if somehow every single handle is created
-    if variabliser_num > 20:
-        raise Exception("Have Made Every Single Possible Handle")
-
     # check if the handle is unique
     check = check_in_users('handle_str', users, handle)
     # if not modify it further
@@ -99,7 +95,6 @@ def handle_generator(name_first, name_last, users):
     
     # create a unique handle
     handle = handle_variabliser(raw_concatenation, 0, '', users)
-
     return handle
 
 #handles error checking for auth_register

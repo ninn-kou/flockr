@@ -6,6 +6,12 @@ from error import InputError, AccessError
 import  data 
 import pytest
 
+
+#########################################################################
+#
+#                     test for channel_invite function
+#
+##########################################################################
 # Xingyu TAN working on channel_test.py for channel_invite fuction
 # 29 SEP 2020
 
@@ -62,13 +68,54 @@ def test_channel_invite_work():
             channel_member_num = len(i['all_members'])
             break
     
+    # check the totoal members number is 2
     assert channel_member_num ==2
-    
+    # check the diff people info correct
     assert u_id1 ==  i['all_members'][0]['u_id']
     assert u_id2 ==  i['all_members'][1]['u_id']
-    
 
-def test_channel_invite_invalid_channelId():
+def test_channel_repeate_invite():
+    '''
+    This test is using for check when the user has been in the program
+    when repeat invite, just skip it.
+    '''
+
+    # create 2 users 
+    user1 = auth_register("test41@test.com","check_test","Xingyu","TAN")
+    user1 = auth_login("test41@test.com","check_test")
+    u_id1 = user1['u_id']
+    u_token1 = user1['token']
+
+    user2 = auth_register("test42@test.com","check_test","steve","TAN")
+    user2 = auth_login("test42@test.com","check_test")
+    u_id2 = user2['u_id']
+    u_token2 = user2['token']
+
+    # create channel for testing
+    channel_test_id = channels_create(u_token1,"channel_test",True)
+
+    
+    # invite people first time
+    channel_invite(u_token1,channel_test_id,u_id2)
+ 
+    # testing for invite people second time
+    channel_invite(u_token1,channel_test_id, u_id2)
+
+    channel_member_num = 0
+    data.init_channels()
+    
+    for i in data.channels:
+        if i['channel_id'] == channel_test_id:
+            channel_member_num = len(i['all_members'])
+            break
+    
+    # check the totoal members number is still 2
+    assert channel_member_num ==2
+
+ 
+##########  test for input error #################
+
+def test_channel_invite_invalid_channelId_input_error():
     '''
     This test is using for check when the channel id we had is invalid
     inputError
@@ -93,7 +140,7 @@ def test_channel_invite_invalid_channelId():
         channel_invite(u_token1,channel_test_id + 0xf, u_id2)
 
 
-def test_channel_invite_invalid_userId():
+def test_channel_invite_invalid_userId_input_error():
     '''
     This test is using for check when the user id we had is invalid
     inputError
@@ -117,6 +164,7 @@ def test_channel_invite_invalid_userId():
     with pytest.raises(InputError):
         channel_invite(u_token1,channel_test_id, u_id2 + 0xf)
 
+#################### test for access error #####################
 def test_channel_non_member_invite():
     '''
     This test is using for check when the authorised user 
@@ -147,28 +195,6 @@ def test_channel_non_member_invite():
     with pytest.raises(AccessError):
         channel_invite(u_token3,channel_test_id, u_id2)
 
-def test_channel_repeate_invite():
-    '''
-    This test is using for check when the user has been in the program
-    '''
-    # create 2 users 
-    user1 = auth_register("test41@test.com","check_test","Xingyu","TAN")
-    user1 = auth_login("test41@test.com","check_test")
-    u_id1 = user1['u_id']
-    u_token1 = user1['token']
 
-    user2 = auth_register("test42@test.com","check_test","steve","TAN")
-    user2 = auth_login("test42@test.com","check_test")
-    u_id2 = user2['u_id']
-    u_token2 = user2['token']
 
-    # create channel for testing
-    channel_test_id = channels_create(u_token1,"channel_test",True)
 
-    
-    # invite people first time
-    channel_invite(u_token1,channel_test_id,u_id2)
- 
-    # testing for invite people second time
-    with pytest.raises(InputError):
-        channel_invite(u_token1,channel_test_id, u_id2)

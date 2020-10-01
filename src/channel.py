@@ -1,4 +1,128 @@
+import data
+from error import InputError, AccessError
+import channels
+
+
+# Xingyu TAN working on channel.py for channel_invite fuction
+# 29 SEP 2020
+
+"""
+channel_invite()
+the fuction Invites a user (with user id u_id) to join a channel with ID channel_id. 
+
+RETURNS:
+{}
+
+
+THEREFORE, TEST EVERYTHING BELOW:
+1. inputError
+- the channel id we had is invalid
+
+- the user id we had is invalid
+
+2. accessError
+- the auth user is not in this channel.
+
+"""
+#############################################
+######          help  fuction        ########
+#############################################
+# adding one member into the channel
+def add_one_in_channel(channel_id,user):
+    for i in data.channels:
+        if i['channel_id'] == channel_id:
+            i['all_members'].append(user)
+            break
+        
+    return
+# transfer the token into user id
+def token_into_user_id(token):
+    au_id = -1
+    for i in data.users:
+        if i['token'] == token:
+            au_id = i['u_id']
+
+    return au_id
+
+# interation the whole channels, grab the channel we need
+def find_channel(channel_id):
+    
+    answer = None
+    for i in data.channels:
+        if i['channel_id'] == channel_id:
+            answer = i
+            break
+    
+    return answer
+
+# find user info by search one's id
+def find_user(user_id):
+    u_id = -1
+    for i in data.users:
+        if i['u_id'] == user_id:
+            u_id = i
+            break
+    
+    return u_id
+
+# check one if in the channel already
+def find_one_in_channel(channel, u_id):
+    for i in channel['all_members']:
+        if i['u_id'] == u_id:
+            return True
+    return False
+
 def channel_invite(token, channel_id, u_id):
+    # apply global variable we need
+    data.init_channels()
+    data.init_users()
+    # case 1
+    # grab the au_id by transfer token
+    auth_id = token_into_user_id(token)
+    # the token id we had is invalid
+    if auth_id == -1:
+        raise(InputError)
+    
+    # case 2
+    # search the channel_id to check if the channel 
+    # is in the channels list
+    channel_got = find_channel(channel_id)
+    # the channel id we had is invalid
+    if channel_got == None:
+        raise(InputError)
+
+    # case 3 
+    # check if the user is valid
+    user = find_user(u_id)
+    if user == -1:
+        #the u_id is invalid
+        raise(InputError)
+
+    # case 4
+    # check if the author is a member in this channel
+    if find_one_in_channel(channel_got, auth_id) == False:
+        raise(AccessError)
+
+    # case 5
+    # check if the user already in the channel, skip adding
+    if find_one_in_channel(channel_got, u_id) == True:
+        return {
+    }
+    
+
+    # case 6
+    #excluding all the error, then add the member
+    # create new member struct
+    user_struct = find_user(u_id)
+    user = {
+        'u_id': u_id,
+        'name_first': user_struct['name_first'],
+        'name_last': user_struct['name_last'],
+    }
+
+    # add the new member into channel
+    add_one_in_channel(channel_id,user)
+    
     return {
     }
 

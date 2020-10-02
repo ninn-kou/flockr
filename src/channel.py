@@ -340,5 +340,37 @@ def channel_addowner(token, channel_id, u_id):
     return 
 
 def channel_removeowner(token, channel_id, u_id):
-    return {
-    }
+    # global variables
+    data.init_channels()
+    data.init_users()
+
+    # check wether the channel is valid 
+    this_channel = find_channel(channel_id)
+    if this_channel is None:
+        raise(InputError)
+    
+    # using the given token to identify the authorized user.
+    auth_id = token_into_user_id(token)
+    # error by the invalid token id
+    if auth_id is -1:
+        raise(InputError)
+
+    # error by he/she is not an owner
+    if find_current_owner(this_channel, u_id) is False:
+        raise(InputError)
+
+    # check if the user is valid
+    user = find_user(u_id)
+    # The u_id is invalid
+    if user == -1:
+        raise(InputError)
+
+    # check if the authorised user is not a owner of this channel
+    if find_current_owner(this_channel, auth_id) is False:
+        raise(AccessError)
+
+    # check if successd
+    # pop the user off the owner
+    rm_owner_in_channel(channel_id, u_id)
+
+    return 

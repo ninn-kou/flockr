@@ -10,11 +10,13 @@ For every member of our team, please use the below TOC to jump to the chapter yo
 
 Most recent changing log for this Markdown document here:
 
+> 02 October, Yuhan Yan: Added more assumptions for iteration 1.
+>
 > 01 October, Hao Ren: Re-formatted this Markdown file.
 >
 > 31 September, Xingyu Tan: Created the formal assumption file.
 >
->> 26 September, Xingyu Tan: Added 3 assumptions to the first draft of assumption.
+> 26 September, Yuhan Yan: Added 3 assumptions to the first draft of assumption.
 
 ## 1. Iteration 1
 

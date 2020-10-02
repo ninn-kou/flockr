@@ -372,6 +372,9 @@ THEREFORE, TEST EVERYTHING BELOW:
 #   help fuction for sending msg
 #
 ################################
+'''
+    this function is using for create new message and send into our channel
+'''
 def msg_send(channel_id, msg_id, u_id, msg, time):
     return_message = {
         'message_id': msg_id,
@@ -426,7 +429,6 @@ def test_inputError_channel_message_invalid_channelId():
     user2 = auth_register("test2@test.com","check_test","steve","TAN")
     user2 = auth_login("test2@test.com","check_test")
     u_id2 = user2['u_id']
-    u_token2 = user2['token']
 
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)
@@ -452,7 +454,6 @@ def test_channel_message_non_member_call_details():
 
     user2 = auth_register("test2@test.com","check_test","steve","TAN")
     user2 = auth_login("test2@test.com","check_test")
-    u_token2 = user2['token']
 
     user3 = auth_register("test3@test.com","check_test","test","TAN")
     user3 = auth_login("test3@test.com","check_test")
@@ -545,7 +546,7 @@ def test_channel_message_newest_one_index():
     channel_test_id = channels_create(u_token1,"channel_test",True)
 
     
-    # 4. 50 : the exist messages after start more than 50, just return the top 50 ones.
+    # the exist messages after start more than 50, just return the top 50 ones.
     for i in range(1,60):
         msg_send(channel_test_id, i, u_token1, 'list more than 50 msgs', i)
         
@@ -559,7 +560,6 @@ def test_channel_message_newest_one_index():
 
   
 # case 4: test if we can show the correct channel_message information
-
 def test_channel_message_correct_message_infors():
     '''
     this test using for check if the channel fuction can return correctly

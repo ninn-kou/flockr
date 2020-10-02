@@ -373,18 +373,17 @@ THEREFORE, TEST EVERYTHING BELOW:
 #
 ################################
 def msg_send(channel_id, msg_id, u_id, msg, time):
-    message: [
-        {
-            'message_id': msg_id,
-            'u_id': u_id,
-            'message': msg,
-            'time_created': time,
-        }
-    ]
+    return_message = {
+        'message_id': msg_id,
+        'u_id': u_id,
+        'message': msg,
+        'time_created': time,
+    }
+
     data.init_channels()
     for i in data.channels:
         if i['channel_id'] == channel_id:
-            i['messages'].insert(message)
+            i['message'].insert(0, return_message)
             break
         
     return
@@ -575,8 +574,7 @@ def test_channel_message_correct_message_infors():
 
     user2 = auth_register("test2@test.com","check_test","steve","TAN")
     user2 = auth_login("test2@test.com","check_test")
-    u_id2 = user2['u_id']
-    u_token2 = user2['token']
+    
 
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)

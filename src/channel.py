@@ -1,10 +1,12 @@
 import data
 from error import InputError, AccessError
 import channels
-
+#############################################
+######          channel_invite       ########
+#############################################
 
 # Xingyu TAN working on channel.py for channel_invite fuction
-# 29 SEP 2020
+# 2 OCT 2020
 
 """
 channel_invite()
@@ -20,8 +22,13 @@ THEREFORE, TEST EVERYTHING BELOW:
 
 - the user id we had is invalid
 
+- the user token is invalid
+
 2. accessError
 - the auth user is not in this channel.
+
+3. repeated invite
+- repeated invite one person who is already in.
 
 """
 #############################################
@@ -76,14 +83,14 @@ def channel_invite(token, channel_id, u_id):
     # apply global variable we need
     data.init_channels()
     data.init_users()
-    # case 1
+    # case 1        // InputError
     # grab the au_id by transfer token
     auth_id = token_into_user_id(token)
     # the token id we had is invalid
     if auth_id == -1:
         raise(InputError)
     
-    # case 2
+    # case 2        // InputError
     # search the channel_id to check if the channel 
     # is in the channels list
     channel_got = find_channel(channel_id)
@@ -91,14 +98,14 @@ def channel_invite(token, channel_id, u_id):
     if channel_got == None:
         raise(InputError)
 
-    # case 3 
+    # case 3        // InputError
     # check if the user is valid
     user = find_user(u_id)
     if user == -1:
         #the u_id is invalid
         raise(InputError)
 
-    # case 4
+    # case 4        // AccessError
     # check if the author is a member in this channel
     if find_one_in_channel(channel_got, auth_id) == False:
         raise(AccessError)
@@ -126,23 +133,60 @@ def channel_invite(token, channel_id, u_id):
     return {
     }
 
+#############################################
+######         channel_details       ########
+#############################################
+# Xingyu TAN working on channel_details.py for channel_details fuction
+# 2 Oct 2020
+
+"""
+channel_details()
+Given a Channel with ID channel_id that the authorised user is part of
+
+RETURNS:
+provide basic details about the channel
+
+
+THEREFORE, TEST EVERYTHING BELOW:
+1. inputError
+- the channel is invalid
+- the user_token is invalid
+
+
+2. accessError
+- the auth user is not in this channel.
+
+
+
+"""
 def channel_details(token, channel_id):
+    # apply global variable we need
+    data.init_channels()
+    data.init_users()
+    # case 1           //Input error
+    # grab the au_id by transfer token
+    auth_id = token_into_user_id(token)
+    # the token id we had is invalid
+    if auth_id == -1:
+        raise(InputError)
+    
+    # case 2            // Input Error
+    # search the channel_id to check if the channel 
+    # is in the channels list
+    channel_got = find_channel(channel_id)
+    # the channel id we had is invalid
+    if channel_got == None:
+        raise(InputError)
+
+    # case 3            // AccessError
+    # check if the author is a member in this channel
+    if find_one_in_channel(channel_got, auth_id) == False:
+        raise(AccessError)
+
     return {
-        'name': 'Hayden',
-        'owner_members': [
-            {
-                'u_id': 1,
-                'name_first': 'Hayden',
-                'name_last': 'Jacobs',
-            }
-        ],
-        'all_members': [
-            {
-                'u_id': 1,
-                'name_first': 'Hayden',
-                'name_last': 'Jacobs',
-            }
-        ],
+        'name': channel_got['name'],
+        'owner_members':channel_got['owner'],
+        'all_members': channel_got['all_members'],
     }
 
 def channel_messages(token, channel_id, start):

@@ -205,6 +205,126 @@ def test_channel_non_member_invite():
     with pytest.raises(AccessError):
         channel_invite(u_token3,channel_test_id, u_id2)
 
+#########################################################################
+#
+#                     test for channel_detail function
+#
+##########################################################################
+
+# Xingyu TAN working on channel_details.py for channel_details fuction
+# 29 SEP 2020
+
+"""
+channel_details()
+Given a Channel with ID channel_id that the authorised user is part of
+
+RETURNS:
+provide basic details about the channel
+
+
+THEREFORE, TEST EVERYTHING BELOW:
+1. inputError
+- the channel id we had is invalid
+
+
+2. accessError
+- the auth user is not in this channel.
+
+"""
+
+def test_channel_details_work():
+    '''
+    this test is using for check the fuction can work normally when no Errors bring.
+    '''
+    # create 2 users 
+    other.clear()
+    user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
+    user1 = auth_login("test1@test.com","check_test")
+    u_id1 = user1['u_id']
+    u_token1 = user1['token']
+
+    user2 = auth_register("test2@test.com","check_test","steve","TAN")
+    user2 = auth_login("test2@test.com","check_test")
+    u_id2 = user2['u_id']
+    u_token2 = user2['token']
+
+    # create channel for testing
+    channel_test_id = channels_create(u_token1,"channel_test",True)
+
+    # testing for channel invite fuction
+    channel_invite(u_token1,channel_test_id,u_id2)
+    channel_test_details = channel_details(u_token1,channel_test_id)
+
+
+    # Assuming we the fuction running correctly, then we do check the channel details 
+    # expecially, the member infomation
+    # check for channel_id
+    assert channel_test_details['name'] == 'channel_test'
+     
+    # check for owner
+    assert channel_test_details['owner_members'][0]['u_id'] == u_id1
+
+    # check for members 
+    assert channel_test_details['all_members'][0]['u_id'] == u_id1
+    assert channel_test_details['all_members'][1]['u_id'] == u_id2
 
 
 
+def test_channel_details_invalid_channelId():
+    '''
+    This test is using for check when the user id we had is invalid
+    inputError
+    '''
+    # create 2 users 
+    other.clear()
+    user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
+    user1 = auth_login("test1@test.com","check_test")
+    u_id1 = user1['u_id']
+    u_token1 = user1['token']
+
+    user2 = auth_register("test2@test.com","check_test","steve","TAN")
+    user2 = auth_login("test2@test.com","check_test")
+    u_id2 = user2['u_id']
+    u_token2 = user2['token']
+
+    # create channel for testing
+    channel_test_id = channels_create(u_token1,"channel_test",True)
+
+    channel_invite(u_token1,channel_test_id, u_id2)
+    
+    # testing for channel invite fuction for invalid channel id inputError
+    with pytest.raises(InputError):
+        channel_details(u_token1,channel_test_id + 0xf)
+
+def test_channel_non_member_call_details():
+    '''
+    This test is using for check when the authorised user 
+    is not already a member of the channel
+    AccessError 
+    '''
+    # create 2 users and author people 
+    other.clear()
+    user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
+    user1 = auth_login("test1@test.com","check_test")
+    u_id1 = user1['u_id']
+    u_token1 = user1['token']
+
+    user2 = auth_register("test2@test.com","check_test","steve","TAN")
+    user2 = auth_login("test2@test.com","check_test")
+    u_id2 = user2['u_id']
+    u_token2 = user2['token']
+
+    user3 = auth_register("test3@test.com","check_test","test","TAN")
+    user3 = auth_login("test3@test.com","check_test")
+    u_id3 = user3['u_id']
+    u_token3 = user3['token']
+
+    # create channel for testing
+    channel_test_id = channels_create(u_token1,"channel_test",True)
+
+
+    # testing for channel invite fuction for invalid token people.
+    with pytest.raises(AccessError):
+        channel_details(u_token3,channel_test_id)
+
+    

@@ -32,6 +32,8 @@ Most recent changing log for this Markdown document here:
     'name_first': name_first,
     'name_last': name_last,
     'handle_str': handle
+    'token': token
+    'password': password
  }
  ```
 

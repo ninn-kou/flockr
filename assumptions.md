@@ -12,7 +12,9 @@ Most recent changing log for this Markdown document here:
 
 > 01 October, Hao Ren: Re-formatted this Markdown file.
 >
-> 31 September, Xingyu Tan: Created the assumption file.
+> 31 September, Xingyu Tan: Created the formal assumption file.
+>
+>> 26 September, Xingyu Tan: Added 3 assumptions to the first draft of assumption.
 
 ## 1. Iteration 1
 
@@ -45,6 +47,8 @@ Most recent changing log for this Markdown document here:
     'token': token
  }
  ```
+
+- The **Flockr** is always the very first user, and for iteration 1 we won't have further testing about it espeacially in channel_addowner and channel_removeowner two features.
 
 ### 1.2 Channel
 

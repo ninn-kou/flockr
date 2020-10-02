@@ -689,7 +689,9 @@ def test_channel_addowner1():
     assert u_id1 == cnl['owner'][0]['u_id']
 ###########################################################################################
 
-# user(u_id) is already the owner
+"""
+    user(u_id) is already the owner
+"""
 def test_channel_addowner2():
     other.clear()
     # user1 login
@@ -739,7 +741,9 @@ def test_channel_addowner2():
         channel_addowner(token1, cid, u_id2)
 ###########################################################################################
 
-# authorized user(u_id) is not an owner of the channel
+"""
+    authorized user(u_id) is not an owner of the channel
+"""
 def test_channel_addowner3():
     other.clear()
     # user1 login
@@ -815,7 +819,9 @@ def test_channel_addowner3():
 ##                             test of channel_removeowner                               ##
 ###########################################################################################
 
-# Standard situation
+"""
+    Standard situation
+"""
 def test_channel_removeowner0():
     other.clear()
     # user1 login
@@ -871,7 +877,9 @@ def test_channel_removeowner0():
 
 ###########################################################################################
 
-# Channel ID is not a valid channel
+"""
+    Channel ID is not a valid channel
+"""
 def test_channel_removeowner1():
     other.clear()
     # user1 login
@@ -897,30 +905,43 @@ def test_channel_removeowner1():
     assert type(token2) is str
 
     # user1 create a channel
-    channel_create_test = channels_create(token1, "Vicmnss", True)
-    cid = channel_create_test['channel_id']
-    owners = channel_create_test['owner']
+    cid = channels_create(token1, "Vicmnss", True)
     assert cid
     assert type(cid) is int
     assert cid != 1234567
     
-    # Check if success
-    assert(channel_addowner(token1, cid, u_id2)) is True
+    owner_num = 0
+    data.init_channels()
+    for cnl in data.channels:
+        if cnl['channel_id'] == cid:
+            owner_num = len(cnl['owner'])
+            break
+    assert owner_num == 1
+    assert u_id1 == cnl['owner'][0]['u_id']
+
+    # user1 invite and add user2 as an owner
+    channel_invite(token1, cid, u_id2)
+    channel_addowner(token1, cid, u_id2)
 
     # Raise error when having a invalid channel id
     with pytest.raises(InputError):
         channel_removeowner(token1, 1234567, u_id2)
 
     # assert the user hasnot been moved
-    is_found = False
-    for owner_key in owners:
-        if owners[owner_key] == owner:
-            is_found = True
+    owner_num = 0
+    for cnl in data.channels:
+        if cnl['channel_id'] == cid:
+            owner_num = len(cnl['owner'])
             break
-    assert is_found == True
+    assert owner_num == 2
+    assert u_id1 == cnl['owner'][0]['u_id']
+    assert u_id2 == cnl['owner'][1]['u_id']
+    
 ###########################################################################################
 
-# user(u_id) is not the owner
+"""
+    user(u_id) is not the owner
+"""
 def test_channel_removeowner2():
     other.clear()
     # user1 login
@@ -945,27 +966,29 @@ def test_channel_removeowner2():
     assert token2
     assert type(token2) is str
 
-    # user1 create a channel
-    channel_create_test = channels_create(token1, "Vicmnss", True)
-    cid = channel_create_test['channel_id']
-    owners = channel_create_test['owner']
+    # user1 create a channel and invite user2
+    cid = channels_create(token1, "Vicmnss", True)
     assert cid
     assert type(cid) is int
+    channel_invite(token1, cid, u_id2)
 
-    # Make sure specified user is not an owner(not find in channel -> owner)
-    is_found = False
-    for owner_key in owners:
-        if owners[owner_key] == owner[1]:
-            is_found = True
+    owner_num = 0
+    data.init_channels()
+    for cnl in data.channels:
+        if cnl['channel_id'] == cid:
+            owner_num = len(cnl['owner'])
             break
-    assert is_found == False
-
+    assert owner_num == 1
+    assert u_id1 == cnl['owner'][0]['u_id']
+    
     # raise input error for unexist owner
     with pytest.raises(InputError):
         channel_removeowner(token1, cid, u_id2)
 ###########################################################################################
 
-# authorized user(u_id) is not an owner of this channel
+"""
+    authorized user(u_id) is not an owner of this channel
+"""
 def test_channel_removeowner3():
     other.clear()
     # user1 login
@@ -991,20 +1014,33 @@ def test_channel_removeowner3():
     assert type(token2) is str
 
     # user1 create a channel and user2 join
-    channel_create_test1 = channels_create(token1, "Vicmnss", True)
-    cid1 = channel_create_test1['channel_id']
+    cid1 = channels_create(token1, "Vicmnss", True)
     assert cid1
     assert type(cid1) is int
     channel_invite(token1, cid1, u_id2)
 
+    owner_num = 0
+    data.init_channels()
+    for cnl in data.channels:
+        if cnl['channel_id'] == cid1:
+            owner_num = len(cnl['owner'])
+            break
+    assert owner_num == 1
+    assert u_id1 == cnl['owner'][0]['u_id']
+
     # user2 create a channel and user1 join
-    channel_create_test2 = channels_create(token2, "Team4", True)
-    cid2 = channel_create_test2['channel_id']
+    cid2 = channels_create(token2, "Team4", True)
     assert cid2
     assert type(cid2) is int
     channel_invite(token2, cid2, u_id1)
 
-    # Make sure authorised user is not an owner
+    owner_num = 0
+    for cnl in data.channels:
+        if cnl['channel_id'] == cid2:
+            owner_num = len(cnl['owner'])
+            break
+    assert owner_num == 1
+    assert u_id2 == cnl['owner'][0]['u_id']
 
     # raise input error for unexist owner
     with pytest.raises(AccessError):

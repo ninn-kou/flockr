@@ -282,6 +282,33 @@ def channel_leave(token, channel_id):
 def channel_join(token, channel_id):
     return {
     }
+
+#############################################
+######        channel_addowner       ########
+#############################################
+# Yuhan Yan working on channel.py for channel_addowner fuction
+# 2 OCT 2020
+
+"""
+channel_addowner()
+Make user with user id u_id an owner of this channel.
+
+RETURNS: {}
+
+THEREFORE, TEST EVERYTHING BELOW:
+1. inputError
+- Channel ID is not a valid channel;
+- When user with user id u_id is already an owner of the channel.
+
+2. accessError
+- when the authorised user is not an owner of the flockr, 
+  or an owner of this channel(won't focus on flockr this iteration).
+
+"""
+#############################################
+######        helper function        ########
+#############################################
+
 def find_current_owner(channel, u_id):
     for owners in channel['owner']:
         if owners['u_id'] == u_id:
@@ -296,13 +323,13 @@ def add_owner_in_channel(channel_id, owners):
     return
 
 def rm_owner_in_channel(channel_id, owners):
+    data.init_channels()
     for users in data.channels:
         if users['channel_id'] == channel_id:
             for onrs in users['owner']:
                 if onrs['u_id'] == owners:
-                    users['owner'].pop(owners)
+                    users['owner'].remove(onrs)
             break
-        
     return
 def channel_addowner(token, channel_id, u_id):
     # global variables
@@ -320,7 +347,7 @@ def channel_addowner(token, channel_id, u_id):
     if auth_id is -1:
         raise(InputError)
 
-    # check wehther he/she is already an owner
+    # check wehther the user is already an owner
     if find_current_owner(this_channel, u_id) == True:
         raise(InputError)
 
@@ -338,6 +365,29 @@ def channel_addowner(token, channel_id, u_id):
     }
     add_owner_in_channel(channel_id, owners)
     return 
+
+#############################################
+######      channel_removeowner      ########
+#############################################
+# Yuhan Yan working on channel.py for channel_removeowner fuction
+# 2 OCT 2020
+
+"""
+channel_removeowner()
+Remove user with user id u_id an owner of this channel
+
+RETURNS: {}
+
+THEREFORE, TEST EVERYTHING BELOW:
+1. inputError
+- Channel ID is not a valid channel
+- When user with user id u_id is not an owner of the channel
+
+2. accessError
+- when the authorised user is not an owner of the flockr, 
+  or an owner of this channel(won't focus on flockr this iteration).
+
+"""
 
 def channel_removeowner(token, channel_id, u_id):
     # global variables

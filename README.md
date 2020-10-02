@@ -314,7 +314,7 @@ For example, if we imagine a user with token "12345" is trying to read messages 
  * Members in a channel have one of two channel permissions.
    1) Owner of the channel (the person who created it, and whoever else that creator adds)
    2) Members of the channel
- * Slackr user's have two global permissions
+ * Flockr users have two global permissions
    1) Owners, who can also modify other owners' permissions.
    2) Members, who do not have any special permissions (permission_id 3)
 * All slackr users are members by default, except for the very first user who signs up, who is an owner

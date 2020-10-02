@@ -5,6 +5,14 @@ import auth
 import pytest
 from error import InputError
 import data
+from other import clear
+
+"""
+Notes on coverage:
+- Impossible to make the token checking alogorithm to check reliably by definition (line 39-40)
+- Impossible to make the u_id checking alogorithm to check reliably by definition (line 52-53)
+- Impossible to create a general test for handles being less than 20 characters
+"""
 
 """
 auth_register()
@@ -37,7 +45,11 @@ THEREFORE, TEST EVERYTHING BELOW:
 Testing Local Data Structure?
 - check user data structure? Not sure how?
 """
-def test_auth_register():
+def test_auth_register_correct_return():
+    clear()
+    """
+    check that correct data structure is returned
+    """
     # - Dict structure -> {u_id, token}
     auth_dict_test = auth.auth_register('test@example.com', 'emilyisshort', 'Emily', 'Luo?')
     assert type(auth_dict_test) is dict
@@ -50,9 +62,13 @@ def test_auth_register():
     # - token is a string
     assert type(auth_dict_test['token']) is str
 
-    # - u_id is unique when multiple users are entered
-    # creates a large  number of u_id's and make sure none of them conflict
-    # tested it up to 10,000 array_size but takes a while, can go higher for sure
+def test_auth_register_multiple_users():
+    clear()
+    """
+    - u_id is unique when multiple users are entered
+    creates a large  number of u_id's and make sure none of them conflict
+    tested it up to 10,000 array_size but takes a while, can go higher for sure
+    """
     array_size = 1000
     array = [0] * array_size
 
@@ -61,10 +77,6 @@ def test_auth_register():
         array[i] = auth.auth_register('test' + str(i) + '@example.com', 'password', 'Test', 'Person')['u_id']
         i += 1
     assert (len(array) == len(set(array)))
-
-    # - a valid token is returned
-    # this will be automatically tested by the 
-    # auth_login() test working at all
     
     # a unique handle is produced
     list = []
@@ -73,6 +85,8 @@ def test_auth_register():
         list.append(user['handle_str'])
     assert (len(list) == len(set(list)))
 
+def test_auth_register_input_error_valid_email():
+    clear()
     ##########################################################################
     # - spits out 'InputError' if: (raise InputError)
     # - email is not a valid email (check with regex)
@@ -81,15 +95,22 @@ def test_auth_register():
     with pytest.raises(InputError):
         auth.auth_register('invalid@example', 'password', 'Mate', 'Old')
 
+def test_auth_register_input_error_existing_email():
+    clear()
     # - email address is already used
-    # this is the email registered at the top of the test function 
+    # this is the email registered at the top of the test function
+    auth.auth_register('test@examples.com', 'emilyisshort', 'Emily', 'Luo?') 
     with pytest.raises(InputError):
-        auth.auth_register('test@example.com', 'emilyisshort', 'Emily', 'Luo?')
+        auth.auth_register('test@examples.com', 'emilyisshort', 'Emily', 'Luo?')
 
+def test_auth_register_input_error_short_password():
+    clear()
     # - len(password) < 6
     with pytest.raises(InputError):
         auth.auth_register('validemail@example.com', 'boo', 'Test', 'Person')
 
+def test_auth_register_input_error_wrong_len_name_first():
+    clear()
     # - len(name_first) < 1 || len(name_first) > 50
     # make a long name
     long_first_name = ""
@@ -101,6 +122,8 @@ def test_auth_register():
     with pytest.raises(InputError):
         auth.auth_register('validemailagain2@example.com', 'password', '', 'Person')
 
+def test_auth_register_input_error_wrong_len_name_last():
+    clear()
     # - len(name_last) < 1 || len(name_last) > 50
     long_last_name = ""
     for i in range(55):
@@ -132,10 +155,8 @@ THEREFORE, TEST EVERYTHING BELOW:
     - password is not correct (we love storing raw passwords)
 """
 
-def test_auth_login():
-    # initialise the users data
-    data.init_users()
-
+def test_auth_login_correct_return():
+    clear()
     # register a user
     auth_register_test = auth.auth_register('tests@example.com', 'password', 'Test Person', 'Bam')
 
@@ -157,6 +178,8 @@ def test_auth_login():
     # - a valid token is returned
     assert len(auth_login_test['token']) == 20
 
+def test_auth_login_input_error_invalid_email():
+    clear()
     # - spits out 'InputError' if:
     # - email is not a valid email (check with regex)
     with pytest.raises(InputError):
@@ -164,15 +187,21 @@ def test_auth_login():
     with pytest.raises(InputError):
         auth.auth_login('invalid@example', 'password')
 
+def test_auth_login_input_error_nonexistent_email():
+    clear()
     # - email is not in data structure i.e. user isn't registered
     with pytest.raises(InputError):
         # this was never registered previously
         auth.auth_login('nottest@example.com', 'password')
 
+def test_auth_login_input_error_incorrect_password():
+    clear()
+    auth.auth_register('tests@examples.com', 'correct_password', 'test', 'person')
+
     # - password is not correct (we love storing raw passwords)
     # correct password is 'password'
     with pytest.raises(InputError):
-        auth.auth_login('tests@example.com', 'incorrect_password')
+        auth.auth_login('tests@examples.com', 'incorrect_password')
 
 """
 auth_logout()
@@ -188,8 +217,7 @@ THEREFORE, TEST EVERYTHING BELOW:
 """
 
 def test_auth_logout():
-    data.init_users()
-
+    clear()
     registration = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old')
     # registration = auth.auth_login('valid@example.com', 'password')
     token = registration['token']

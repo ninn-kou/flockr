@@ -49,7 +49,7 @@ def create_u_id(users):
     # simple recursive function to check whether u_id is unique
     for user in users:
         if user['u_id'] == u_id:
-            u_id = create_u_id(u_id, users)
+            u_id = create_u_id(users)
             break
     
     return u_id

@@ -73,6 +73,7 @@ def channels_create(token, name, is_public):
             }
         ],   
         'is_public': is_public,
+        'message':[]
     }
     #add it to the data
     data.append_channels(channel_new)

@@ -74,7 +74,9 @@ def test_channels_listall():
                     'name_last': 'LastN'
                 }
             ],
-            'is_public':True
+            'is_public':True,
+            'message':[]
+
         } , {
             'name':'team2',
             'channel_id':channel_2_id,
@@ -92,7 +94,8 @@ def test_channels_listall():
                     'name_last': 'LastN2'
                 }
             ],            
-            'is_public':True
+            'is_public':True,
+            'message':[]
         }
     ]
 
@@ -140,7 +143,8 @@ def test_channels_list():
                     'name_last': 'LastN'
                 }
             ],            
-            'is_public':True
+            'is_public':True,
+            'message':[]
         }
     ]
 

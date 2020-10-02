@@ -53,7 +53,7 @@ def token_into_user_id(token):
 
     return au_id
 
-# interation the whole channels, grab the channel we need
+# interation the whole channels, grab the channel we need.
 def find_channel(channel_id):
 
     answer = None
@@ -64,7 +64,7 @@ def find_channel(channel_id):
 
     return answer
 
-# find user info by search one's id
+# find user info by search one's id.
 def find_user(user_id):
     u_id = -1
     for i in data.users:
@@ -74,7 +74,7 @@ def find_user(user_id):
 
     return u_id
 
-# check one if in the channel already
+# check one if in the channel already.
 def find_one_in_channel(channel, u_id):
     for i in channel['all_members']:
         if i['u_id'] == u_id:
@@ -140,7 +140,7 @@ def channel_invite(token, channel_id, u_id):
 ################################################################################
 
 # Xingyu TAN working on channel_details.py for channel_details function.
-# 2 Oct 2020
+# 2 OCT 2020
 
 """
 channel_details()
@@ -221,6 +221,7 @@ THEREFORE, TEST EVERYTHING BELOW:
 - the auth user is not in this channel.
 
 """
+
 def channel_messages(token, channel_id, start):
     # apply global variable we need
     data.init_channels()
@@ -277,18 +278,41 @@ def channel_messages(token, channel_id, start):
         'end': end,
     }
 
+################################################################################
+# channel_leave
+################################################################################
+
+# Hao Ren
+# 3 October, 2020
+
+"""
+channel_join()
+"""
+
 def channel_leave(token, channel_id):
     return {
     }
+
+################################################################################
+# channel_join
+################################################################################
+
+# Hao Ren
+# 3 October, 2020
+
+"""
+channel_join()
+"""
 
 def channel_join(token, channel_id):
     return {
     }
 
-#############################################
-######        channel_addowner       ########
-#############################################
-# Yuhan Yan working on channel.py for channel_addowner function
+################################################################################
+# channel_addowner
+################################################################################
+
+# Yuhan Yan working on channel.py for channel_addowner function.
 # 2 OCT 2020
 
 """
@@ -307,9 +331,10 @@ THEREFORE, TEST EVERYTHING BELOW:
   or an owner of this channel(won't focus on flockr this iteration).
 
 """
-#############################################
-######        helper function        ########
-#############################################
+
+################################################################################
+# Helper Functions
+################################################################################
 
 def find_current_owner(channel, u_id):
     for owners in channel['owner']:
@@ -368,10 +393,11 @@ def channel_addowner(token, channel_id, u_id):
     add_owner_in_channel(channel_id, owners)
     return
 
-#############################################
-######      channel_removeowner      ########
-#############################################
-# Yuhan Yan working on channel.py for channel_removeowner function
+################################################################################
+# channel_removeowner
+################################################################################
+
+# Yuhan Yan working on channel.py for channel_removeowner function.
 # 2 OCT 2020
 
 """

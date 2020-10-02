@@ -282,10 +282,62 @@ def channel_leave(token, channel_id):
 def channel_join(token, channel_id):
     return {
     }
+def find_current_owner(channel, u_id):
+    for owners in channel['owner']:
+        if owners['u_id'] == u_id:
+            return True
+    return False
 
+def add_owner_in_channel(channel_id, owners):
+    for users in data.channels:
+        if users['channel_id'] == channel_id:
+            users['owner'].append(owners)
+            break
+    return
+
+def rm_owner_in_channel(channel_id, owners):
+    for users in data.channels:
+        if users['channel_id'] == channel_id:
+            for onrs in users['owner']:
+                if onrs['u_id'] == owners:
+                    users['owner'].pop(owners)
+            break
+        
+    return
 def channel_addowner(token, channel_id, u_id):
-    return {
+    # global variables
+    data.init_channels()
+    data.init_users()
+
+    # check wether the channel is valid 
+    this_channel = find_channel(channel_id)
+    if this_channel is None:
+        raise(InputError)
+    
+    ## using the given token to identify the authorized user.
+    auth_id = token_into_user_id(token)
+    # error by the invalid token id
+    if auth_id is -1:
+        raise(InputError)
+
+    # check wehther he/she is already an owner
+    if find_current_owner(this_channel, u_id) == True:
+        raise(InputError)
+
+    # check if the authorised user is not a member of this channel
+    if find_current_owner(this_channel, auth_id) == False:
+        raise(AccessError)
+
+    # check if successd
+    # append the user to the owner
+    owner_detail = find_user(u_id)
+    owners = {
+        'u_id': u_id,
+        'name_first': owner_detail['name_first'],
+        'name_last': owner_detail['name_last'],
     }
+    add_owner_in_channel(channel_id, owners)
+    return 
 
 def channel_removeowner(token, channel_id, u_id):
     return {

@@ -27,11 +27,13 @@ Most recent changing log for this Markdown document here:
 
  ```py
  user = {
-  'u_id': u_id,
-  'email': email,
-  'name_first': name_first,
-  'name_last': name_last,
-  'handle_str': handle
+    'u_id': u_id,
+    'email': email,
+    'name_first': name_first,
+    'name_last': name_last,
+    'handle_str': handle
+    'token': token
+    'password': password
  }
  ```
 
@@ -39,8 +41,8 @@ Most recent changing log for this Markdown document here:
 
  ```py
  token_object = {
-  'u_id': u_id,
-  'token': token
+    'u_id': u_id,
+    'token': token
  }
  ```
 
@@ -51,23 +53,23 @@ Most recent changing log for this Markdown document here:
 
  ```py
  channel = {
-  'name': 'Hayden',
-  'channel_id':' '
-  'owner': [
-  {
-  'u_id': 1,
-  'name_first': 'Hayden',
-  'name_last': 'Jacobs',
-  }
-  ],
-  'all_members': [
-  {
-  'u_id': 1,
-  'name_first': 'Hayden',
-  'name_last': 'Jacobs',
-  }
-  ],
-  'is public': True,
-  'messages':[]
+    'name': 'Hayden',
+    'channel_id':' '
+    'owner': [
+        {
+            'u_id': 1,
+            'name_first': 'Hayden',
+            'name_last': 'Jacobs',
+        }
+    ],
+    'all_members': [
+        {
+            'u_id': 1,
+            'name_first': 'Hayden',
+            'name_last': 'Jacobs',
+        }
+    ],
+    'is public': True,
+    'messages':[]
  }
  ```

@@ -189,18 +189,90 @@ def channel_details(token, channel_id):
         'all_members': channel_got['all_members'],
     }
 
+
+#############################################
+######        channel_messages       ########
+#############################################
+# Xingyu TAN working on channel_test.py for channel_messages fuction
+# 2 OCT 2020
+
+"""
+channel_messages()
+Given a Channel with ID channel_id that the authorised user is part of channel, 
+and return no more than 50 messages
+
+RETURNS:
+end: -1 : for no more message after start
+end: 50; 
+    (1): exist messages after start and no more than 50 messages.
+    (2): the exist messages after start more than 50, just return the top 50 ones.
+messages: always the top 50 message 
+
+
+THEREFORE, TEST EVERYTHING BELOW:
+1. inputError
+- the channel id we had is invalid
+
+- start is greater than the total number of messages in the channel
+
+2. accessError
+- the auth user is not in this channel.
+
+"""
 def channel_messages(token, channel_id, start):
+    # apply global variable we need
+    data.init_channels()
+    data.init_users()
+    end = start + 50
+
+    # case 1           //Input error
+    # grab the au_id by transfer token
+    auth_id = token_into_user_id(token)
+    # the token id we had is invalid
+    if auth_id == -1:
+        raise(InputError)
+    
+    # case 2            // Input Error
+    # search the channel_id to check if the channel 
+    # is in the channels list
+    channel_got = find_channel(channel_id)
+    # the channel id we had is invalid
+    if channel_got == None:
+        raise(InputError)
+
+    # case 3            // AccessError
+    # check if the author is a member in this channel
+    if find_one_in_channel(channel_got, auth_id) == False:
+        raise(AccessError)
+
+    # case 4            // Input Error
+    # start is greater than the total number of messages in the channel
+    num_msgs = len(channel_got['message'])
+    if num_msgs < start:
+        raise(InputError)
+
+    # case 5:
+    # no more msg after start
+    if num_msgs == start:
+        end = -1
+    
+    # initial the new msg struct
+    return_msg = []
+
+    # case 6:
+    # msg after start is more than 50
+    if num_msgs > (start + 50):
+        return_msg = channel_got['message'][start: start + 51]
+
+    # case 7:
+    # msg after start is less than 50
+    else :
+        return_msg = channel_got['message'][start:]
+
     return {
-        'messages': [
-            {
-                'message_id': 1,
-                'u_id': 1,
-                'message': 'Hello world',
-                'time_created': 1582426789,
-            }
-        ],
-        'start': 0,
-        'end': 50,
+        'messages': return_msg,
+        'start': start,
+        'end': end,
     }
 
 def channel_leave(token, channel_id):

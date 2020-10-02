@@ -381,14 +381,15 @@ def msg_send(channel_id, msg_id, u_id, msg, time):
             'time_created': time,
         }
     ]
-    init_channels():
+    data.init_channels()
     for i in data.channels:
         if i['channel_id'] == channel_id:
-            i['messages'].append(message)
+            i['messages'].insert(message)
             break
         
     return
 
+###################     INPUT ERROR        ##################
 def test_inputError_channel_message_channelId_start_invalid():
     '''
     This test is using for check when channel id we had is invalid
@@ -436,8 +437,9 @@ def test_inputError_channel_message_invalid_channelId():
     with pytest.raises(InputError):
         channel_messages(u_token1,channel_test_id + 0xf, 0)
 
-# testing for access error
-def test_channel_non_member_call_details():
+
+###################        Access error      ###################
+def test_channel_message_non_member_call_details():
     '''
     This test is using for check when the authorised user 
     is not already a member of the channel
@@ -465,10 +467,14 @@ def test_channel_non_member_call_details():
     with pytest.raises(AccessError):
         channel_messages(u_token3,channel_test_id,0)
 
-def test_channel_nornal_test1():
+
+
+######   test  for normally channel_messsge work and  correct return #########
+# case 1: return -1 : for no more message after start 
+def test_channel_message_return_negative_one():
     '''
     this test using for check if the channel fuction can return correctly
-    1. -1 : for no more message after start
+    
     '''
     # create 2 users 
     other.clear()
@@ -489,40 +495,8 @@ def test_channel_nornal_test1():
     assert check_return_negative_one['end'] == -1
 
 
-def test_channel_nornal_test2():
-    '''
-    this test using for check if the channel fuction can return correctly
-    2. check the fuction can return the message correctly.
-    2.1 the [0] always the top fresh one 
-    '''
-    # create 2 users 
-    other.clear()
-    user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
-    user1 = auth_login("test1@test.com","check_test")
-    u_token1 = user1['token']
-
-    user2 = auth_register("test2@test.com","check_test","steve","TAN")
-    user2 = auth_login("test2@test.com","check_test")
-    u_id2 = user2['u_id']
-    u_token2 = user2['token']
-
-    # create channel for testing
-    channel_test_id = channels_create(u_token1,"channel_test",True)
-
-    
-
-    # 2. check the fuction can return the message correctly.
-    for i in range(1,3):
-        check_message_id = message_send(u_token1, channel_test_id, 'hi steve')['message_id']
-        check_work_msg = channel_messages(u_token1,channel_test_id,0)
-        # check the uodatest msg in [0]
-        assert(check_work_msg['messages'][0]['message_id'] == check_message_id)
-
-        #3. 0< number && number <= 50: exist messages after start and no more than 50 messages.
-        assert(check_work_msg['end'] == 50)
-
-
-    def test_channel_nornal_test3():
+# case 2: return 50; check the end return alway (start + 50) when message less than 50
+def test_channel_message_return50_end():
     '''
     this test using for check if the channel fuction can return correctly
      
@@ -542,23 +516,20 @@ def test_channel_nornal_test2():
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)
 
-    # 2. check the fuction can return the message correctly.
+     # 2. check the fuction can return the message correctly.
     for i in range(1,3):
-        check_message_id = message_send(u_token1, channel_test_id, 'hi steve')['message_id']
-        check_work_msg = channel_messages(u_token1,channel_test_id,0)
-        
-
-    #3. 0< number && number <= 50: exist messages after start and no more than 50 messages.
+        msg_send(channel_test_id, i, u_token1, 'test for return correct info', i)
+    
+    check_work_msg = channel_messages(u_token1,channel_test_id,0)
+    #0< number && number <= 50: exist messages after start and no more than 50 messages.
     assert(check_work_msg['end'] == 50)
-    
-    
 
-
-    def test_channel_nornal_test4():
+# case 3: return 50; test for the newest one when total msg more than 50 
+def test_channel_message_newest_one_index():
     '''
     this test using for check if the channel fuction can return correctly
     
-    4. 50 : the exist messages after start more than 50, just return the top 50 ones.
+    return 50 : the exist messages after start more than 50, just return the top 50 ones.
     '''
     # create 2 users 
     other.clear()
@@ -577,13 +548,42 @@ def test_channel_nornal_test2():
     
     # 4. 50 : the exist messages after start more than 50, just return the top 50 ones.
     for i in range(1,60):
-        message_send(u_token1, channel_test_id, 'list more than 50 msgs')['message_id']
+        msg_send(channel_test_id, i, u_token1, 'list more than 50 msgs', i)
         
     # update the last one 
-    check_message_id = message_send(u_token1, channel_test_id, 'update the last one')['message_id']
+    msg_send(channel_test_id, 61, u_token1, 'update the last one', 61)
+
     check_work_msg = channel_messages(u_token1,channel_test_id,0)
     # check the uodatest msg in [0] is the last update one.
-    assert(check_work_msg['messages'][0]['message_id'] == check_message_id)
+    assert(check_work_msg['messages'][0]['message_id'] == 61)
 
 
   
+# case 4: test if we can show the correct channel_message information
+
+def test_channel_message_correct_message_infors():
+    '''
+    this test using for check if the channel fuction can return correctly
+    2. check the fuction can return the message correctly.
+    2.1 the [0] always the top fresh one 
+    '''
+    # create 2 users 
+    other.clear()
+    user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
+    user1 = auth_login("test1@test.com","check_test")
+    u_token1 = user1['token']
+
+    user2 = auth_register("test2@test.com","check_test","steve","TAN")
+    user2 = auth_login("test2@test.com","check_test")
+    u_id2 = user2['u_id']
+    u_token2 = user2['token']
+
+    # create channel for testing
+    channel_test_id = channels_create(u_token1,"channel_test",True)
+
+    # 2. check the fuction can return the message correctly.
+    for i in range(1,3):
+        msg_send(channel_test_id, i, u_token1, 'test for return correct info', i)
+        check_work_msg = channel_messages(u_token1,channel_test_id,0)
+        # check the uodatest msg in [0]
+        assert(check_work_msg['messages'][0]['message_id'] == i)

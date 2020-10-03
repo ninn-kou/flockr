@@ -305,11 +305,12 @@ def remove_a_member_in_channel(u_id, channel_id):
 
 def number_of_owners(channel_id):
     data.init_channels()
-    number = 0
-    for owner in data.channels:
-        if owner['u_id'] is not None:
-            number += 1
-    return number
+    num = 0
+    for chan in data.channels:
+        if chan['channel_id'] == channel_id:
+            num = len(chan['owner'])
+            break
+    return num
 
 def remove_whole_channel(channel_id):
     data.init_channels()
@@ -343,12 +344,12 @@ def channel_leave(token, channel_id):
     if auth_id == -1:
         raise(InputError)
 
-    if find_one_in_channel(channel_id, auth_id) is False:
+    if find_one_in_channel(target_channel, auth_id) is False:
         raise(AccessError)
 
     # Normal case: Refer to "assumptions.md".
     # Normal case 1: the user is one of the owners.
-    if find_current_owner(channel_id, auth_id) is True:
+    if find_current_owner(target_channel, auth_id) is True:
         if number_of_owners(channel_id) >= 1:
             rm_owner_in_channel(channel_id,auth_id)
             remove_a_member_in_channel(auth_id, channel_id)

@@ -286,10 +286,46 @@ def channel_messages(token, channel_id, start):
 # 3 October, 2020
 
 """
-channel_join()
+channel_leave()
+Given a channel ID, the user removed as a member of this channel.
+
+InputError: when any of Channel ID is not a valid channel
+AccessError: when Authorised user is not a member of channel with channel_id
 """
 
+def remove_a_member_in_channel(u_id, channel_id):
+    data.init_channels()
+    for users in data.channels:
+        if users['channel_id'] == channel_id:
+            for member in users['all_members']:
+                if member['u_id'] == u_id:
+                    users['all_members'].remove(member)
+            break
+    return
+
 def channel_leave(token, channel_id):
+
+    data.init_channels()
+    data.init_users()
+
+    # Error case 1: if the channel does not exist.
+    target_channel = find_channel(channel_id)
+    if target_channel is None:
+        raise(InputError)
+
+    # Error case 2: if the authorised user is not a member in channel.
+    auth_id = token_into_user_id(token)
+    if auth_id == -1:
+        raise(InputError)
+
+    #TODO: channel_id or target_channel
+
+    if find_one_in_channel(channel_id, auth_id) == False:
+        raise(AccessError)
+
+    # Normal case: Remove this member from channel.
+    remove_a_member_in_channel(auth_id, channel_id)
+
     return {
     }
 
@@ -302,11 +338,35 @@ def channel_leave(token, channel_id):
 
 """
 channel_join()
-"""
+Given a channel_id of a channel that the authorised user can join, adds them to that channel.
+
+InputError: when any of Channel ID is not a valid channel
+AccessError when channel_id refers to a channel that is private (when the authorised user is not a global owner)
+
 
 def channel_join(token, channel_id):
+
+    data.init_channels()
+    data.init_users()
+
+    # Error case 1: if the channel does not exist.
+    target_channel = find_channel(channel_id)
+    if target_channel is None:
+        raise(InputError)
+
+    # Error case 2: if the authorised user is not a member in channel.
+    auth_id = token_into_user_id(token)
+    if auth_id == -1:
+        raise(InputError)
+
+    #TODO: channel_id or target_channel
+
+    if find_one_in_channel(channel_id, auth_id) == False:
+        raise(AccessError)
+
     return {
     }
+"""
 
 ################################################################################
 # channel_addowner

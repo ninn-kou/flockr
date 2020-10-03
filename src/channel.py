@@ -303,6 +303,22 @@ def remove_a_member_in_channel(u_id, channel_id):
             break
     return
 
+def number_of_owners(channel_id):
+    data.init_channels()
+    number = 0;
+    for owners in data.channels:
+        if owners['u_id'] is not None
+        number += 1
+    return number
+
+def remove_whole_channel(channel_id):
+    data.init_channels()
+    for chan in data.channels:
+        if chan['channel_id'] == channel_id:
+            remove(chan)
+        break
+    return
+
 def channel_leave(token, channel_id):
 
     data.init_channels()
@@ -318,16 +334,23 @@ def channel_leave(token, channel_id):
     if auth_id == -1:
         raise(InputError)
 
-    #TODO: channel_id or target_channel
-
-    if find_one_in_channel(channel_id, auth_id) == False:
+    if find_one_in_channel(channel_id, auth_id) is False:
         raise(AccessError)
 
-    # Normal case: Remove this member from channel.
+    # Normal case: Refer to "assumptions.md".
+    # Normal case 1: the user is one of the owners.
+    if find_current_owner(channel_id, auth_id) is True:
+        if number_of_owners(channel_id) >= 1:
+            rm_owner_in_channel(channel_id,auth_id)
+            remove_a_member_in_channel(auth_id, channel_id)
+        # Normal case 2: the user is the only user, close the channel.
+        else:
+            remove_whole_channel(channel_id)
+
+    # Normal case 3: the user is not the owner.
     remove_a_member_in_channel(auth_id, channel_id)
 
-    return {
-    }
+    return
 
 ################################################################################
 # channel_join

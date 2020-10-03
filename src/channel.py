@@ -287,10 +287,11 @@ def channel_join(token, channel_id):
     return {
     }
 
-#############################################
-######        channel_addowner       ########
-#############################################
-# Yuhan Yan working on channel.py for channel_addowner fuction
+################################################################################
+# channel_addowner
+################################################################################
+
+# Yuhan Yan working on channel.py for channel_addowner function.
 # 2 OCT 2020
 
 """
@@ -305,13 +306,14 @@ THEREFORE, TEST EVERYTHING BELOW:
 - When user with user id u_id is already an owner of the channel.
 
 2. accessError
-- when the authorised user is not an owner of the flockr, 
+- when the authorized user is not an owner of the flockr,
   or an owner of this channel(won't focus on flockr this iteration).
 
 """
-#############################################
-######        helper function        ########
-#############################################
+
+################################################################################
+# Helper Functions
+################################################################################
 
 def find_current_owner(channel, u_id):
     for owners in channel['owner']:
@@ -340,26 +342,26 @@ def channel_addowner(token, channel_id, u_id):
     data.init_channels()
     data.init_users()
 
-    # check wether the channel is valid 
+    # check wether the channel is valid
     this_channel = find_channel(channel_id)
     if this_channel is None:
         raise(InputError)
-    
+
     ## using the given token to identify the authorized user.
     auth_id = token_into_user_id(token)
     # error by the invalid token id
-    if auth_id is -1:
+    if auth_id == -1:
         raise(InputError)
 
-    # check wehther the user is already an owner
+    # check whether the user is already an owner
     if find_current_owner(this_channel, u_id) == True:
         raise(InputError)
 
-    # check if the authorised user is not a member of this channel
+    # check if the authorized user is not a member of this channel
     if find_current_owner(this_channel, auth_id) == False:
         raise(AccessError)
 
-    # check if successd
+    # check if success
     # append the user to the owner
     owner_detail = find_user(u_id)
     owners = {
@@ -368,12 +370,13 @@ def channel_addowner(token, channel_id, u_id):
         'name_last': owner_detail['name_last'],
     }
     add_owner_in_channel(channel_id, owners)
-    return 
+    return
 
-#############################################
-######      channel_removeowner      ########
-#############################################
-# Yuhan Yan working on channel.py for channel_removeowner fuction
+################################################################################
+# channel_removeowner
+################################################################################
+
+# Yuhan Yan working on channel.py for channel_removeowner function.
 # 2 OCT 2020
 
 """
@@ -388,7 +391,7 @@ THEREFORE, TEST EVERYTHING BELOW:
 - When user with user id u_id is not an owner of the channel
 
 2. accessError
-- when the authorised user is not an owner of the flockr, 
+- when the authorized user is not an owner of the flockr,
   or an owner of this channel(won't focus on flockr this iteration).
 
 """
@@ -398,15 +401,15 @@ def channel_removeowner(token, channel_id, u_id):
     data.init_channels()
     data.init_users()
 
-    # check wether the channel is valid 
+    # check wether the channel is valid
     this_channel = find_channel(channel_id)
     if this_channel is None:
         raise(InputError)
-    
+
     # using the given token to identify the authorized user.
     auth_id = token_into_user_id(token)
     # error by the invalid token id
-    if auth_id is -1:
+    if auth_id == -1:
         raise(InputError)
 
     # error by he/she is not an owner
@@ -419,12 +422,12 @@ def channel_removeowner(token, channel_id, u_id):
     if user == -1:
         raise(InputError)
 
-    # check if the authorised user is not a owner of this channel
+    # check if the authorized user is not a owner of this channel
     if find_current_owner(this_channel, auth_id) is False:
         raise(AccessError)
 
-    # check if successd
+    # check if success
     # pop the user off the owner
     rm_owner_in_channel(channel_id, u_id)
 
-    return 
+    return

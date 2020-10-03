@@ -9,18 +9,17 @@ import other
 from message import message_send
 
 
-
 #########################################################################
 #
 #                     test for channel_invite function
 #
 ##########################################################################
-# Xingyu TAN working on channel_test.py for channel_invite fuction
+# Xingyu TAN working on channel_test.py for channel_invite function
 # 29 SEP 2020
 
 """
 channel_invite()
-the fuction Invites a user (with user id u_id) to join a channel with ID channel_id. 
+the function Invites a user (with user id u_id) to join a channel with ID channel_id.
 
 RETURNS:
 none
@@ -44,9 +43,9 @@ THEREFORE, TEST EVERYTHING BELOW:
 
 def test_channel_invite_work():
     '''
-    this test is using for check the fuction can work normally when no Errors bring.
+    this test is using for check the function can work normally when no Errors bring.
     '''
-    # create 2 users 
+    # create 2 users
     other.clear()
     user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test1@test.com","check_test")
@@ -56,40 +55,40 @@ def test_channel_invite_work():
     user2 = auth_register("test2@test.com","check_test","steve","TAN")
     user2 = auth_login("test2@test.com","check_test")
     u_id2 = user2['u_id']
-    u_token2 = user2['token']
 
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)
 
 
-    # testing for channel invite fuction
+    # testing for channel invite function
     channel_invite(u_token1,channel_test_id,u_id2)
 
 
 
-    # Assuming we the fuction running correctly, then we do check the channel details 
+    # Assuming we the function running correctly, then we do check the channel details
     # expecially, the member infomation
     channel_member_num = 0
     data.init_channels()
-    
+
     for i in data.channels:
         if i['channel_id'] == channel_test_id:
             channel_member_num = len(i['all_members'])
             break
-    
+
     # check the totoal members number is 2
     assert channel_member_num ==2
     # check the diff people info correct
     assert u_id1 ==  i['all_members'][0]['u_id']
     assert u_id2 ==  i['all_members'][1]['u_id']
 
+###########################################################################################
 def test_channel_repeate_invite():
     '''
     This test is using for check when the user has been in the program
     when repeat invite, just skip it.
     '''
 
-    # create 2 users 
+    # create 2 users
     other.clear()
 
     user1 = auth_register("test41@test.com","check_test","Xingyu","TAN")
@@ -105,33 +104,32 @@ def test_channel_repeate_invite():
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)
 
-    
+
     # invite people first time
     channel_invite(u_token1,channel_test_id,u_id2)
- 
+
     # testing for invite people second time
     channel_invite(u_token1,channel_test_id, u_id2)
 
     channel_member_num = 0
     data.init_channels()
-    
+
     for i in data.channels:
         if i['channel_id'] == channel_test_id:
             channel_member_num = len(i['all_members'])
             break
-    
+
     # check the totoal members number is still 2
     assert channel_member_num ==2
 
- 
-##########  test for input error #################
 
+##########  test for input error #####################################
 def test_channel_invite_invalid_channelId_input_error():
     '''
     This test is using for check when the channel id we had is invalid
     inputError
     '''
-    # create 2 users 
+    # create 2 users
     other.clear()
 
     user1 = auth_register("test5@test.com","check_test","Xingyu","TAN")
@@ -146,19 +144,19 @@ def test_channel_invite_invalid_channelId_input_error():
 
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)
-    
 
-    # testing for channel invite fuction for invalid channel id inputError
+
+    # testing for channel invite function for invalid channel id inputError
     with pytest.raises(InputError):
         channel_invite(u_token1,channel_test_id + 0xf, u_id2)
 
-
+##########################################################################
 def test_channel_invite_invalid_userId_input_error():
     '''
     This test is using for check when the user id we had is invalid
     inputError
     '''
-    # create 2 users 
+    # create 2 users
     other.clear()
 
     user1 = auth_register("test3@test.com","check_test","Xingyu","TAN")
@@ -175,18 +173,18 @@ def test_channel_invite_invalid_userId_input_error():
     channel_test_id = channels_create(u_token1,"channel_test",True)
 
 
-    # testing for channel invite fuction for invalid user id inputError
+    # testing for channel invite function for invalid user id inputError
     with pytest.raises(InputError):
         channel_invite(u_token1,channel_test_id, u_id2 + 0xf)
 
-#################### test for access error #####################
+#################### test for access error #############################
 def test_channel_non_member_invite():
     '''
-    This test is using for check when the authorised user 
+    This test is using for check when the authorised user
     is not already a member of the channel
-    AccessError 
+    AccessError
     '''
-    # create 2 users and author people 
+    # create 2 users and author people
     other.clear()
 
     user1 = auth_register("test11@test.com","check_test","Xingyu","TAN")
@@ -208,7 +206,7 @@ def test_channel_non_member_invite():
     channel_test_id = channels_create(u_token1,"channel_test",True)
 
 
-    # testing for channel invite fuction for invalid token people.
+    # testing for channel invite function for invalid token people.
     with pytest.raises(AccessError):
         channel_invite(u_token3,channel_test_id, u_id2)
 
@@ -218,7 +216,7 @@ def test_channel_non_member_invite():
 #
 ##########################################################################
 
-# Xingyu TAN working on channel_details.py for channel_details fuction
+# Xingyu TAN working on channel_details.py for channel_details function
 # 29 SEP 2020
 
 """
@@ -242,9 +240,9 @@ THEREFORE, TEST EVERYTHING BELOW:
 
 def test_channel_details_work():
     '''
-    this test is using for check the fuction can work normally when no Errors bring.
+    this test is using for check the function can work normally when no Errors bring.
     '''
-    # create 2 users 
+    # create 2 users
     other.clear()
     user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test1@test.com","check_test")
@@ -259,31 +257,30 @@ def test_channel_details_work():
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)
 
-    # testing for channel invite fuction
+    # testing for channel invite function
     channel_invite(u_token1,channel_test_id,u_id2)
     channel_test_details = channel_details(u_token1,channel_test_id)
 
 
-    # Assuming we the fuction running correctly, then we do check the channel details 
+    # Assuming we the function running correctly, then we do check the channel details
     # expecially, the member infomation
     # check for channel_id
     assert channel_test_details['name'] == 'channel_test'
-     
+
     # check for owner
     assert channel_test_details['owner_members'][0]['u_id'] == u_id1
 
-    # check for members 
+    # check for members
     assert channel_test_details['all_members'][0]['u_id'] == u_id1
     assert channel_test_details['all_members'][1]['u_id'] == u_id2
 
-
-
+###########################################################################################
 def test_channel_details_invalid_channelId():
     '''
     This test is using for check when the user id we had is invalid
     inputError
     '''
-    # create 2 users 
+    # create 2 users
     other.clear()
     user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test1@test.com","check_test")
@@ -299,18 +296,20 @@ def test_channel_details_invalid_channelId():
     channel_test_id = channels_create(u_token1,"channel_test",True)
 
     channel_invite(u_token1,channel_test_id, u_id2)
-    
-    # testing for channel invite fuction for invalid channel id inputError
+
+    # testing for channel invite function for invalid channel id inputError
     with pytest.raises(InputError):
         channel_details(u_token1,channel_test_id + 0xf)
 
+###########################################################################################
+
 def test_channel_non_member_call_details():
     '''
-    This test is using for check when the authorised user 
+    This test is using for check when the authorised user
     is not already a member of the channel
-    AccessError 
+    AccessError
     '''
-    # create 2 users and author people 
+    # create 2 users and author people
     other.clear()
     user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test1@test.com","check_test")
@@ -331,11 +330,11 @@ def test_channel_non_member_call_details():
     channel_test_id = channels_create(u_token1,"channel_test",True)
 
 
-    # testing for channel invite fuction for invalid token people.
+    # testing for channel invite function for invalid token people.
     with pytest.raises(AccessError):
         channel_details(u_token3,channel_test_id)
 
-    
+
 #########################################################################
 #
 #                     test for channel_messages function
@@ -343,12 +342,12 @@ def test_channel_non_member_call_details():
 ##########################################################################
 
 
-# Xingyu TAN working on channel_test.py for channel_messages fuction
+# Xingyu TAN working on channel_test.py for channel_messages function
 # 29 SEP 2020
 
 """
 channel_messages()
-Given a Channel with ID channel_id that the authorised user is part of channel, 
+Given a Channel with ID channel_id that the authorised user is part of channel,
 and return no more than 50 messages
 
 RETURNS:
@@ -369,7 +368,7 @@ THEREFORE, TEST EVERYTHING BELOW:
 """
 ################################
 #
-#   help fuction for sending msg
+#   help function for sending msg
 #
 ################################
 '''
@@ -388,7 +387,7 @@ def msg_send(channel_id, msg_id, u_id, msg, time):
         if i['channel_id'] == channel_id:
             i['message'].insert(0, return_message)
             break
-        
+
     return
 
 ###################     INPUT ERROR        ##################
@@ -397,7 +396,7 @@ def test_inputError_channel_message_channelId_start_invalid():
     This test is using for check when channel id we had is invalid
     inputError
     '''
-    # create 2 users 
+    # create 2 users
     other.clear()
     user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test1@test.com","check_test")
@@ -410,17 +409,18 @@ def test_inputError_channel_message_channelId_start_invalid():
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)
     channel_invite(u_token1,channel_test_id, u_id2)
-    
-    # testing for channel message fuction for invalid message start
+
+    # testing for channel message function for invalid message start
     with pytest.raises(InputError):
         channel_messages(u_token1,channel_test_id, 10)
 
+###########################################################################################
 def test_inputError_channel_message_invalid_channelId():
     '''
     This test is using for check when channel id we had is invalid
     inputError
     '''
-    # create 2 users 
+    # create 2 users
     other.clear()
     user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test1@test.com","check_test")
@@ -433,20 +433,20 @@ def test_inputError_channel_message_invalid_channelId():
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)
     channel_invite(u_token1,channel_test_id, u_id2)
-    
-    # testing for channel message fuction for invalid channel id inputError
+
+    # testing for channel message function for invalid channel id inputError
     with pytest.raises(InputError):
         channel_messages(u_token1,channel_test_id + 0xf, 0)
 
 
-###################        Access error      ###################
+###################        Access error      ################################
 def test_channel_message_non_member_call_details():
     '''
-    This test is using for check when the authorised user 
+    This test is using for check when the authorised user
     is not already a member of the channel
-    AccessError 
+    AccessError
     '''
-    # create 2 users and author people 
+    # create 2 users and author people
     other.clear()
     user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test1@test.com","check_test")
@@ -463,20 +463,20 @@ def test_channel_message_non_member_call_details():
     channel_test_id = channels_create(u_token1,"channel_test",True)
 
 
-    # testing for channel invite fuction for invalid token people.
+    # testing for channel invite function for invalid token people.
     with pytest.raises(AccessError):
         channel_messages(u_token3,channel_test_id,0)
 
 
 
 ######   test  for normally channel_messsge work and  correct return #########
-# case 1: return -1 : for no more message after start 
+# case 1: return -1 : for no more message after start
 def test_channel_message_return_negative_one():
     '''
-    this test using for check if the channel fuction can return correctly
-    
+    this test using for check if the channel function can return correctly
+
     '''
-    # create 2 users 
+    # create 2 users
     other.clear()
     user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test1@test.com","check_test")
@@ -494,15 +494,16 @@ def test_channel_message_return_negative_one():
     check_return_negative_one = channel_messages(u_token1,channel_test_id,0)
     assert check_return_negative_one['end'] == -1
 
+###########################################################################################
 
 # case 2: return 50; check the end return alway (start + 50) when message less than 50
 def test_channel_message_return50_end():
     '''
-    this test using for check if the channel fuction can return correctly
-     
+    this test using for check if the channel function can return correctly
+
     3. 0< number && number <= 50: exist messages after start and no more than 50 messages.
     '''
-    # create 2 users 
+    # create 2 users
     other.clear()
     user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test1@test.com","check_test")
@@ -516,22 +517,24 @@ def test_channel_message_return50_end():
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)
 
-     # 2. check the fuction can return the message correctly.
+     # 2. check the function can return the message correctly.
     for i in range(1,3):
         msg_send(channel_test_id, i, u_token1, 'test for return correct info', i)
-    
+
     check_work_msg = channel_messages(u_token1,channel_test_id,0)
     #0< number && number <= 50: exist messages after start and no more than 50 messages.
     assert(check_work_msg['end'] == 50)
 
-# case 3: return 50; test for the newest one when total msg more than 50 
+###########################################################################################
+
+# case 3: return 50; test for the newest one when total msg more than 50
 def test_channel_message_newest_one_index():
     '''
-    this test using for check if the channel fuction can return correctly
-    
+    this test using for check if the channel function can return correctly
+
     return 50 : the exist messages after start more than 50, just return the top 50 ones.
     '''
-    # create 2 users 
+    # create 2 users
     other.clear()
     user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test1@test.com","check_test")
@@ -545,28 +548,28 @@ def test_channel_message_newest_one_index():
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)
 
-    
+
     # the exist messages after start more than 50, just return the top 50 ones.
     for i in range(1,60):
         msg_send(channel_test_id, i, u_token1, 'list more than 50 msgs', i)
-        
-    # update the last one 
+
+    # update the last one
     msg_send(channel_test_id, 61, u_token1, 'update the last one', 61)
 
     check_work_msg = channel_messages(u_token1,channel_test_id,0)
     # check the uodatest msg in [0] is the last update one.
     assert(check_work_msg['messages'][0]['message_id'] == 61)
 
+###########################################################################################
 
-  
 # case 4: test if we can show the correct channel_message information
 def test_channel_message_correct_message_infors():
     '''
-    this test using for check if the channel fuction can return correctly
-    2. check the fuction can return the message correctly.
-    2.1 the [0] always the top fresh one 
+    this test using for check if the channel function can return correctly
+    2. check the function can return the message correctly.
+    2.1 the [0] always the top fresh one
     '''
-    # create 2 users 
+    # create 2 users
     other.clear()
     user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test1@test.com","check_test")
@@ -574,24 +577,50 @@ def test_channel_message_correct_message_infors():
 
     user2 = auth_register("test2@test.com","check_test","steve","TAN")
     user2 = auth_login("test2@test.com","check_test")
-    
+
 
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)
 
-    # 2. check the fuction can return the message correctly.
+    # 2. check the function can return the message correctly.
     for i in range(1,3):
         msg_send(channel_test_id, i, u_token1, 'test for return correct info', i)
         check_work_msg = channel_messages(u_token1,channel_test_id,0)
         # check the uodatest msg in [0]
         assert(check_work_msg['messages'][0]['message_id'] == i)
 
+################################################################################
+# Tests for channel_leave()
+################################################################################
+
+def test_channel_leave():
+    """
+    InputError: when any of:Channel ID is not a valid channel
+    AccessError: when Authorised user is not a member of channel with channel_id
+    """
+
+
+
+
+
+
+################################################################################
+# Tests for channel_join()
+################################################################################
+
+def test_channel_join():
+
+
+
+
+
+
 ###########################################################################################
 ##                                test of channel_addowner                               ##
 ###########################################################################################
-"""
- Standard situation
-"""
+    """
+    Standard situation
+    """
 def test_channel_addowner0():
     other.clear()
     # user1 login

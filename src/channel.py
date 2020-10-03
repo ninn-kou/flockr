@@ -1,20 +1,20 @@
 import data
 from error import InputError, AccessError
 import channels
-#############################################
-######          channel_invite       ########
-#############################################
 
-# Xingyu TAN working on channel.py for channel_invite fuction
+################################################################################
+# channel_invite
+################################################################################
+
+# Xingyu TAN working on channel.py for channel_invite function.
 # 2 OCT 2020
 
 """
 channel_invite()
-the fuction Invites a user (with user id u_id) to join a channel with ID channel_id. 
+the function Invites a user (with user id u_id) to join a channel with ID channel_id.
 
 RETURNS:
 {}
-
 
 THEREFORE, TEST EVERYTHING BELOW:
 1. inputError
@@ -31,16 +31,18 @@ THEREFORE, TEST EVERYTHING BELOW:
 - repeated invite one person who is already in.
 
 """
-#############################################
-######          help  fuction        ########
-#############################################
+
+################################################################################
+# Helper Functions
+################################################################################
+
 # adding one member into the channel
 def add_one_in_channel(channel_id,user):
     for i in data.channels:
         if i['channel_id'] == channel_id:
             i['all_members'].append(user)
             break
-        
+
     return
 # transfer the token into user id
 def token_into_user_id(token):
@@ -51,34 +53,34 @@ def token_into_user_id(token):
 
     return au_id
 
-# interation the whole channels, grab the channel we need
+# interation the whole channels, grab the channel we need.
 def find_channel(channel_id):
-    
+
     answer = None
     for i in data.channels:
         if i['channel_id'] == channel_id:
             answer = i
             break
-    
+
     return answer
 
-# find user info by search one's id
+# find user info by search one's id.
 def find_user(user_id):
     u_id = -1
     for i in data.users:
         if i['u_id'] == user_id:
             u_id = i
             break
-    
+
     return u_id
 
-# check one if in the channel already
+# check one if in the channel already.
 def find_one_in_channel(channel, u_id):
     for i in channel['all_members']:
         if i['u_id'] == u_id:
             return True
     return False
-
+############################ help function closed #########################
 def channel_invite(token, channel_id, u_id):
     # apply global variable we need
     data.init_channels()
@@ -89,9 +91,9 @@ def channel_invite(token, channel_id, u_id):
     # the token id we had is invalid
     if auth_id == -1:
         raise(InputError)
-    
+
     # case 2        // InputError
-    # search the channel_id to check if the channel 
+    # search the channel_id to check if the channel
     # is in the channels list
     channel_got = find_channel(channel_id)
     # the channel id we had is invalid
@@ -115,7 +117,7 @@ def channel_invite(token, channel_id, u_id):
     if find_one_in_channel(channel_got, u_id) == True:
         return {
     }
-    
+
 
     # case 6
     #excluding all the error, then add the member
@@ -129,19 +131,20 @@ def channel_invite(token, channel_id, u_id):
 
     # add the new member into channel
     add_one_in_channel(channel_id,user)
-    
+
     return {
     }
 
-#############################################
-######         channel_details       ########
-#############################################
-# Xingyu TAN working on channel_details.py for channel_details fuction
-# 2 Oct 2020
+################################################################################
+# channel_details
+################################################################################
+
+# Xingyu TAN working on channel_details.py for channel_details function.
+# 2 OCT 2020
 
 """
 channel_details()
-Given a Channel with ID channel_id that the authorised user is part of
+Given a Channel with ID channel_id that the authorized user is part of
 
 RETURNS:
 provide basic details about the channel
@@ -156,9 +159,8 @@ THEREFORE, TEST EVERYTHING BELOW:
 2. accessError
 - the auth user is not in this channel.
 
-
-
 """
+
 def channel_details(token, channel_id):
     # apply global variable we need
     data.init_channels()
@@ -169,9 +171,9 @@ def channel_details(token, channel_id):
     # the token id we had is invalid
     if auth_id == -1:
         raise(InputError)
-    
+
     # case 2            // Input Error
-    # search the channel_id to check if the channel 
+    # search the channel_id to check if the channel
     # is in the channels list
     channel_got = find_channel(channel_id)
     # the channel id we had is invalid
@@ -189,24 +191,24 @@ def channel_details(token, channel_id):
         'all_members': channel_got['all_members'],
     }
 
+################################################################################
+# channel_messages
+################################################################################
 
-#############################################
-######        channel_messages       ########
-#############################################
-# Xingyu TAN working on channel_test.py for channel_messages fuction
+# Xingyu TAN working on channel_test.py for channel_messages function.
 # 2 OCT 2020
 
 """
 channel_messages()
-Given a Channel with ID channel_id that the authorised user is part of channel, 
+Given a Channel with ID channel_id that the authorized user is part of channel,
 and return no more than 50 messages
 
 RETURNS:
 end: -1 : for no more message after start
-end: 50; 
+end: 50;
     (1): exist messages after start and no more than 50 messages.
     (2): the exist messages after start more than 50, just return the top 50 ones.
-messages: always the top 50 message 
+messages: always the top 50 message
 
 
 THEREFORE, TEST EVERYTHING BELOW:
@@ -219,6 +221,7 @@ THEREFORE, TEST EVERYTHING BELOW:
 - the auth user is not in this channel.
 
 """
+
 def channel_messages(token, channel_id, start):
     # apply global variable we need
     data.init_channels()
@@ -231,9 +234,9 @@ def channel_messages(token, channel_id, start):
     # the token id we had is invalid
     if auth_id == -1:
         raise(InputError)
-    
+
     # case 2            // Input Error
-    # search the channel_id to check if the channel 
+    # search the channel_id to check if the channel
     # is in the channels list
     channel_got = find_channel(channel_id)
     # the channel id we had is invalid
@@ -255,7 +258,7 @@ def channel_messages(token, channel_id, start):
     # no more msg after start
     if num_msgs == start:
         end = -1
-    
+
     # initial the new msg struct
     return_msg = []
 
@@ -274,6 +277,7 @@ def channel_messages(token, channel_id, start):
         'start': start,
         'end': end,
     }
+
 
 def channel_leave(token, channel_id):
     return {

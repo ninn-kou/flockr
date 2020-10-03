@@ -586,6 +586,7 @@ def test_channel_message_correct_message_infors():
         # check the uodatest msg in [0]
         assert(check_work_msg['messages'][0]['message_id'] == i)
 
+
 ################################################################################
 # Tests for channel_leave()
 ################################################################################
@@ -595,17 +596,14 @@ def test_channel_leave():
     InputError: when any of:Channel ID is not a valid channel
     AccessError: when Authorised user is not a member of channel with channel_id
     """
-
-
-
-
+    # other.clear()
 
 
 ################################################################################
 # Tests for channel_join()
 ################################################################################
 
-def test_channel_join():
+# def test_channel_join():
 
 
 

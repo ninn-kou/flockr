@@ -305,17 +305,26 @@ def remove_a_member_in_channel(u_id, channel_id):
 
 def number_of_owners(channel_id):
     data.init_channels()
-    number = 0;
-    for owners in data.channels:
-        if owners['u_id'] is not None
-        number += 1
+    number = 0
+    for owner in data.channels:
+        if owner['u_id'] is not None:
+            number += 1
     return number
 
 def remove_whole_channel(channel_id):
     data.init_channels()
     for chan in data.channels:
         if chan['channel_id'] == channel_id:
-            remove(chan)
+            chan.remove('chan')
+        break
+    return
+
+# This function would return a bool variable to indicate if the channel is public.
+def is_channel_public(channel_id):
+    data.init_channels()
+    for channel in data.channels:
+        if channel['channel_id'] == channel_id:
+            return channel['is_public']
         break
     return
 
@@ -363,9 +372,9 @@ def channel_leave(token, channel_id):
 channel_join()
 Given a channel_id of a channel that the authorised user can join, adds them to that channel.
 
-InputError: when any of Channel ID is not a valid channel
-AccessError when channel_id refers to a channel that is private (when the authorised user is not a global owner)
-
+InputError: when any of Channel ID is not a valid channel.
+AccessError: when channel_id refers to a channel that is private (when the authorised user is not a global owner).
+"""
 
 def channel_join(token, channel_id):
 
@@ -377,19 +386,26 @@ def channel_join(token, channel_id):
     if target_channel is None:
         raise(InputError)
 
-    # Error case 2: if the authorised user is not a member in channel.
+    # Error case 2: if the channel is private.
+    if is_channel_public(channel_id) is False:
+        raise(AccessError)
+
+    # Normal case: join this member.
     auth_id = token_into_user_id(token)
     if auth_id == -1:
         raise(InputError)
 
-    #TODO: channel_id or target_channel
+    new_member_struct = find_user(auth_id)
 
-    if find_one_in_channel(channel_id, auth_id) == False:
-        raise(AccessError)
-
-    return {
+    user = {
+        'u_id': auth_id,
+        'name_first': new_member_struct['name_first'],
+        'name_last': new_member_struct['name_last'],
     }
-"""
+
+    add_one_in_channel(channel_id,user)
+
+    return
 
 ################################################################################
 # channel_addowner
@@ -454,7 +470,7 @@ def channel_addowner(token, channel_id, u_id):
     ## using the given token to identify the authorized user.
     auth_id = token_into_user_id(token)
     # error by the invalid token id
-    if auth_id is -1:
+    if auth_id == -1:
         raise(InputError)
 
     # check whether the user is already an owner
@@ -513,7 +529,7 @@ def channel_removeowner(token, channel_id, u_id):
     # using the given token to identify the authorized user.
     auth_id = token_into_user_id(token)
     # error by the invalid token id
-    if auth_id is -1:
+    if auth_id == -1:
         raise(InputError)
 
     # error by he/she is not an owner

@@ -9,7 +9,6 @@ import other
 from message import message_send
 
 
-
 #########################################################################
 #
 #                     test for channel_invite function
@@ -56,7 +55,6 @@ def test_channel_invite_work():
     user2 = auth_register("test2@test.com","check_test","steve","TAN")
     user2 = auth_login("test2@test.com","check_test")
     u_id2 = user2['u_id']
-    u_token2 = user2['token']
 
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)
@@ -83,6 +81,7 @@ def test_channel_invite_work():
     assert u_id1 ==  i['all_members'][0]['u_id']
     assert u_id2 ==  i['all_members'][1]['u_id']
 
+###########################################################################################
 def test_channel_repeate_invite():
     '''
     This test is using for check when the user has been in the program
@@ -126,6 +125,7 @@ def test_channel_repeate_invite():
 
 ##########  test for input error #################
 
+##########  test for input error #####################################
 def test_channel_invite_invalid_channelId_input_error():
     '''
     This test is using for check when the channel id we had is invalid
@@ -152,7 +152,7 @@ def test_channel_invite_invalid_channelId_input_error():
     with pytest.raises(InputError):
         channel_invite(u_token1,channel_test_id + 0xf, u_id2)
 
-
+##########################################################################
 def test_channel_invite_invalid_userId_input_error():
     '''
     This test is using for check when the user id we had is invalid
@@ -179,7 +179,7 @@ def test_channel_invite_invalid_userId_input_error():
     with pytest.raises(InputError):
         channel_invite(u_token1,channel_test_id, u_id2 + 0xf)
 
-#################### test for access error #####################
+#################### test for access error #############################
 def test_channel_non_member_invite():
     '''
     This test is using for check when the authorised user
@@ -276,8 +276,7 @@ def test_channel_details_work():
     assert channel_test_details['all_members'][0]['u_id'] == u_id1
     assert channel_test_details['all_members'][1]['u_id'] == u_id2
 
-
-
+###########################################################################################
 def test_channel_details_invalid_channelId():
     '''
     This test is using for check when the user id we had is invalid
@@ -303,6 +302,8 @@ def test_channel_details_invalid_channelId():
     # testing for channel invite function for invalid channel id inputError
     with pytest.raises(InputError):
         channel_details(u_token1,channel_test_id + 0xf)
+
+###########################################################################################
 
 def test_channel_non_member_call_details():
     '''
@@ -415,6 +416,7 @@ def test_inputError_channel_message_channelId_start_invalid():
     with pytest.raises(InputError):
         channel_messages(u_token1,channel_test_id, 10)
 
+###########################################################################################
 def test_inputError_channel_message_invalid_channelId():
     '''
     This test is using for check when channel id we had is invalid
@@ -439,7 +441,7 @@ def test_inputError_channel_message_invalid_channelId():
         channel_messages(u_token1,channel_test_id + 0xf, 0)
 
 
-###################        Access error      ###################
+###################        Access error      ################################
 def test_channel_message_non_member_call_details():
     '''
     This test is using for check when the authorised user
@@ -494,6 +496,7 @@ def test_channel_message_return_negative_one():
     check_return_negative_one = channel_messages(u_token1,channel_test_id,0)
     assert check_return_negative_one['end'] == -1
 
+###########################################################################################
 
 # case 2: return 50; check the end return alway (start + 50) when message less than 50
 def test_channel_message_return50_end():
@@ -557,6 +560,7 @@ def test_channel_message_newest_one_index():
     # check the uodatest msg in [0] is the last update one.
     assert(check_work_msg['messages'][0]['message_id'] == 61)
 
+###########################################################################################
 
 
 # case 4: test if we can show the correct channel_message information
@@ -993,7 +997,6 @@ def test_channel_addowner1():
     assert owner_num == 1
     assert u_id1 == cnl['owner'][0]['u_id']
 ###########################################################################################
-
 """
     user(u_id) is already the owner
 """
@@ -1119,11 +1122,8 @@ def test_channel_addowner3():
         channel_addowner(token2, cid1, u_id3)
 
 ###########################################################################################
-
+# test of channel_removeowner
 ###########################################################################################
-##                             test of channel_removeowner                               ##
-###########################################################################################
-
 """
     Standard situation
 """

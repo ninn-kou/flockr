@@ -80,7 +80,7 @@ def find_one_in_channel(channel, u_id):
         if i['u_id'] == u_id:
             return True
     return False
-
+############################ help function closed #########################
 def channel_invite(token, channel_id, u_id):
     # apply global variable we need
     data.init_channels()

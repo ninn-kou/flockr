@@ -1,9 +1,9 @@
 # this file is using for pytest of channel.py .
-from channel import channel_invite, channel_details, channel_messages, channel_addowner, channel_removeowner
+from channel import channel_invite, channel_details, channel_messages, channel_leave, channel_join, channel_addowner, channel_removeowner
 from channels import channels_create
-from auth import auth_login, auth_register, auth_logout 
+from auth import auth_login, auth_register, auth_logout
 from error import InputError, AccessError
-import data 
+import data
 import pytest
 import other
 from message import message_send
@@ -122,6 +122,8 @@ def test_channel_repeate_invite():
     # check the totoal members number is still 2
     assert channel_member_num ==2
 
+
+##########  test for input error #################
 
 ##########  test for input error #####################################
 def test_channel_invite_invalid_channelId_input_error():
@@ -525,8 +527,6 @@ def test_channel_message_return50_end():
     #0< number && number <= 50: exist messages after start and no more than 50 messages.
     assert(check_work_msg['end'] == 50)
 
-###########################################################################################
-
 # case 3: return 50; test for the newest one when total msg more than 50
 def test_channel_message_newest_one_index():
     '''
@@ -562,6 +562,7 @@ def test_channel_message_newest_one_index():
 
 ###########################################################################################
 
+
 # case 4: test if we can show the correct channel_message information
 def test_channel_message_correct_message_infors():
     '''
@@ -590,37 +591,316 @@ def test_channel_message_correct_message_infors():
         assert(check_work_msg['messages'][0]['message_id'] == i)
 
 ################################################################################
-# Tests for channel_leave()
-################################################################################
-
-def test_channel_leave():
-    """
-    InputError: when any of:Channel ID is not a valid channel
-    AccessError: when Authorised user is not a member of channel with channel_id
-    """
-
-
-
-
-
-
-################################################################################
 # Tests for channel_join()
 ################################################################################
 
-def test_channel_join():
+def test_channel_join_normal():
+    """
+    InputError: when any of Channel ID is not a valid channel.
+    AccessError: when channel_id refers to a channel that is private (when the authorised user is not a global owner).
+    """
+    other.clear()
 
+    # Create the owner account to access channel.
+    auth_register('owner@test.com', 'Iampassword', 'Hao', 'Ren')
+    login_owner = auth_login('owner@test.com', 'Iampassword')
+    assert type(login_owner) is dict
+    u_id_owner = login_owner['u_id']
+    assert u_id_owner
+    token_owner = login_owner['token']
+    assert token_owner
+    assert type(u_id_owner) is int
+    assert type(token_owner) is str
 
+    # Create the user to join and leave the channel.
+    auth_register('user@test.com', 'Iampassword', 'Zhiyuan', 'Liu')
+    login_user = auth_login('user@test.com', 'Iampassword')
+    assert type(login_user) is dict
+    u_id_user = login_user['u_id']
+    assert u_id_user
+    token_user = login_user['token']
+    assert token_user
+    assert type(u_id_user) is int
+    assert type(token_user) is str
 
+    # Owner creates a test channel.
+    chan_id = channels_create(token_owner, "Test_Channel", True)
+    assert chan_id
+    assert type(chan_id) is int
 
+    # Normal case:
+    # If the function executed correctly, it would return a 'None'
+    assert channel_join(token_user, chan_id) == None
 
+def test_channel_join_invalid_channel_id():
 
-###########################################################################################
+    other.clear()
+
+    # Create the owner account to access channel.
+    auth_register('owner@test.com', 'Iampassword', 'Hao', 'Ren')
+    login_owner = auth_login('owner@test.com', 'Iampassword')
+    assert type(login_owner) is dict
+    u_id_owner = login_owner['u_id']
+    assert u_id_owner
+    token_owner = login_owner['token']
+    assert token_owner
+    assert type(u_id_owner) is int
+    assert type(token_owner) is str
+
+    # Create the user to join and leave the channel.
+    auth_register('user@test.com', 'Iampassword', 'Zhiyuan', 'Liu')
+    login_user = auth_login('user@test.com', 'Iampassword')
+    assert type(login_user) is dict
+    u_id_user = login_user['u_id']
+    assert u_id_user
+    token_user = login_user['token']
+    assert token_user
+    assert type(u_id_user) is int
+    assert type(token_user) is str
+
+    # Owner creates a test channel.
+    chan_id = channels_create(token_owner, "Test_Channel", True)
+    assert chan_id
+    assert type(chan_id) is int
+
+    # For any input error:
+    wrong_id = 3141592653
+    with pytest.raises(InputError):
+        channel_join(token_user, wrong_id)
+
+def test_channel_join_for_private():
+
+    other.clear()
+
+    # Create the owner account to access channel.
+    auth_register('owner@test.com', 'Iampassword', 'Hao', 'Ren')
+    login_owner = auth_login('owner@test.com', 'Iampassword')
+    assert type(login_owner) is dict
+    u_id_owner = login_owner['u_id']
+    assert u_id_owner
+    token_owner = login_owner['token']
+    assert token_owner
+    assert type(u_id_owner) is int
+    assert type(token_owner) is str
+
+    # Create the user to join and leave the channel.
+    auth_register('user@test.com', 'Iampassword', 'Zhiyuan', 'Liu')
+    login_user = auth_login('user@test.com', 'Iampassword')
+    assert type(login_user) is dict
+    u_id_user = login_user['u_id']
+    assert u_id_user
+    token_user = login_user['token']
+    assert token_user
+    assert type(u_id_user) is int
+    assert type(token_user) is str
+
+    # Owner creates a test channel.
+    # However, this case we need a PRIVATE channel.
+    chan_id = channels_create(token_owner, "Test_Channel", False)
+    assert chan_id
+    assert type(chan_id) is int
+
+    with pytest.raises(AccessError):
+        channel_join(token_user, chan_id)
+
+################################################################################
+# Tests for channel_leave()
+# Now, we did 3 passed test for channel_join(), so we use it to initialize our struct.
+################################################################################
+
+def test_channel_leave_normal():
+    """
+    InputError: when any of:Channel ID is not a valid channel
+    AccessError: when Authorised user is not a member of channel with channel_id
+
+    After above tests, we could trust our initialize conditions are correct, so
+    we just try to make them clearly with simple test for users.
+    """
+    other.clear()
+
+    # Create the owner account to access channel.
+    auth_register('owner@test.com', 'Iampassword', 'Hao', 'Ren')
+    login_owner = auth_login('owner@test.com', 'Iampassword')
+    u_id_owner = login_owner['u_id']
+    token_owner = login_owner['token']
+
+    # Create the user1.
+    auth_register('user1@test.com', 'Iampassword', 'Zhiyuan', 'Liu')
+    login_user1 = auth_login('user1@test.com', 'Iampassword')
+    u_id_user1 = login_user1['u_id']
+    token_user1 = login_user1['token']
+    assert login_user1
+    assert u_id_user1
+    assert token_user1
+
+    # Create the user2.
+    auth_register('user2@test.com', 'Iampassword', 'Jiaqi', 'Lu')
+    login_user2 = auth_login('user2@test.com', 'Iampassword')
+    u_id_user2 = login_user2['u_id']
+    token_user2 = login_user2['token']
+    assert login_user2
+    assert u_id_user2
+    assert token_user2
+
+    # Create the user3.
+    auth_register('user3@test.com', 'Iampassword', 'Tingyu', 'Jiang')
+    login_user3 = auth_login('user3@test.com', 'Iampassword')
+    u_id_user3 = login_user3['u_id']
+    token_user3 = login_user3['token']
+    assert login_user3
+    assert u_id_user3
+    assert token_user3
+
+    # Owner creates a test channel.
+    chan_id = channels_create(token_owner, "Test_Channel", True)
+    assert chan_id
+    assert type(chan_id) is int
+
+    channel_join(token_user1, chan_id)
+    channel_join(token_user2, chan_id)
+    channel_join(token_user3, chan_id)
+
+    # Normal case:
+    channel_leave(token_user1, chan_id)
+    channel_leave(token_user2, chan_id)
+
+    # We removed user2 and user3, so the owner and user should be remaining here.
+    # The total number of members in the channel should be 2.
+    user_num = 0
+    data.init_channels()
+    for chan in data.channels:
+        if chan['channel_id'] == chan_id:
+            user_num = len(chan['all_members'])
+            break
+    assert user_num == 2
+
+def test_channel_leave_invalid_channel():
+    """
+    InputError: when any of:Channel ID is not a valid channel
+    AccessError: when Authorised user is not a member of channel with channel_id
+
+    After above tests, we could trust our initialize conditions are correct, so
+    we just try to make them clearly with simple test for users.
+    """
+    other.clear()
+
+    # Create the owner account to access channel.
+    auth_register('owner@test.com', 'Iampassword', 'Hao', 'Ren')
+    login_owner = auth_login('owner@test.com', 'Iampassword')
+    u_id_owner = login_owner['u_id']
+    token_owner = login_owner['token']
+
+    # Create the user1.
+    auth_register('user1@test.com', 'Iampassword', 'Zhiyuan', 'Liu')
+    login_user1 = auth_login('user1@test.com', 'Iampassword')
+    u_id_user1 = login_user1['u_id']
+    token_user1 = login_user1['token']
+    assert login_user1
+    assert u_id_user1
+    assert token_user1
+
+    # Create the user2.
+    auth_register('user2@test.com', 'Iampassword', 'Jiaqi', 'Lu')
+    login_user2 = auth_login('user2@test.com', 'Iampassword')
+    u_id_user2 = login_user2['u_id']
+    token_user2 = login_user2['token']
+    assert login_user2
+    assert u_id_user2
+    assert token_user2
+
+    # Create the user3.
+    auth_register('user3@test.com', 'Iampassword', 'Tingyu', 'Jiang')
+    login_user3 = auth_login('user3@test.com', 'Iampassword')
+    u_id_user3 = login_user3['u_id']
+    token_user3 = login_user3['token']
+    assert login_user3
+    assert u_id_user3
+    assert token_user3
+
+    # Owner creates a test channel.
+    chan_id = channels_create(token_owner, "Test_Channel", True)
+    assert chan_id
+    assert type(chan_id) is int
+
+    channel_join(token_user1, chan_id)
+    channel_join(token_user2, chan_id)
+    channel_join(token_user3, chan_id)
+
+    # Normal case:
+    channel_leave(token_user1, chan_id)
+    channel_leave(token_user2, chan_id)
+
+    wrong_id = 3141592653
+    with pytest.raises(InputError):
+        channel_leave(token_user3, wrong_id)
+
+def test_channel_leave_not_a_member():
+    """
+    InputError: when any of:Channel ID is not a valid channel
+    AccessError: when Authorised user is not a member of channel with channel_id
+
+    After above tests, we could trust our initialize conditions are correct, so
+    we just try to make them clearly with simple test for users.
+    """
+    other.clear()
+
+    # Create the owner account to access channel.
+    auth_register('owner@test.com', 'Iampassword', 'Hao', 'Ren')
+    login_owner = auth_login('owner@test.com', 'Iampassword')
+    u_id_owner = login_owner['u_id']
+    token_owner = login_owner['token']
+
+    # Create the user1.
+    auth_register('user1@test.com', 'Iampassword', 'Zhiyuan', 'Liu')
+    login_user1 = auth_login('user1@test.com', 'Iampassword')
+    u_id_user1 = login_user1['u_id']
+    token_user1 = login_user1['token']
+    assert login_user1
+    assert u_id_user1
+    assert token_user1
+
+    # Create the user2.
+    auth_register('user2@test.com', 'Iampassword', 'Jiaqi', 'Lu')
+    login_user2 = auth_login('user2@test.com', 'Iampassword')
+    u_id_user2 = login_user2['u_id']
+    token_user2 = login_user2['token']
+    assert login_user2
+    assert u_id_user2
+    assert token_user2
+
+    # Create the user3.
+    auth_register('user3@test.com', 'Iampassword', 'Tingyu', 'Jiang')
+    login_user3 = auth_login('user3@test.com', 'Iampassword')
+    u_id_user3 = login_user3['u_id']
+    token_user3 = login_user3['token']
+    assert login_user3
+    assert u_id_user3
+    assert token_user3
+
+    # Owner creates a test channel.
+    chan_id = channels_create(token_owner, "Test_Channel", True)
+    assert chan_id
+    assert type(chan_id) is int
+
+    channel_join(token_user1, chan_id)
+    channel_join(token_user2, chan_id)
+    channel_join(token_user3, chan_id)
+
+    # Normal case:
+    channel_leave(token_user1, chan_id)
+    channel_leave(token_user2, chan_id)
+
+    # User had left channel by the above code.
+    # If we re-leave him, there should be an access error.
+    with pytest.raises(AccessError):
+        channel_leave(token_user2, chan_id)
+
+################################################################################
 # test of channel_addowner
-###########################################################################################
-    """
-    Standard situation
-    """
+################################################################################
+"""
+ Standard situation
+"""
 def test_channel_addowner0():
     other.clear()
     # user1 login
@@ -652,7 +932,7 @@ def test_channel_addowner0():
 
     # user2 join in
     channel_invite(token1, cid, u_id2)
-    
+
     # add user 2 as owner
     channel_addowner(token1, cid, u_id2)
     # Check if success
@@ -694,7 +974,7 @@ def test_channel_addowner1():
     assert token2
     assert type(token2) is str
 
-    # user1 create a channel 
+    # user1 create a channel
     cid = channels_create(token1, "Vicmnss", True)
     assert cid
     assert type(cid) is int
@@ -706,7 +986,7 @@ def test_channel_addowner1():
     # Raise error when add invalid channel ID
     with pytest.raises(InputError):
         channel_addowner(token1, 1234567, u_id2)
-    
+
     # Check if success
     owner_num = 0
     data.init_channels()
@@ -763,7 +1043,7 @@ def test_channel_addowner2():
     assert owner_num == 2
     assert u_id1 == cnl['owner'][0]['u_id']
     assert u_id2 == cnl['owner'][1]['u_id']
-    
+
     # Raise error when add it again
     with pytest.raises(InputError):
         channel_addowner(token1, cid, u_id2)
@@ -875,7 +1155,7 @@ def test_channel_removeowner0():
     cid = channels_create(token1, "Vicmnss", True)
     assert cid
     assert type(cid) is int
-    
+
     # Check if success
     channel_addowner(token1, cid, u_id2)
     owner_num = 0
@@ -890,7 +1170,7 @@ def test_channel_removeowner0():
 
     # Delete the added owner
     channel_removeowner(token1, cid, u_id2)
-    
+
     # assert the user has been moved
     owner_num = 0
     for cnl in data.channels:
@@ -934,7 +1214,7 @@ def test_channel_removeowner1():
     assert cid
     assert type(cid) is int
     assert cid != 1234567
-    
+
     owner_num = 0
     data.init_channels()
     for cnl in data.channels:
@@ -961,7 +1241,7 @@ def test_channel_removeowner1():
     assert owner_num == 2
     assert u_id1 == cnl['owner'][0]['u_id']
     assert u_id2 == cnl['owner'][1]['u_id']
-    
+
 ###########################################################################################
 
 """
@@ -1005,7 +1285,7 @@ def test_channel_removeowner2():
             break
     assert owner_num == 1
     assert u_id1 == cnl['owner'][0]['u_id']
-    
+
     # raise input error for unexist owner
     with pytest.raises(InputError):
         channel_removeowner(token1, cid, u_id2)
@@ -1071,4 +1351,4 @@ def test_channel_removeowner3():
     with pytest.raises(AccessError):
         channel_removeowner(token2, cid1, u_id1)
 
-###########################################################################################
+################################################################################

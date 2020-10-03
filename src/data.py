@@ -71,7 +71,7 @@ channels = [
                 'name_last': 'Jacobs',
             }
         ],   
-        'is public': True,
+        'is_public': True,
         'messages':[]  
     }
 ]

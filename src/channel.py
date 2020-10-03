@@ -278,14 +278,135 @@ def channel_messages(token, channel_id, start):
         'end': end,
     }
 
+################################################################################
+# channel_leave
+################################################################################
+
+# Hao Ren
+# 3 October, 2020
+
+"""
+channel_leave()
+Given a channel ID, the user removed as a member of this channel.
+
+InputError: when any of Channel ID is not a valid channel
+AccessError: when Authorised user is not a member of channel with channel_id
+"""
+
+def remove_a_member_in_channel(u_id, channel_id):
+    data.init_channels()
+    for users in data.channels:
+        if users['channel_id'] == channel_id:
+            for member in users['all_members']:
+                if member['u_id'] == u_id:
+                    users['all_members'].remove(member)
+            break
+    return
+
+def number_of_owners(channel_id):
+    data.init_channels()
+    num = 0
+    for chan in data.channels:
+        if chan['channel_id'] == channel_id:
+            num = len(chan['owner'])
+            break
+    return num
+
+def remove_whole_channel(channel_id):
+    data.init_channels()
+    for chan in data.channels:
+        if chan['channel_id'] == channel_id:
+            chan.remove('chan')
+        break
+    return
+
+# This function would return a bool variable to indicate if the channel is public.
+def is_channel_public(channel_id):
+    data.init_channels()
+    for channel in data.channels:
+        if channel['channel_id'] == channel_id:
+            return channel['is_public']
+        break
+    return
 
 def channel_leave(token, channel_id):
-    return {
-    }
+
+    data.init_channels()
+    data.init_users()
+
+    # Error case 1: if the channel does not exist.
+    target_channel = find_channel(channel_id)
+    if target_channel is None:
+        raise(InputError)
+
+    # Error case 2: if the authorised user is not a member in channel.
+    auth_id = token_into_user_id(token)
+    if auth_id == -1:
+        raise(InputError)
+
+    if find_one_in_channel(target_channel, auth_id) is False:
+        raise(AccessError)
+
+    # Normal case: Refer to "assumptions.md".
+    # Normal case 1: the user is one of the owners.
+    if find_current_owner(target_channel, auth_id) is True:
+        if number_of_owners(channel_id) >= 1:
+            rm_owner_in_channel(channel_id,auth_id)
+            remove_a_member_in_channel(auth_id, channel_id)
+        # Normal case 2: the user is the only user, close the channel.
+        else:
+            remove_whole_channel(channel_id)
+
+    # Normal case 3: the user is not the owner.
+    remove_a_member_in_channel(auth_id, channel_id)
+
+    return
+
+################################################################################
+# channel_join
+################################################################################
+
+# Hao Ren
+# 3 October, 2020
+
+"""
+channel_join()
+Given a channel_id of a channel that the authorised user can join, adds them to that channel.
+
+InputError: when any of Channel ID is not a valid channel.
+AccessError: when channel_id refers to a channel that is private (when the authorised user is not a global owner).
+"""
 
 def channel_join(token, channel_id):
-    return {
+
+    data.init_channels()
+    data.init_users()
+
+    # Error case 1: if the channel does not exist.
+    target_channel = find_channel(channel_id)
+    if target_channel is None:
+        raise(InputError)
+
+    # Error case 2: if the channel is private.
+    if is_channel_public(channel_id) is False:
+        raise(AccessError)
+
+    # Normal case: join this member.
+    auth_id = token_into_user_id(token)
+    if auth_id == -1:
+        raise(InputError)
+
+    new_member_struct = find_user(auth_id)
+
+    user = {
+        'u_id': auth_id,
+        'name_first': new_member_struct['name_first'],
+        'name_last': new_member_struct['name_last'],
     }
+
+    add_one_in_channel(channel_id,user)
+
+    return
 
 ################################################################################
 # channel_addowner

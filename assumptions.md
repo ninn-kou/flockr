@@ -52,7 +52,7 @@ Most recent changing log for this Markdown document here:
 
 - The **Flockr** is always the very first user, and for iteration 1 we won't have further testing about it espeacially in channel_addowner and channel_removeowner two features.
 
-### 1.2 Channel
+### 1.2 Channel Structure
 
 - The user who creates the channel would be the owner automatically.
 - It is assumed that the `channel struct` is like this:
@@ -79,3 +79,15 @@ Most recent changing log for this Markdown document here:
     'messages':[]
  }
  ```
+
+### 1.3 channel_leave()
+
+- If the user is not an owner:
+  - Delete his/her information from `all_members`.
+
+- If the user is one of the owner:
+  - Delete his/her information from `all_members`.
+  - Delete his/her information from `owner`.
+
+- If the user is the only one owner in the channel:
+  - Remove the whole channel cause a no-owner channel is banned.

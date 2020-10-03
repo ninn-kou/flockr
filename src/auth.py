@@ -11,7 +11,7 @@ import string
 def regex_email_check(email):
 
     regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
-    if re.search(regex, email) == None:  
+    if re.search(regex, email) == None:
         raise InputError
     return
 
@@ -24,7 +24,7 @@ def check_in_users(data_type, users, item):
             break
     return focus_user
 
-# create a 20 character long ascii string for token    
+# create a 20 character long ascii string for token
 def create_token(u_id, users):
     # create list of random characters and length of token
     valid_characters = string.ascii_letters + string.digits + string.punctuation
@@ -51,7 +51,7 @@ def create_u_id(users):
         if user['u_id'] == u_id:
             u_id = create_u_id(users)
             break
-    
+
     return u_id
 
 # creates variable numbers at the end of the string
@@ -71,17 +71,17 @@ def handle_variabliser(handle, variabliser_num, variabliser, users):
             variabliser = string.ascii_letters + string.digits
             # need to modify it further
             variabliser_num += 1
-            
+
         # if true, try other variable characters
         else:
             # variabilise the string accordingly
             handle = handle[0:(-1 * variabliser_num)]
-            
+
             for x in range(variabliser_num):
                 character = random.choice(variabliser)
                 variabliser = variabliser.replace(character, '')
                 handle = handle + character
-        
+
         handle = handle_variabliser(handle, variabliser_num, variabliser, users)
     return handle
 
@@ -92,7 +92,7 @@ def handle_generator(name_first, name_last, users):
     raw_concatenation = name_first + name_last
     if len(raw_concatenation) > 20:
         raw_concatenation = raw_concatenation[:20]
-    
+
     # create a unique handle
     handle = handle_variabliser(raw_concatenation, 0, '', users)
     return handle
@@ -104,7 +104,7 @@ def auth_register_error_check(email, password, name_first, name_last):
 
     # check for valid input
     regex_email_check(email)
-    
+
     # check if email is already used
     if check_in_users('email', data.users, email) != None:
         raise InputError
@@ -125,7 +125,7 @@ def auth_register_error_check(email, password, name_first, name_last):
 
 # function to register a new user to the program
 def auth_register(email, password, name_first, name_last):
-    
+
     # checks for InputError
     auth_register_error_check(email, password, name_first, name_last)
 
@@ -165,7 +165,7 @@ def auth_login(email, password):
 
     # check if email is valid
     regex_email_check(email)
-    
+
     # check if email is used by user
     # will raise InputError if user is not stored
     focus_user = check_in_users('email', data.users, email)

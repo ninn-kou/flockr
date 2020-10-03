@@ -1,22 +1,29 @@
 import data
-from error import InputError
 import re
 import random
 import string
+from error import InputError
 
-# Joseph Jeong is the only one that touched this sofar
-# 29 SEP 2020
+################################################################################
+################################################################################
+##
+##    Joseph Jeong's work:
+##    29 September, 2020
+##
+################################################################################
+################################################################################
 
-# checks that the email is validly formatted email
+
 def regex_email_check(email):
-
+    """Check that the email is validly formatted email."""
     regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+
     if re.search(regex, email) == None:
         raise InputError
-    return
 
-# check for a particular data type in users list
+
 def check_in_users(data_type, users, item):
+    """Check for a particular data type in users list."""
     focus_user = None
     for user in users:
         if user[data_type] == item:
@@ -24,57 +31,51 @@ def check_in_users(data_type, users, item):
             break
     return focus_user
 
-# create a 20 character long ascii string for token
+
 def create_token(u_id, users):
-    # create list of random characters and length of token
+    """Create a 20 character long ascii string for token."""
+    # Create list of random characters and length of token.
     valid_characters = string.ascii_letters + string.digits + string.punctuation
-    token_length = 20
-
-    # create a random token
+    token_length = 20                       # Create a random token.
     token = "".join(random.choices(valid_characters, k = token_length))
-
-    # check that token is unique
-    for user in users:
+    for user in users:                      # Check that token is unique.
         if user['token'] == token:
             token = create_token(u_id, users)
             break
 
     return token
 
-# create a random 32 bit unsigned integer to use as a u_id
-def create_u_id(users):
-    # create a random 32 bit unsigned integer
-    u_id = random.randint(0, 0xFFFFFFFF)
 
-    # simple recursive function to check whether u_id is unique
+def create_u_id(users):
+    """Create a random 32 bit unsigned integer to use as a u_id."""
+    u_id = random.randint(0, 0xFFFFFFFF)    # Create a random 32 bit unsigned integer.
+    # Simple recursive function to check whether u_id is unique.
     for user in users:
         if user['u_id'] == u_id:
             u_id = create_u_id(users)
             break
-
     return u_id
 
-# creates variable numbers at the end of the string
-# flawed because it isn't optimal randomisation
-# BUT it does the job -> every handle will ALWAYS be unique
-# Even 10,000 of the same name...
-def handle_variabliser(handle, variabliser_num, variabliser, users):
 
-    # check if the handle is unique
+def handle_variabliser(handle, variabliser_num, variabliser, users):
+    """
+    Creates variable numbers at the end of the string, flawed because it isn't
+    optimal randomisation. BUT it does the job -> every handle will ALWAYS be unique,
+    even 10,000 of the same name...
+    """
+    # Check if the handle is unique, if not modify it further.
     check = check_in_users('handle_str', users, handle)
-    # if not modify it further
 
     if check != None:
-        # check if there are any variabliser characters to iterate through
-        # if not, variabilise more characters
+        # Check if there are any variabliser characters to iterate through, if not, variabilise more characters.
         if not variabliser:
             variabliser = string.ascii_letters + string.digits
             # need to modify it further
             variabliser_num += 1
 
-        # if true, try other variable characters
+        # If true, try other variable characters.
         else:
-            # variabilise the string accordingly
+            # Variabilise the string accordingly.
             handle = handle[0:(-1 * variabliser_num)]
 
             for x in range(variabliser_num):
@@ -85,61 +86,44 @@ def handle_variabliser(handle, variabliser_num, variabliser, users):
         handle = handle_variabliser(handle, variabliser_num, variabliser, users)
     return handle
 
-# generates a unique handle
+
 def handle_generator(name_first, name_last, users):
-
-    # create base concatenation
+    """Generates a unique handle."""
     raw_concatenation = name_first + name_last
-    if len(raw_concatenation) > 20:
+    if len(raw_concatenation) > 20:         # Create base concatenation.
         raw_concatenation = raw_concatenation[:20]
-
-    # create a unique handle
     handle = handle_variabliser(raw_concatenation, 0, '', users)
-    return handle
+    return handle                           # Create a unique handle.
 
-#handles error checking for auth_register
+
 def auth_register_error_check(email, password, name_first, name_last):
-    # initialise user data
-    data.init_users()
+    """Handles error checking for auth_register."""
+    data.init_users()                       # Initialise user data.
+    regex_email_check(email)                # Check for valid input.
 
-    # check for valid input
-    regex_email_check(email)
-
-    # check if email is already used
     if check_in_users('email', data.users, email) != None:
-        raise InputError
+        raise (InputError)                  # Check if email is already used.
 
-    # check len(password) >= 6
     if len(password) < 6:
-        raise InputError
+        raise (InputError)                  # check len(password) >= 6.
 
-    #check first name matches requirements
     if len(name_first) < 1 or len(name_first) > 50:
-        raise InputError
+        raise (InputError)                  # Check first name matches requirements.
 
-    #check Last Name matches requirements
     if len(name_last) < 1 or len(name_last) > 50:
-        raise InputError
+        raise (InputError)                  # Check Last Name matches requirements.
 
-    return
 
-# function to register a new user to the program
 def auth_register(email, password, name_first, name_last):
+    """ Function to register a new user to the program."""
 
-    # checks for InputError
     auth_register_error_check(email, password, name_first, name_last)
 
-    # create a unique u_id
-    u_id = create_u_id(data.users)
-
-    # creates a random and unique token
-    token = create_token(u_id, data.users)
-
-    # generate handle
+    u_id = create_u_id(data.users)          # Create a unique u_id.
+    token = create_token(u_id, data.users)  # creates a random and unique token.
     handle = handle_generator(name_first, name_last, data.users)
 
-    # create and store a user object
-    user = {
+    user = {                                # Create and store a user object.
         'u_id': u_id,
         'email': email,
         'name_first': name_first,
@@ -150,55 +134,41 @@ def auth_register(email, password, name_first, name_last):
     }
     data.append_users(user)
 
-    # creates an object with u_id and token
-    token_object = {
+    token_object = {                        # Creates an object with u_id and token.
         'u_id': u_id,
         'token': token
     }
-
     return token_object
 
-# used to log user into program
+
 def auth_login(email, password):
-    # initialise user data
-    data.init_users()
+    """ Used to log user into program."""
+    data.init_users()                       # Initialise user data.
+    regex_email_check(email)                # check if email is valid.
 
-    # check if email is valid
-    regex_email_check(email)
-
-    # check if email is used by user
-    # will raise InputError if user is not stored
     focus_user = check_in_users('email', data.users, email)
-    if focus_user == None:
-        raise InputError
+    if focus_user == None:                  # Check if email is used by user.
+        raise InputError                    # If not stored, raise an error.
 
-    # check password
     if focus_user['password'] != password:
-        raise InputError
+        raise InputError                    # Check password.
 
-    # if everything checks out, create token
-    u_id = focus_user['u_id']
+    u_id = focus_user['u_id']               # If all passed, create a token.
     token = create_token(u_id, data.users)
 
-    # creates an object with u_id and token
-    token_object = {
+    token_object = {                        # Creates an object with u_id and token.
         'u_id': u_id,
         'token': token
     }
-
-    # add token to program
-    data.add_token(token_object)
-
+    data.add_token(token_object)            # Add token to program.
     return token_object
 
-# used to log user out of program
+
 def auth_logout(token):
+    """Used to log user out of program."""
+    user = data.remove_token(token)         # Search for token in token dict.
 
-    # search for token in token dict
-    user = data.remove_token(token)
-
-    # Returns accordingly if token is found
     if user == None:
-        return {'is_success': False}
+        return {'is_success': False}        # Returns accordingly if token is found.
     else:
         return {'is_success': True}

@@ -123,8 +123,6 @@ def test_channel_repeate_invite():
     assert channel_member_num ==2
 
 
-##########  test for input error #################
-
 ##########  test for input error #####################################
 def test_channel_invite_invalid_channelId_input_error():
     '''

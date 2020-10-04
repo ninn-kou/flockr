@@ -16,7 +16,7 @@ Notes on coverage:
 
 """
 auth_register()
-It should create a new account 
+It should create a new account
 
 RETURNS:
 a dict with the u_id and the token
@@ -77,7 +77,7 @@ def test_auth_register_multiple_users():
         array[i] = auth.auth_register('test' + str(i) + '@example.com', 'password', 'Test', 'Person')['u_id']
         i += 1
     assert (len(array) == len(set(array)))
-    
+
     # a unique handle is produced
     list = []
     data.init_users()
@@ -99,7 +99,7 @@ def test_auth_register_input_error_existing_email():
     clear()
     # - email address is already used
     # this is the email registered at the top of the test function
-    auth.auth_register('test@examples.com', 'emilyisshort', 'Emily', 'Luo?') 
+    auth.auth_register('test@examples.com', 'emilyisshort', 'Emily', 'Luo?')
     with pytest.raises(InputError):
         auth.auth_register('test@examples.com', 'emilyisshort', 'Emily', 'Luo?')
 
@@ -118,7 +118,7 @@ def test_auth_register_input_error_wrong_len_name_first():
         long_first_name += "a"
     with pytest.raises(InputError):
         auth.auth_register('validemailagain@example.com', 'password', long_first_name, 'Person')
-    # make a short name 
+    # make a short name
     with pytest.raises(InputError):
         auth.auth_register('validemailagain2@example.com', 'password', '', 'Person')
 
@@ -130,7 +130,7 @@ def test_auth_register_input_error_wrong_len_name_last():
         long_last_name += "a"
     with pytest.raises(InputError):
         auth.auth_register('validemailagain@example.com', 'password', 'Test', long_last_name)
-    # make a short name 
+    # make a short name
     with pytest.raises(InputError):
         auth.auth_register('validemailagain2@example.com', 'password', 'Test', '')
 
@@ -166,7 +166,7 @@ def test_auth_login_correct_return():
     assert auth_login_test['u_id']
     assert auth_login_test['token']
 
-    # - u_id is an integer  
+    # - u_id is an integer
     assert type(auth_login_test['u_id']) is int
 
     # - token is a string
@@ -226,7 +226,7 @@ def test_auth_logout():
     invalid_token = '500000'
     if (invalid_token == token):
         raise Exception('The token in program is actually valid')
-    
+
     is_success = auth.auth_logout(invalid_token)
     assert is_success['is_success'] == False
 

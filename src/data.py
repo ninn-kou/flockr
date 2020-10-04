@@ -4,12 +4,12 @@
 ###########################################################################
 """
 The User Data Structure
-NOT SURE 
+NOT SURE
 
 The Spec says to store it like this:
 users = [
     user: {
-        'u_id': 
+        'u_id':
         'email': ''
         'name_first':'',
         'name_last':'',
@@ -28,7 +28,7 @@ users = []
 
 # initialise the users list
 def init_users():
-    global users 
+    global users
 # append user to list
 def append_users(user):
     users.append(user)
@@ -52,9 +52,9 @@ def remove_token(token):
 
 ##########################################################################################
 """
-the struct using for channel 
-channels = [    
-    channel:  { 
+the struct using for channel
+channels = [
+    channel:  {
         'name': 'Hayden',
         'channel_id':
         'owner': [
@@ -70,9 +70,9 @@ channels = [
                 'name_first': 'Hayden',
                 'name_last': 'Jacobs',
             }
-        ],   
+        ],
         'is_public': True,
-        'messages':[]  
+        'messages':[]
     }
 ]
 
@@ -81,7 +81,7 @@ channels = []
 
 # initialise the channels list
 def init_channels():
-    global channels 
+    global channels
 
 #add a channel in the channels list
 def append_channels(channel):

@@ -8,5 +8,5 @@ def test_echo():
     assert echo.echo("trump") == "trump", "trump == trump"
 
 def test_echo_except():
-    with pytest.raises(InputError) as e:
+    with pytest.raises(InputError):
         assert echo.echo("echo")

@@ -69,7 +69,7 @@ Complete. Please see commit history to view old iteration info.
 
 ### 4.1. Task
 
-**NOTE:** In merging the instructions for this iteration into your repo, you may get a failed pipeline. This is most likely because your code is not pytest compliant. If this is the case, that is the *first* thing you should address for this iteration. It is important you have a *stable* master branch before proceeding to add additional features.
+**NOTE:** In merging the instructions for this iteration into your repo, you may get a failed pipeline. This is most likely because your code is not pylint compliant. If this is the case, that is the *first* thing you should address for this iteration. It is important you have a *stable* master branch before proceeding to add additional features.
 
 In this iteration, more features were added to the specification, and the focus has been changed to HTTP endpoints. Many of the theory surrounding iteration 2 will be covered in week 4-6 lectures. Note that there will still be 1 or 2 features of the frontend that will not work because the routes will not appear until iteration 3.
 

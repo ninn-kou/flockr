@@ -2,7 +2,7 @@
 
 ## Changelog
 
-Coming Soon
+ * 08/10: Added section 6.8
 
 ## Contents
 
@@ -293,6 +293,10 @@ if True: # condition here
 The descriptions will not be assessed, they are just there for the frontend to help users.
 
 The types in error.py have been modified appropriately for you.
+
+### 6.8. Other Points
+
+* Each message should have it's own unique ID. I.E. No messages should share an ID with another message, even if that other message is in a different channel.
 
 ## 7. Due Dates and Weightings
 

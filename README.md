@@ -69,7 +69,7 @@ Complete. Please see commit history to view old iteration info.
 
 ### 4.1. Task
 
-**NOTE:** In merging the instructions for this iteration into your repo, you may get a failed pipeline. This is most likely because your code is not pytest compliant. If this is the case, that is the *first* thing you should address for this iteration. It is important you have a *stable* master branch before proceeding to add additional features.
+**NOTE:** In merging the instructions for this iteration into your repo, you may get a failed pipeline. This is most likely because your code is not pylint compliant. If this is the case, that is the *first* thing you should address for this iteration. It is important you have a *stable* master branch before proceeding to add additional features.
 
 In this iteration, more features were added to the specification, and the focus has been changed to HTTP endpoints. Many of the theory surrounding iteration 2 will be covered in week 4-6 lectures. Note that there will still be 1 or 2 features of the frontend that will not work because the routes will not appear until iteration 3.
 
@@ -148,7 +148,7 @@ You are not required to store data persistently in this iteration. However, basi
 
 ### 4.5. Submission
 
-This iteration is due to be submitted at 8pm Sunday 4th October (**week 3**). You will then be demonstrating this in your week 4 lab. All team members **must** attend this lab session, or they will not receive a mark.
+This iteration is due to be submitted at 8pm Monday 26th October (**week 7**). You will then be demonstrating this in your week 7 lab. All team members **must** attend this lab session, or they will not receive a mark.
 
 At the due date provided, we will automatically collect and submit the code that is on the `master` branch of your repository. If the deadline is approaching and you have features that are either untested or failing their tests, **DO NOT MERGE IN THOSE MERGE REQUESTS**. Your tutor will look at unmerged branches and may allocate some reduced marks for incomplete functionality, but `master` should only contain working code.
 
@@ -165,7 +165,7 @@ For this and for all future milestones, you should consider the other expectatio
 
 ### 4.7. Demonstration
 
-When you demonstrate this iteration in your week 4 lab, it will consist of a 15 minute Q&A in front of your tutorial class via zoom. Webcams are required to be on during this Q&A (your phone is a good alternative if your laptop/desktop doesn't have a webcam).
+When you demonstrate this iteration in your week 7 lab, it will consist of a 15 minute Q&A in front of your tutorial class via zoom. Webcams are required to be on during this Q&A (your phone is a good alternative if your laptop/desktop doesn't have a webcam).
 
 ## 5. Iteration 3
 
@@ -277,7 +277,7 @@ If you run the frontend at the same time as your flask server is running on the 
 
 #### 6.7.1.
 
-A working example of the frontend can be used at http://www.flockr-unsw.herokuapp.com/
+A working example of the frontend can be used at http://flockr-unsw.herokuapp.com/
 
 The data is reset daily, but you can use this link to play around and get a feel for how the application should behave.
 

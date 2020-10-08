@@ -3,8 +3,8 @@
 ## Changelog
 
  * 08/10: Added section 6.8
- * 08/10: Removed any reference to "admin"
- 
+ * 08/10: Removed any reference to "admin", clarity about implementing entire interface
+
 ## Contents
 
   1. Aims
@@ -76,7 +76,7 @@ In this iteration, more features were added to the specification, and the focus 
 
 In this iteration, you are expected to:
 
-1. Implement and test the HTTP Flask server according to the interface provided in the specification.
+1. Implement and test the HTTP Flask server according to the entire interface provided in the specification.
 
     Part of this section may be automarked.
 

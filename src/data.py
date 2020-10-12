@@ -1,48 +1,43 @@
-# a collection of data structures used between programs
+'''
+A collection of data structures used between programs
+'''
 
-
-###########################################################################
-"""
-The User Data Structure
-NOT SURE
-
-The Spec says to store it like this:
-users = [
-    user: {
-        'u_id':
-        'email': ''
-        'name_first':'',
-        'name_last':'',
-        'handle_str': '',
-        'token': '',
-        'password': ''
-    }
-]
-
-Issue is:
-1. How to validate tokens? Are tokens stored in auth.py?
-2. How to find each user in the list? Is u_id just used as a list address?
-
-"""
 users = []
 
-# initialise the users list
 def init_users():
+    '''
+    initialise users as a global variable
+
+    The User Data Structure
+    Stored Like This:
+    users = [
+        user: {
+            'u_id':
+            'email': ''
+            'name_first':'',
+            'name_last':'',
+            'handle_str': '',
+            'token': '',
+            'password': ''
+        }
+    ]
+    '''
     global users
-# append user to list
+
 def append_users(user):
+    ''' append user to list '''
     users.append(user)
 
-# add token to user
 def add_token(token_object):
+    ''' add token to user '''
     for user in users:
         if token_object['u_id'] == user['u_id']:
             user['token'] = token_object['token']
             return user
     return None
 
-# remove token from user
 def remove_token(token):
+    ''' remove token from user '''
     for user in users:
         if token == user['token']:
             user.pop('token', None)
@@ -51,38 +46,39 @@ def remove_token(token):
 
 
 ##########################################################################################
-"""
-the struct using for channel
-channels = [
-    channel:  {
-        'name': 'Hayden',
-        'channel_id':
-        'owner': [
-            {
-                'u_id': 1,
-                'name_first': 'Hayden',
-                'name_last': 'Jacobs',
-            }
-        ],
-        'all_members': [
-            {
-                'u_id': 1,
-                'name_first': 'Hayden',
-                'name_last': 'Jacobs',
-            }
-        ],
-        'is_public': True,
-        'messages':[]
-    }
-]
 
-"""
 channels = []
 
-# initialise the channels list
 def init_channels():
+    ''' initialise the channels list
+
+    the struct using for channel
+    channels = [
+        channel:  {
+            'name': 'Hayden',
+            'channel_id':
+            'owner': [
+                {
+                    'u_id': 1,
+                    'name_first': 'Hayden',
+                    'name_last': 'Jacobs',
+                }
+            ],
+            'all_members': [
+                {
+                    'u_id': 1,
+                    'name_first': 'Hayden',
+                    'name_last': 'Jacobs',
+                }
+            ],
+            'is_public': True,
+            'messages':[]
+        }
+    ]
+
+    '''
     global channels
 
-#add a channel in the channels list
 def append_channels(channel):
+    ''' add a channel in the channels list '''
     channels.append(channel)

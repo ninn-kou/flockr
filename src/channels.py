@@ -1,6 +1,5 @@
-import data
 import random
-import auth
+import data
 from other import clear
 from error import InputError
 
@@ -50,13 +49,13 @@ def channels_create(token, name, is_public):
     data.init_channels()                    # Initialise the channels list.
 
     if len(name) > 20:                      # The length of channel name should <= 20.
-        raise(InputError)
+        raise InputError
 
     for i in data.users:                    # Find the details of the user by token.
         if i['token'] == token:
             owner_id = i['u_id']
-            owner_FN = i['name_first']
-            owner_LN = i['name_last']
+            owner_fn = i['name_first']
+            owner_ln = i['name_last']
             break
 
     channel_id = create_channel_id(data.channels)
@@ -66,15 +65,15 @@ def channels_create(token, name, is_public):
         'owner': [
             {
                 'u_id': owner_id,
-                'name_first': owner_FN,
-                'name_last': owner_LN,
+                'name_first': owner_fn,
+                'name_last': owner_ln,
             }
         ],
         'all_members': [
             {
                 'u_id': owner_id,
-                'name_first': owner_FN,
-                'name_last': owner_LN,
+                'name_first': owner_fn,
+                'name_last': owner_ln,
             }
         ],
         'is_public': is_public,

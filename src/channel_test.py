@@ -93,13 +93,11 @@ def test_channel_repeate_invite():
 
     user1 = auth_register("test41@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test41@test.com","check_test")
-    u_id1 = user1['u_id']
     u_token1 = user1['token']
 
     user2 = auth_register("test42@test.com","check_test","steve","TAN")
     user2 = auth_login("test42@test.com","check_test")
     u_id2 = user2['u_id']
-    u_token2 = user2['token']
 
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)
@@ -134,13 +132,11 @@ def test_channel_invite_invalid_channelId_input_error():
 
     user1 = auth_register("test5@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test5@test.com","check_test")
-    u_id1 = user1['u_id']
     u_token1 = user1['token']
 
     user2 = auth_register("test6@test.com","check_test","steve","TAN")
     user2 = auth_login("test6@test.com","check_test")
     u_id2 = user2['u_id']
-    u_token2 = user2['token']
 
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)
@@ -161,13 +157,11 @@ def test_channel_invite_invalid_userId_input_error():
 
     user1 = auth_register("test3@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test3@test.com","check_test")
-    u_id1 = user1['u_id']
     u_token1 = user1['token']
 
     user2 = auth_register("test4@test.com","check_test","steve","TAN")
     user2 = auth_login("test4@test.com","check_test")
     u_id2 = user2['u_id']
-    u_token2 = user2['token']
 
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)
@@ -189,17 +183,14 @@ def test_channel_non_member_invite():
 
     user1 = auth_register("test11@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test11@test.com","check_test")
-    u_id1 = user1['u_id']
     u_token1 = user1['token']
 
     user2 = auth_register("test22@test.com","check_test","steve","TAN")
     user2 = auth_login("test22@test.com","check_test")
     u_id2 = user2['u_id']
-    u_token2 = user2['token']
 
     user3 = auth_register("test33@test.com","check_test","test","TAN")
     user3 = auth_login("test33@test.com","check_test")
-    u_id3 = user3['u_id']
     u_token3 = user3['token']
 
     # create channel for testing
@@ -252,7 +243,6 @@ def test_channel_details_work():
     user2 = auth_register("test2@test.com","check_test","steve","TAN")
     user2 = auth_login("test2@test.com","check_test")
     u_id2 = user2['u_id']
-    u_token2 = user2['token']
 
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)
@@ -284,13 +274,11 @@ def test_channel_details_invalid_channelId():
     other.clear()
     user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test1@test.com","check_test")
-    u_id1 = user1['u_id']
     u_token1 = user1['token']
 
     user2 = auth_register("test2@test.com","check_test","steve","TAN")
     user2 = auth_login("test2@test.com","check_test")
     u_id2 = user2['u_id']
-    u_token2 = user2['token']
 
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)
@@ -313,17 +301,12 @@ def test_channel_non_member_call_details():
     other.clear()
     user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test1@test.com","check_test")
-    u_id1 = user1['u_id']
     u_token1 = user1['token']
 
-    user2 = auth_register("test2@test.com","check_test","steve","TAN")
-    user2 = auth_login("test2@test.com","check_test")
-    u_id2 = user2['u_id']
-    u_token2 = user2['token']
+
 
     user3 = auth_register("test3@test.com","check_test","test","TAN")
     user3 = auth_login("test3@test.com","check_test")
-    u_id3 = user3['u_id']
     u_token3 = user3['token']
 
     # create channel for testing
@@ -452,9 +435,6 @@ def test_channel_message_non_member_call_details():
     user1 = auth_login("test1@test.com","check_test")
     u_token1 = user1['token']
 
-    user2 = auth_register("test2@test.com","check_test","steve","TAN")
-    user2 = auth_login("test2@test.com","check_test")
-
     user3 = auth_register("test3@test.com","check_test","test","TAN")
     user3 = auth_login("test3@test.com","check_test")
     u_token3 = user3['token']
@@ -482,10 +462,7 @@ def test_channel_message_return_negative_one():
     user1 = auth_login("test1@test.com","check_test")
     u_token1 = user1['token']
 
-    user2 = auth_register("test2@test.com","check_test","steve","TAN")
-    user2 = auth_login("test2@test.com","check_test")
-    u_id2 = user2['u_id']
-    u_token2 = user2['token']
+
 
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)
@@ -509,10 +486,6 @@ def test_channel_message_return50_end():
     user1 = auth_login("test1@test.com","check_test")
     u_token1 = user1['token']
 
-    user2 = auth_register("test2@test.com","check_test","steve","TAN")
-    user2 = auth_login("test2@test.com","check_test")
-    u_id2 = user2['u_id']
-    u_token2 = user2['token']
 
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)
@@ -537,11 +510,6 @@ def test_channel_message_newest_one_index():
     user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test1@test.com","check_test")
     u_token1 = user1['token']
-
-    user2 = auth_register("test2@test.com","check_test","steve","TAN")
-    user2 = auth_login("test2@test.com","check_test")
-    u_id2 = user2['u_id']
-    u_token2 = user2['token']
 
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)
@@ -573,9 +541,6 @@ def test_channel_message_correct_message_infors():
     user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test1@test.com","check_test")
     u_token1 = user1['token']
-
-    user2 = auth_register("test2@test.com","check_test","steve","TAN")
-    user2 = auth_login("test2@test.com","check_test")
 
 
     # create channel for testing
@@ -719,7 +684,6 @@ def test_channel_leave_normal():
     # Create the owner account to access channel.
     auth_register('owner@test.com', 'Iampassword', 'Hao', 'Ren')
     login_owner = auth_login('owner@test.com', 'Iampassword')
-    u_id_owner = login_owner['u_id']
     token_owner = login_owner['token']
 
     # Create the user1.
@@ -785,7 +749,6 @@ def test_channel_leave_invalid_channel():
     # Create the owner account to access channel.
     auth_register('owner@test.com', 'Iampassword', 'Hao', 'Ren')
     login_owner = auth_login('owner@test.com', 'Iampassword')
-    u_id_owner = login_owner['u_id']
     token_owner = login_owner['token']
 
     # Create the user1.
@@ -845,7 +808,6 @@ def test_channel_leave_not_a_member():
     # Create the owner account to access channel.
     auth_register('owner@test.com', 'Iampassword', 'Hao', 'Ren')
     login_owner = auth_login('owner@test.com', 'Iampassword')
-    u_id_owner = login_owner['u_id']
     token_owner = login_owner['token']
 
     # Create the user1.

@@ -1,10 +1,10 @@
-import auth
-import channels
+import base.auth as auth
+import base.channels as channels
 import pytest
-import data
-from error import InputError
+import base.data as data
+from base.error import InputError
 import random
-from other import clear
+from base.other import clear
 
 def test_channels_create():
     clear()

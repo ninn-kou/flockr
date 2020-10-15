@@ -11,7 +11,7 @@ from werkzeug.exceptions import BadRequest
 
 import time
 
-import auth
+import base.auth
 
 AUTHHTTP = Blueprint('auth', __name__)
 

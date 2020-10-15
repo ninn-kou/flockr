@@ -278,6 +278,7 @@ def test_channel_details_invalid_channelId():
 
     user2 = auth_register("test2@test.com","check_test","steve","TAN")
     user2 = auth_login("test2@test.com","check_test")
+    u_id2 = user2['u_id']
     u_token2 = user2['token']
 
     # create channel for testing

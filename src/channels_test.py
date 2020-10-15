@@ -113,7 +113,6 @@ def test_channels_list():
 
     user2 = auth.auth_register('56@test.com', 'password', 'FirstN2', 'LastN2')
     user2 = auth.auth_login('56@test.com', 'password')
-    u2_token = user2['token']
 
     #create a channel by user1 in channels and return its channel id
     channel_1_id = channels.channels_create(u1_token,'team',True)

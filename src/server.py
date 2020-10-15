@@ -4,6 +4,8 @@ from flask import Flask, request
 from flask_cors import CORS
 from error import InputError
 
+import auth_http
+
 def defaultHandler(err):
     response = err.get_response()
     print('response', err, err.get_response())
@@ -31,5 +33,8 @@ def echo():
         'data': data
     })
 
+# all functions from auth.py
+APP.register_blueprint(auth_http.AUTHHTTP, url_prefix='/auth')
+
 if __name__ == "__main__":
-    APP.run(port=0) # Do not edit this port
+    APP.run(port=45411) # Do not edit this port

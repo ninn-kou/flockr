@@ -5,7 +5,6 @@ import random
 import data
 from error import InputError
 
-
 ################################################################################
 ################################################################################
 ##
@@ -31,8 +30,14 @@ def channels_list(token):
 
 def channels_listall(token):
     """just return all channels? sure about that?"""
+    found = 0
+    for user in data.users:                      # Check that token exists.
+        if user['token'] == token:
+            found = 1
+            break
+    if found != 1:
+        raise InputError
     return data.channels
-
 
 def create_channel_id(channels):
     """Create a random channel id."""

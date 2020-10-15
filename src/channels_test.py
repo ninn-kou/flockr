@@ -111,14 +111,10 @@ def test_channels_list():
     u1_id = user1['u_id']
     u1_token = user1['token']
 
-    user2 = auth.auth_register('56@test.com', 'password', 'FirstN2', 'LastN2')
-    user2 = auth.auth_login('56@test.com', 'password')
+
 
     #create a channel by user1 in channels and return its channel id
     channel_1_id = channels.channels_create(u1_token,'team',True)
-
-    #create a channel by user2 in channels and return its channel id
-    #channel_listall = channels_listall(u1_token)
 
     #check if it only return the autherised one
     channel_list1 = channels.channels_list(u1_token)

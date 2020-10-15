@@ -303,8 +303,7 @@ def test_channel_non_member_call_details():
     user1 = auth_login("test1@test.com","check_test")
     u_token1 = user1['token']
 
-    user2 = auth_register("test2@test.com","check_test","steve","TAN")
-    user2 = auth_login("test2@test.com","check_test")
+
 
     user3 = auth_register("test3@test.com","check_test","test","TAN")
     user3 = auth_login("test3@test.com","check_test")
@@ -463,8 +462,7 @@ def test_channel_message_return_negative_one():
     user1 = auth_login("test1@test.com","check_test")
     u_token1 = user1['token']
 
-    user2 = auth_register("test2@test.com","check_test","steve","TAN")
-    user2 = auth_login("test2@test.com","check_test")
+
 
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)
@@ -488,8 +486,6 @@ def test_channel_message_return50_end():
     user1 = auth_login("test1@test.com","check_test")
     u_token1 = user1['token']
 
-    user2 = auth_register("test2@test.com","check_test","steve","TAN")
-    user2 = auth_login("test2@test.com","check_test")
 
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)
@@ -514,9 +510,6 @@ def test_channel_message_newest_one_index():
     user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test1@test.com","check_test")
     u_token1 = user1['token']
-
-    user2 = auth_register("test2@test.com","check_test","steve","TAN")
-    user2 = auth_login("test2@test.com","check_test")
 
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)

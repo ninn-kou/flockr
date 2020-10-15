@@ -2,7 +2,7 @@
     Other functions to help testing
 '''
 
-import data
+import base.data as data
 
 def clear():
     ''' clear the backend state '''

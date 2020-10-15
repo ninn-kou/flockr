@@ -1,8 +1,8 @@
 '''
     channel.py written by Xingyu Tan, Yuhan Yan and Hao Ren.
 '''
-import data
-from error import InputError, AccessError
+import base.data as data
+from base.error import InputError, AccessError
 
 
 ################################################################################

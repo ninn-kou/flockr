@@ -1,4 +1,4 @@
-from error import InputError
+from base.error import InputError
 
 def echo(value):
     if value == 'echo':

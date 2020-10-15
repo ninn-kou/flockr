@@ -5,8 +5,8 @@ import re
 import random
 import string
 
-import data
-from error import InputError
+import base.data as data
+from base.error import InputError
 
 def regex_email_check(email):
     """Check that the email is validly formatted email."""

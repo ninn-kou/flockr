@@ -1,6 +1,6 @@
-import echo
+import base.echo as echo
 import pytest
-from error import InputError
+from base.error import InputError
 
 def test_echo():
     assert echo.echo("1") == "1", "1 == 1"

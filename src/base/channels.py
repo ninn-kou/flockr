@@ -2,8 +2,8 @@
 functions of create a new channel and return the specific channel
 '''
 import random
-import data
-from error import InputError
+import base.data as data
+from base.error import InputError
 
 ################################################################################
 ################################################################################

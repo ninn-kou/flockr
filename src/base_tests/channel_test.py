@@ -1,12 +1,12 @@
 # this file is using for pytest of channel.py .
-from channel import channel_invite, channel_details, channel_messages, channel_leave, channel_join, channel_addowner, channel_removeowner
-from channels import channels_create
-from auth import auth_login, auth_register, auth_logout
-from error import InputError, AccessError
-import data
+from base.channel import channel_invite, channel_details, channel_messages, channel_leave, channel_join, channel_addowner, channel_removeowner
+from base.channels import channels_create
+from base.auth import auth_login, auth_register, auth_logout
+from base.error import InputError, AccessError
+import base.data as data
 import pytest
-import other
-from message import message_send
+import base.other as other
+from base.message import message_send
 
 
 #########################################################################

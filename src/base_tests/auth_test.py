@@ -3,10 +3,10 @@ Joseph Jeong made auth_test.py
 '''
 import pytest
 
-import auth
-from error import InputError
-import data
-from other import clear
+import base.auth as auth
+from base.error import InputError
+import base.data as data
+from base.other import clear
 
 def coverate_notes():
     """

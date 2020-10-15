@@ -1,5 +1,11 @@
+'''
+    Other functions to help testing
+'''
+
 import data
+
 def clear():
+    ''' clear the backend state '''
     data.init_channels()
     data.init_users()
 

@@ -1,24 +1,19 @@
-import data
+'''
+    auth.py written by Joseph Jeong.
+'''
 import re
 import random
 import string
+
+import data
 from error import InputError
-
-################################################################################
-################################################################################
-##
-##    Joseph Jeong's work:
-##    29 September, 2020
-##
-################################################################################
-################################################################################
-
 
 def regex_email_check(email):
     """Check that the email is validly formatted email."""
-    regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 
-    if re.search(regex, email) == None:
+    regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+
+    if re.search(regex, email) is None:
         raise InputError
 
 
@@ -66,8 +61,9 @@ def handle_variabliser(handle, variabliser_num, variabliser, users):
     # Check if the handle is unique, if not modify it further.
     check = check_in_users('handle_str', users, handle)
 
-    if check != None:
-        # Check if there are any variabliser characters to iterate through, if not, variabilise more characters.
+    if check is not None:
+        # Check if there are any variabliser characters to iterate through,
+        # if not, variabilise more characters.
         if not variabliser:
             variabliser = string.ascii_letters + string.digits
             # need to modify it further
@@ -78,7 +74,7 @@ def handle_variabliser(handle, variabliser_num, variabliser, users):
             # Variabilise the string accordingly.
             handle = handle[0:(-1 * variabliser_num)]
 
-            for x in range(variabliser_num):
+            for _ in range(variabliser_num):
                 character = random.choice(variabliser)
                 variabliser = variabliser.replace(character, '')
                 handle = handle + character
@@ -101,17 +97,17 @@ def auth_register_error_check(email, password, name_first, name_last):
     data.init_users()                       # Initialise user data.
     regex_email_check(email)                # Check for valid input.
 
-    if check_in_users('email', data.users, email) != None:
-        raise (InputError)                  # Check if email is already used.
+    if check_in_users('email', data.users, email) is not None:
+        raise InputError                  # Check if email is already used.
 
     if len(password) < 6:
-        raise (InputError)                  # check len(password) >= 6.
+        raise InputError                  # check len(password) >= 6.
 
     if len(name_first) < 1 or len(name_first) > 50:
-        raise (InputError)                  # Check first name matches requirements.
+        raise InputError                  # Check first name matches requirements.
 
     if len(name_last) < 1 or len(name_last) > 50:
-        raise (InputError)                  # Check Last Name matches requirements.
+        raise InputError                  # Check Last Name matches requirements.
 
 
 def auth_register(email, password, name_first, name_last):
@@ -147,7 +143,7 @@ def auth_login(email, password):
     regex_email_check(email)                # check if email is valid.
 
     focus_user = check_in_users('email', data.users, email)
-    if focus_user == None:                  # Check if email is used by user.
+    if focus_user is None:                  # Check if email is used by user.
         raise InputError                    # If not stored, raise an error.
 
     if focus_user['password'] != password:
@@ -168,7 +164,6 @@ def auth_logout(token):
     """Used to log user out of program."""
     user = data.remove_token(token)         # Search for token in token dict.
 
-    if user == None:
+    if user is None:
         return {'is_success': False}        # Returns accordingly if token is found.
-    else:
-        return {'is_success': True}
+    return {'is_success': True}

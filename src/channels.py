@@ -1,6 +1,8 @@
+'''
+functions of create a new channel and return the specific channel
+'''
 import random
 import data
-from other import clear
 from error import InputError
 
 

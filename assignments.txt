@@ -25,3 +25,8 @@ Yuhan - user.py
 Liuyuzi - other.py
 Joseph - _http.py files for auth, channel, and channels, and server.py
 Hao Ren - _http.py files for message, user and other
+
+Things to improve in Iteration 2:
+- task boards
+- exception messages
+- project management

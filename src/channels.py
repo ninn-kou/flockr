@@ -1,9 +1,9 @@
-import data
+'''
+functions of create a new channel and return the specific channel
+'''
 import random
-import auth
-from other import clear
+import data
 from error import InputError
-
 
 ################################################################################
 ################################################################################
@@ -30,8 +30,14 @@ def channels_list(token):
 
 def channels_listall(token):
     """just return all channels? sure about that?"""
+    found = 0
+    for user in data.users:                      # Check that token exists.
+        if user['token'] == token:
+            found = 1
+            break
+    if found != 1:
+        raise InputError
     return data.channels
-
 
 def create_channel_id(channels):
     """Create a random channel id."""
@@ -50,13 +56,13 @@ def channels_create(token, name, is_public):
     data.init_channels()                    # Initialise the channels list.
 
     if len(name) > 20:                      # The length of channel name should <= 20.
-        raise(InputError)
+        raise InputError
 
     for i in data.users:                    # Find the details of the user by token.
         if i['token'] == token:
             owner_id = i['u_id']
-            owner_FN = i['name_first']
-            owner_LN = i['name_last']
+            owner_fn = i['name_first']
+            owner_ln = i['name_last']
             break
 
     channel_id = create_channel_id(data.channels)
@@ -66,15 +72,15 @@ def channels_create(token, name, is_public):
         'owner': [
             {
                 'u_id': owner_id,
-                'name_first': owner_FN,
-                'name_last': owner_LN,
+                'name_first': owner_fn,
+                'name_last': owner_ln,
             }
         ],
         'all_members': [
             {
                 'u_id': owner_id,
-                'name_first': owner_FN,
-                'name_last': owner_LN,
+                'name_first': owner_fn,
+                'name_last': owner_ln,
             }
         ],
         'is_public': is_public,

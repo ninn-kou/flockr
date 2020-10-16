@@ -4,6 +4,7 @@
 import re
 import random
 import string
+import hashlib
 
 import data.data as data
 from base.error import InputError
@@ -16,7 +17,6 @@ def regex_email_check(email):
     if re.search(regex, email) is None:
         raise InputError('terrible email')
 
-
 def check_in_users(data_type, users, item):
     """Check for a particular data type in users list."""
 
@@ -26,7 +26,6 @@ def check_in_users(data_type, users, item):
             focus_user = user
             break
     return focus_user
-
 
 def create_token(u_id, users):
     """Create a 20 character long ascii string for token."""
@@ -90,7 +89,6 @@ def handle_variabliser(handle, variabliser_num, variabliser, users):
         handle = handle_variabliser(handle, variabliser_num, variabliser, users)
     return handle
 
-
 def handle_generator(name_first, name_last, users):
     """Generates a unique handle."""
 
@@ -103,7 +101,6 @@ def handle_generator(name_first, name_last, users):
     handle = handle_variabliser(raw_concatenation, 0, '', users)
 
     return handle
-
 
 def auth_register_error_check(email, password, name_first, name_last):
     """Handles error checking for auth_register."""
@@ -127,6 +124,15 @@ def auth_register_error_check(email, password, name_first, name_last):
     if len(name_last) < 1 or len(name_last) > 50:
         raise InputError('1')
 
+def hash(input):
+    ''' create a has with input'''
+
+    # create the hash
+    hash = hashlib.sha256(input.encode()).hexdigest()
+    print(hash)
+
+    return hash
+
 def auth_register(email, password, name_first, name_last):
     """ Function to register a new user to the program."""
 
@@ -141,6 +147,8 @@ def auth_register(email, password, name_first, name_last):
 
     # create a unique handle
     handle = handle_generator(name_first, name_last, data.return_users())
+
+    password = hash(password)
 
     # Create and store a user object.
     user = {
@@ -161,7 +169,6 @@ def auth_register(email, password, name_first, name_last):
     }
     return token_object
 
-
 def auth_login(email, password):
     """ Used to log user into program."""
 
@@ -175,8 +182,10 @@ def auth_login(email, password):
     if focus_user is None:
         raise InputError
 
+    print(focus_user)
+
     # Check password is correct
-    if focus_user['password'] != password:
+    if focus_user['password'] != hash(password):
         raise InputError
 
     # Creates an object with u_id and token.

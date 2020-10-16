@@ -232,7 +232,7 @@ def test_auth_login_input_error_incorrect_password():
     auth.auth_register('tests@examples.com', 'correct_password', 'test', 'person')
 
     # - password is not correct (we love storing raw passwords)
-    # correct password is 'password'
+    # correct password is 'correct_password'
     with pytest.raises(InputError):
         auth.auth_login('tests@examples.com', 'incorrect_password')
 

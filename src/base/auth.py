@@ -14,7 +14,7 @@ def regex_email_check(email):
     regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 
     if re.search(regex, email) is None:
-        raise InputError
+        raise InputError('terrible email')
 
 
 def check_in_users(data_type, users, item):
@@ -98,16 +98,16 @@ def auth_register_error_check(email, password, name_first, name_last):
     regex_email_check(email)                # Check for valid input.
 
     if check_in_users('email', data.users, email) is not None:
-        raise InputError                  # Check if email is already used.
+        raise InputError('1')                  # Check if email is already used.
 
     if len(password) < 6:
-        raise InputError                  # check len(password) >= 6.
+        raise InputError('1')                  # check len(password) >= 6.
 
     if len(name_first) < 1 or len(name_first) > 50:
-        raise InputError                  # Check first name matches requirements.
+        raise InputError('1')                  # Check first name matches requirements.
 
     if len(name_last) < 1 or len(name_last) > 50:
-        raise InputError                  # Check Last Name matches requirements.
+        raise InputError('1')                  # Check Last Name matches requirements.
 
 
 def auth_register(email, password, name_first, name_last):

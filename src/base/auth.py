@@ -5,7 +5,7 @@ import re
 import random
 import string
 
-import base.data as data
+import data.data as data
 from base.error import InputError
 
 def regex_email_check(email):
@@ -107,14 +107,12 @@ def handle_generator(name_first, name_last, users):
 
 def auth_register_error_check(email, password, name_first, name_last):
     """Handles error checking for auth_register."""
-    # Initialise user data.
-    data.init_users()
 
     # Check for valid input.
     regex_email_check(email)
 
     # Check if email is already used.
-    if check_in_users('email', data.users, email) is not None:
+    if check_in_users('email', data.return_users(), email) is not None:
         raise InputError('1')
 
     # check len(password) >= 6.
@@ -136,13 +134,13 @@ def auth_register(email, password, name_first, name_last):
     auth_register_error_check(email, password, name_first, name_last)
 
     # Create a unique u_id.
-    u_id = create_u_id(data.users)
+    u_id = create_u_id(data.return_users())
 
     # creates a random and unique token.
-    token = create_token(u_id, data.users)
+    token = create_token(u_id, data.return_users())
 
     # create a unique handle
-    handle = handle_generator(name_first, name_last, data.users)
+    handle = handle_generator(name_first, name_last, data.return_users())
 
     # Create and store a user object.
     user = {
@@ -167,14 +165,11 @@ def auth_register(email, password, name_first, name_last):
 def auth_login(email, password):
     """ Used to log user into program."""
 
-    # Initialise user data.
-    data.init_users()
-
     # check if email is valid.
     regex_email_check(email)
 
     # Check if email is used by user.
-    focus_user = check_in_users('email', data.users, email)
+    focus_user = check_in_users('email', data.return_users(), email)
 
     # If not stored, raise an error.
     if focus_user is None:
@@ -186,7 +181,7 @@ def auth_login(email, password):
 
     # Creates an object with u_id and token.
     u_id = focus_user['u_id']
-    token = create_token(u_id, data.users)
+    token = create_token(u_id, data.return_users())
 
     token_object = {
         'u_id': u_id,

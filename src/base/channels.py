@@ -2,7 +2,7 @@
 functions of create a new channel and return the specific channel
 '''
 import random
-import base.data as data
+import data.data as data
 from base.error import InputError
 
 ################################################################################
@@ -16,7 +16,7 @@ from base.error import InputError
 
 def channels_list(token):
     """List the channel you want."""
-    for i in data.users:                    # Transfer token into u_id.
+    for i in data.return_users():                    # Transfer token into u_id.
         if i['token'] == token:
             user_id = i['u_id']
             break
@@ -31,7 +31,7 @@ def channels_list(token):
 def channels_listall(token):
     """just return all channels? sure about that?"""
     found = 0
-    for user in data.users:                      # Check that token exists.
+    for user in data.return_users():                      # Check that token exists.
         if user['token'] == token:
             found = 1
             break
@@ -58,7 +58,7 @@ def channels_create(token, name, is_public):
     if len(name) > 20:                      # The length of channel name should <= 20.
         raise InputError
 
-    for i in data.users:                    # Find the details of the user by token.
+    for i in data.return_users():                    # Find the details of the user by token.
         if i['token'] == token:
             owner_id = i['u_id']
             owner_fn = i['name_first']

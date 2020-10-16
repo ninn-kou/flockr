@@ -5,7 +5,7 @@ import pytest
 
 import base.auth as auth
 from base.error import InputError
-import base.data as data
+import data.data as data
 from base.other import clear
 
 def coverate_notes():
@@ -18,9 +18,9 @@ def coverate_notes():
 
 def iteration_2_notes():
     """
-    U_ID:
     TOKENS:
     using jwt
+    need to store 
 
     PASSWORDS:
     Stored as hashed strings
@@ -101,8 +101,7 @@ def test_auth_register_multiple_users():
 
     # a unique handle is produced
     new_list = []
-    data.init_users()
-    for user in data.users:
+    for user in data.return_users():
         new_list.append(user['handle_str'])
     assert len(new_list) == len(set(new_list))
 

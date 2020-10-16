@@ -1,7 +1,7 @@
 '''
     channel.py written by Xingyu Tan, Yuhan Yan and Hao Ren.
 '''
-import base.data as data
+import data.data as data
 from base.error import InputError, AccessError
 
 
@@ -35,7 +35,7 @@ def add_one_in_channel(channel_id, user):
 def token_into_user_id(token):
     """Transfer the token into the user id."""
     au_id = -1
-    for i in data.users:
+    for i in data.return_users():
         if i['token'] == token:
             au_id = i['u_id']
     return au_id
@@ -52,7 +52,7 @@ def find_channel(channel_id):
 def find_user(user_id):
     """Find user's info by search one's id."""
     u_id = -1
-    for i in data.users:
+    for i in data.return_users():
         if i['u_id'] == user_id:
             u_id = i
             break
@@ -91,8 +91,7 @@ def channel_invite(token, channel_id, u_id):
         3. Repeated Invite
             - Repeated invite one person who is already in.
     """
-    data.init_channels()
-    data.init_users()                       # Global variables.
+    data.init_channels()                       # Global variables.
 
     auth_id = token_into_user_id(token)     # InputError 1: invalid token.
     if auth_id == -1:
@@ -146,7 +145,6 @@ def channel_details(token, channel_id):
             - the authorised user is not in this channel.
     """
     data.init_channels()                    # Global variables.
-    data.init_users()
 
     auth_id = token_into_user_id(token)     # InputError 1: invalid token.
     if auth_id == -1:
@@ -193,7 +191,6 @@ def channel_messages(token, channel_id, start):
             - the authorised user is not in this channel.
     """
     data.init_channels()                    # Global variables.
-    data.init_users()
     end = start + 50
 
     auth_id = token_into_user_id(token)     # InputError 1: invalid token.
@@ -307,7 +304,6 @@ def channel_leave(token, channel_id):
             - the authorised user is not in this channel.
     """
     data.init_channels()                    # Global variables.
-    data.init_users()
 
     target_channel = find_channel(channel_id)
     if target_channel is None:              # InputError 1: invalid channel_id.
@@ -352,7 +348,6 @@ def channel_join(token, channel_id):
             - the channel is PRIVATE.
     """
     data.init_channels()                    # Global variables.
-    data.init_users()
 
     target_channel = find_channel(channel_id)
     if target_channel is None:              # InputError 1: invalid channel_id.
@@ -442,7 +437,6 @@ def channel_addowner(token, channel_id, u_id):
             - or an owner of this channel(won't focus on flockr this iteration).
     """
     data.init_channels()                    # Global variables.
-    data.init_users()
 
     this_channel = find_channel(channel_id)
     if this_channel is None:                # InputError 1: invalid channel_id.
@@ -492,7 +486,6 @@ def channel_removeowner(token, channel_id, u_id):
             - or an owner of this channel(won't focus on flockr this iteration).
     """
     data.init_channels()                    # Global variables.
-    data.init_users()
 
     this_channel = find_channel(channel_id)
     if this_channel is None:                # InputError 1: invalid channel_id.

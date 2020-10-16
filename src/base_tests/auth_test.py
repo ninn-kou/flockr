@@ -16,6 +16,21 @@ def coverate_notes():
     - Impossible to create a general test for handles being less than 20 characters
     """
 
+def iteration_2_notes():
+    """
+    U_ID:
+    TOKENS:
+    using jwt
+
+    PASSWORDS:
+    Stored as hashed strings
+
+    DATA:
+    Persistent storage
+
+    functionally, things should still work the same
+    """
+
 def auth_register_notes():
     """
     auth_register()

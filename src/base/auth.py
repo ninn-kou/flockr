@@ -30,6 +30,7 @@ def check_in_users(data_type, users, item):
 
 def create_token(u_id, users):
     """Create a 20 character long ascii string for token."""
+
     # Create list of random characters and length of token.
     valid_characters = string.ascii_letters + string.digits + string.punctuation
     token_length = 20
@@ -45,7 +46,6 @@ def create_token(u_id, users):
 
     return token
 
-
 def create_u_id(users):
     """Create a random 32 bit unsigned integer to use as a u_id."""
 
@@ -54,7 +54,7 @@ def create_u_id(users):
 
     # Simple recursive function to check whether u_id is unique.
     for user in users:
-        if user['u_id'] == u_id:
+        if user['u_id'] is u_id:
             u_id = create_u_id(users)
             break
 

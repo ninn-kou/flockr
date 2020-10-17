@@ -30,14 +30,14 @@ def login():
     print(token)
 
     # return dumps(token)
-    return dumps({'hi': 'boo', 'thing': 'colour!'})
+    return jsonify({'hi': 'boo', 'thing': 'colour!'})
 
 
 @AUTHHTTP.route('/register', methods = ['POST'])
 def register():
 
+    # get the user from json
     user = request.json
-    print(user)
 
     token = auth.auth_register(
         user.get('email'),
@@ -45,7 +45,6 @@ def register():
         user.get('name_first'),
         user.get('name_last')
     )
-    print(token)
-    token['u_id'] = str(token['u_id'])
+    
+    # return token object as json
     return jsonify(token)
-    # return dumps({'hi': 'boo', 'thing': 'colour!'})

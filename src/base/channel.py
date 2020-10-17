@@ -42,7 +42,7 @@ def token_into_user_id(token):
 
     try:
         email = jwt.decode(token, jwt_secret, algorithms=['HS256']).get('email')
-    except:
+    except jwt.DecodeError:
         return -1
 
     au_id = -1

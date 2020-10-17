@@ -6,6 +6,7 @@ import random
 import string
 import hashlib
 import jwt
+from jwt import DecodeError
 
 import data.data as data
 from base.error import InputError
@@ -217,9 +218,9 @@ def auth_logout(token):
     # decode email from jwt token
     try:
         email = jwt.decode(token, JWT_SECRET, algorithms=['HS256']).get('email')
-    except:
+    except DecodeError:
         return {'is_success': False}
-    
+
     # find email
     for user in data.return_users():
         print(user)

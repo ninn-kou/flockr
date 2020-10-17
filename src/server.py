@@ -3,9 +3,8 @@ Main file to run in order to run backend server
 '''
 
 from json import dumps
-from flask import Flask, request
+from flask import Flask
 from flask_cors import CORS
-from base.error import InputError
 
 import server.auth_http as auth_http
 import server.echo_http as echo_http

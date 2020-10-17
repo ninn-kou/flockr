@@ -15,7 +15,6 @@ import requests
 
 import pytest
 
-import base.auth as auth
 import data.data as data
 from base.other import clear
 
@@ -50,7 +49,7 @@ def test_register(url):
     # clear out the databases
     clear()
 
-    resp = requests.post(url + 'auth/register', 
+    resp = requests.post(url + 'auth/register',
     json = {
         'email': 'test@example.com',
         'password': 'emilyisshort',
@@ -66,10 +65,10 @@ def test_register(url):
         if user['u_id'] == text.get('u_id'):
             focus_user = user
             break
-    
+
     assert focus_user is not None
     assert focus_user.get('email') == 'test@example.com'
-    
+
 
 def test_login(url):
     '''
@@ -78,7 +77,7 @@ def test_login(url):
     # clear out the databases
     clear()
 
-    register_text = requests.post(url + 'auth/register', 
+    register_text = requests.post(url + 'auth/register',
     json = {
         'email': 'test@example.com',
         'password': 'emilyisshort',
@@ -102,7 +101,7 @@ def test_logout(url):
     clear()
 
     # register the user
-    user = requests.post(url + 'auth/register', 
+    user = requests.post(url + 'auth/register',
     json = {
         'email': 'test@example.com',
         'password': 'emilyisshort',

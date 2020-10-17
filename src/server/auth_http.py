@@ -13,6 +13,7 @@ AUTHHTTP = Blueprint('auth', __name__)
 
 @AUTHHTTP.route('/register', methods = ['POST'])
 def register():
+    ''' registers a new user'''
 
     # get the user from json
     user = request.json
@@ -29,6 +30,7 @@ def register():
 
 @AUTHHTTP.route('/login', methods = ['POST'])
 def login():
+    ''' logs the user in'''
 
     # get the user from json
     user = request.json
@@ -37,12 +39,13 @@ def login():
         user.get('email'),
         user.get('password')
     )
-    
+
     # return token object as json
     return jsonify(token)
 
 @AUTHHTTP.route('/logout', methods = ['POST'])
 def logout():
+    ''' logs the user out'''
 
     # get the user from json
     user = request.json
@@ -50,6 +53,6 @@ def logout():
     success = auth.auth_logout(
         user.get('token')
     )
-    
+
     # return token object as json
     return jsonify(success)

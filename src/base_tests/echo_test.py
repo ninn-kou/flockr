@@ -1,9 +1,9 @@
 '''
     For sanity test in echo_http_test.py
 '''
+import pytest
 
 import base.echo as echo
-import pytest
 from base.error import InputError
 
 def test_echo():

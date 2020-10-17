@@ -12,7 +12,6 @@ def test_channels_create():
     data.init_channels()
     #create a user and take its  id and token
     user1 = auth.auth_register('12345@test.com', 'password', 'FirstN', 'LastN')
-    user1 = auth.auth_login('12345@test.com', 'password')
     u1_id = user1['u_id']
     u1_token = user1['token']
 

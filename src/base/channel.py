@@ -1,9 +1,10 @@
 '''
     channel.py written by Xingyu Tan, Yuhan Yan and Hao Ren.
 '''
+import jwt
+
 import data.data as data
 from base.error import InputError, AccessError
-
 
 ################################################################################
 ################################################################################
@@ -34,9 +35,19 @@ def add_one_in_channel(channel_id, user):
 
 def token_into_user_id(token):
     """Transfer the token into the user id."""
+
+    # Adding in a little bit here to improve token handling
+    with open('src/data/JWT_SECRET.txt', 'r') as file:
+        jwt_secret = file.read()
+
+    try:
+        email = jwt.decode(token, jwt_secret, algorithms=['HS256']).get('email')
+    except:
+        return -1
+
     au_id = -1
     for i in data.return_users():
-        if i['token'] == token:
+        if i['email'] == email:
             au_id = i['u_id']
     return au_id
 

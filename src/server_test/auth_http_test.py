@@ -92,7 +92,7 @@ def test_login(url):
     })
 
     # make sure u_id are matching both times
-    assert json.loads(register_text).get('u_id') == json.loads(auth_text).get('u_id')
+    assert json.loads(register_text.text).get('u_id') == json.loads(auth_text.text).get('u_id')
 
 def test_logout(url):
     '''
@@ -102,7 +102,7 @@ def test_logout(url):
     clear()
 
     # register the user
-    text = requests.post(url + 'auth/register', 
+    user = requests.post(url + 'auth/register', 
     json = {
         'email': 'test@example.com',
         'password': 'emilyisshort',
@@ -110,9 +110,11 @@ def test_logout(url):
         'name_last': 'Luo?'
     })
 
+    # log that user out with returned jwt
     token = requests.post(url + 'auth/logout',
     json = {
-        'token': json.loads(text).get('token')
+        'token': json.loads(user.text).get('token')
     })
 
-    assert json.loads(token).get('is_success')
+    # make sure logging out user was successful
+    assert json.loads(token.text).get('is_success')

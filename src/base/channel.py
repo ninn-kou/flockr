@@ -1,9 +1,10 @@
 '''
     channel.py written by Xingyu Tan, Yuhan Yan and Hao Ren.
 '''
-import base.data as data
-from base.error import InputError, AccessError
+import jwt
 
+import data.data as data
+from base.error import InputError, AccessError
 
 ################################################################################
 ################################################################################
@@ -34,9 +35,19 @@ def add_one_in_channel(channel_id, user):
 
 def token_into_user_id(token):
     """Transfer the token into the user id."""
+
+    # Adding in a little bit here to improve token handling
+    with open('src/data/JWT_SECRET.txt', 'r') as file:
+        jwt_secret = file.read()
+
+    try:
+        email = jwt.decode(token, jwt_secret, algorithms=['HS256']).get('email')
+    except:
+        return -1
+
     au_id = -1
-    for i in data.users:
-        if i['token'] == token:
+    for i in data.return_users():
+        if i['email'] == email:
             au_id = i['u_id']
     return au_id
 
@@ -52,7 +63,7 @@ def find_channel(channel_id):
 def find_user(user_id):
     """Find user's info by search one's id."""
     u_id = -1
-    for i in data.users:
+    for i in data.return_users():
         if i['u_id'] == user_id:
             u_id = i
             break
@@ -91,8 +102,7 @@ def channel_invite(token, channel_id, u_id):
         3. Repeated Invite
             - Repeated invite one person who is already in.
     """
-    data.init_channels()
-    data.init_users()                       # Global variables.
+    data.init_channels()                       # Global variables.
 
     auth_id = token_into_user_id(token)     # InputError 1: invalid token.
     if auth_id == -1:
@@ -146,7 +156,6 @@ def channel_details(token, channel_id):
             - the authorised user is not in this channel.
     """
     data.init_channels()                    # Global variables.
-    data.init_users()
 
     auth_id = token_into_user_id(token)     # InputError 1: invalid token.
     if auth_id == -1:
@@ -193,7 +202,6 @@ def channel_messages(token, channel_id, start):
             - the authorised user is not in this channel.
     """
     data.init_channels()                    # Global variables.
-    data.init_users()
     end = start + 50
 
     auth_id = token_into_user_id(token)     # InputError 1: invalid token.
@@ -307,7 +315,6 @@ def channel_leave(token, channel_id):
             - the authorised user is not in this channel.
     """
     data.init_channels()                    # Global variables.
-    data.init_users()
 
     target_channel = find_channel(channel_id)
     if target_channel is None:              # InputError 1: invalid channel_id.
@@ -352,7 +359,6 @@ def channel_join(token, channel_id):
             - the channel is PRIVATE.
     """
     data.init_channels()                    # Global variables.
-    data.init_users()
 
     target_channel = find_channel(channel_id)
     if target_channel is None:              # InputError 1: invalid channel_id.
@@ -442,7 +448,6 @@ def channel_addowner(token, channel_id, u_id):
             - or an owner of this channel(won't focus on flockr this iteration).
     """
     data.init_channels()                    # Global variables.
-    data.init_users()
 
     this_channel = find_channel(channel_id)
     if this_channel is None:                # InputError 1: invalid channel_id.
@@ -492,7 +497,6 @@ def channel_removeowner(token, channel_id, u_id):
             - or an owner of this channel(won't focus on flockr this iteration).
     """
     data.init_channels()                    # Global variables.
-    data.init_users()
 
     this_channel = find_channel(channel_id)
     if this_channel is None:                # InputError 1: invalid channel_id.

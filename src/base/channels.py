@@ -47,7 +47,7 @@ def channels_list(token):
     for i in range(len(data.return_channels())):     # Use loops to check if user in channel.
         for j in range(len(data.return_channels()[i]['all_members'])):
             if data.return_channels()[i]['all_members'][j]['u_id'] == user_id:
-                channel_list.append(data.channels[i])
+                channel_list.append(data.return_channels()[i])
     return channel_list
 
 

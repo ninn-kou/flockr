@@ -1188,7 +1188,7 @@ def test_channel_removeowner1():
 
     # assert the user hasnot been moved
     owner_num = 0
-    for cnl in data.channels:
+    for cnl in data.return_channels():
         if cnl['channel_id'] == cid:
             owner_num = len(cnl['owner'])
             break

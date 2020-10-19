@@ -8,8 +8,7 @@ from base.other import clear
 
 def test_channels_create():
     clear()
-    #initialise the channels list
-    data.init_channels()
+
     #create a user and take its  id and token
     user1 = auth.auth_register('12345@test.com', 'password', 'FirstN', 'LastN')
     u1_id = user1['u_id']
@@ -22,16 +21,15 @@ def test_channels_create():
     #create a channel in channels and return its channel id
     channel_1_id = channels.channels_create(u1_token,'team',True)
     #assert channel_1_id is int
-    assert data.channels[-1]['name'] == 'team'
-    assert data.channels[-1]['channel_id'] == channel_1_id
-    assert data.channels[-1]['is_public'] == True
-    assert data.channels[-1]['owner'] == [{'u_id':u1_id,'name_first':'FirstN','name_last':'LastN'}]
-    assert data.channels[-1]['all_members'] == [{'u_id':u1_id,'name_first':'FirstN','name_last':'LastN'}]
+    assert data.return_channels()[-1]['name'] == 'team'
+    assert data.return_channels()[-1]['channel_id'] == channel_1_id
+    assert data.return_channels()[-1]['is_public'] == True
+    assert data.return_channels()[-1]['owner'] == [{'u_id':u1_id,'name_first':'FirstN','name_last':'LastN'}]
+    assert data.return_channels()[-1]['all_members'] == [{'u_id':u1_id,'name_first':'FirstN','name_last':'LastN'}]
 
 def test_channels_listall():
     clear()
-    #initialise the channels list
-    data.init_channels()
+
     #create two user and take their id and token
     user1 = auth.auth_register('1234@test.com', 'password', 'FirstN', 'LastN')
     user1 = auth.auth_login('1234@test.com', 'password')
@@ -96,8 +94,7 @@ def test_channels_listall():
 
 def test_channels_list():
     clear()
-    #initialise the channels list
-    data.init_channels()
+
     #create two user and take their id and token
     user1 = auth.auth_register('45@test.com', 'password', 'FirstN', 'LastN')
     user1 = auth.auth_login('45@test.com', 'password')

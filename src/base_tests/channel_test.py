@@ -360,12 +360,14 @@ def msg_send(channel_id, msg_id, u_id, msg, time):
         'time_created': time,
     }
 
-    for i in data.return_channels():
+    channels = data.return_channels()
+
+    for i in channels:
         if i['channel_id'] == channel_id:
             i['message'].insert(0, return_message)
             break
 
-    return
+    data.replace_channels(channels)
 
 ###################     INPUT ERROR        ##################
 def test_inputError_channel_message_channelId_start_invalid():
@@ -535,7 +537,6 @@ def test_channel_message_correct_message_infors():
     user1 = auth_register("test1@test.com","check_test","Xingyu","TAN")
     user1 = auth_login("test1@test.com","check_test")
     u_token1 = user1['token']
-
 
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)

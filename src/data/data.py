@@ -120,6 +120,13 @@ def append_channels(channel):
     with open('src/data/channels.json', 'w') as file:
         json.dump(channels, file)
 
+def replace_channels(channels):
+    ''' replace persistent database with input'''
+
+    # write json to file
+    with open('src/data/channels.json', 'w') as file:
+        json.dump(channels, file)
+
 def clear_channels():
     ''' clear out channels file '''
 

@@ -28,10 +28,18 @@ from base.error import InputError, AccessError
 
 def add_one_in_channel(channel_id, user):
     """Adding a member into the channel."""
-    for i in data.return_channels():
+
+    # get the channels
+    channels = data.return_channels()
+
+    # add user into memory
+    for i in channels:
         if i['channel_id'] == channel_id:
             i['all_members'].append(user)
             break
+    
+    # add it to memory
+    data.replace_channels(channels)
 
 def token_into_user_id(token):
     """Transfer the token into the user id."""
@@ -252,12 +260,17 @@ def channel_messages(token, channel_id, start):
 
 def remove_a_member_in_channel(u_id, channel_id):
     """Remove the member by user if from the channel."""
-    for users in data.return_channels():
+
+    channels = data.return_channels()
+    
+    for users in channels:
         if users['channel_id'] == channel_id:
             for member in users['all_members']:
                 if member['u_id'] == u_id:
                     users['all_members'].remove(member)
             break
+
+    data.replace_channels(channels)
 
 def number_of_owners(channel_id):
     """Return the total number of owners."""
@@ -270,10 +283,15 @@ def number_of_owners(channel_id):
 
 def remove_whole_channel(channel_id):
     """If no owner exist, remove the whole channel."""
-    for chan in data.return_channels():
+
+    channels = data.return_channels()
+    
+    for chan in channels:
         if chan['channel_id'] == channel_id:
             chan.remove('chan')
         break
+    
+    data.replace_channels(channels)
 
 def is_channel_public(channel_id):
     """To indicate if the channel is public."""
@@ -395,19 +413,29 @@ def find_current_owner(channel, u_id):
 
 def add_owner_in_channel(channel_id, owners):
     """Add a member into the owner list."""
-    for users in data.return_channels():
+
+    channels = data.return_channels()
+
+    for users in channels:
         if users['channel_id'] == channel_id:
             users['owner'].append(owners)
             break
+    
+    data.replace_channels(channels)
 
 def rm_owner_in_channel(channel_id, owners):
     """Remove a member from the owner list."""
-    for users in data.return_channels():
+
+    channels = data.return_channels()
+
+    for users in channels:
         if users['channel_id'] == channel_id:
             for onrs in users['owner']:
                 if onrs['u_id'] == owners:
                     users['owner'].remove(onrs)
             break
+    
+    data.replace_channels(channels)
 
 
 ############################################################

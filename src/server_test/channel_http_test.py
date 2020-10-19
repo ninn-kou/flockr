@@ -7,6 +7,7 @@ to interface with the frontend
 '''
 
 import re
+from re import L
 from subprocess import Popen, PIPE
 import signal
 from time import sleep
@@ -41,3 +42,68 @@ def url():
     else:
         server.kill()
         raise Exception("Couldn't get URL from local server")
+
+def register_user(email, password, name_first, name_last):
+    resp = requests.post(url + 'auth/register',
+    json = {
+        'email': email,
+        'password': password,
+        'name_first': name_first,
+        'name_last': name_last
+    })
+
+    return json.loads(resp.text)
+
+def test_invite(url):
+    ''' testing channel_invite requests '''
+
+    # clear out the databases
+    clear()
+
+def test_details(url):
+    ''' testing channel_details requests '''
+
+    # clear out the databases
+    clear()
+
+    # register a new user
+    user = register_user('test@example.com', 'emilyisshort', 'Emily', 'Luo')
+
+    response = requests.post(url + 'channel/invite', 
+    json = {
+        'token': user.get('token'),
+        'channel_id': 'yep'
+    })
+    
+
+def test_messages(url):
+    ''' testing channel_messages requests '''
+
+    # clear out the databases
+    clear()
+
+
+
+def test_leave(url):
+    ''' testing channel_leave requests '''
+
+    # clear out the databases
+    clear()
+
+def test_join(url):
+    ''' testing channel_join requests '''
+
+    # clear out the databases
+    clear()
+
+def test_addowner(url):
+    ''' testing channel_join requests '''
+
+    # clear out the databases
+    clear()
+
+def test_removeowner(url):
+    ''' testing channel_removeowner requests '''
+
+    # clear out the databases
+    clear()

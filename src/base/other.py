@@ -6,9 +6,8 @@ import data.data as data
 
 def clear():
     ''' clear the backend state '''
-    data.init_channels()
 
-    data.channels = []
+    data.clear_channels()
     data.clear_users()
 
 def users_all(token):

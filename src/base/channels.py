@@ -44,9 +44,9 @@ def channels_list(token):
     user_id = i['u_id']
 
     channel_list = []
-    for i in range(len(data.channels)):     # Use loops to check if user in channel.
-        for j in range(len(data.channels[i]['all_members'])):
-            if data.channels[i]['all_members'][j]['u_id'] == user_id:
+    for i in range(len(data.return_channels())):     # Use loops to check if user in channel.
+        for j in range(len(data.return_channels()[i]['all_members'])):
+            if data.return_channels()[i]['all_members'][j]['u_id'] == user_id:
                 channel_list.append(data.channels[i])
     return channel_list
 
@@ -57,7 +57,7 @@ def channels_listall(token):
     # check that token exists
     owner_from_token(token)
 
-    return data.channels
+    return data.return_channels()
 
 def create_channel_id(channels):
     """Create a random channel id."""
@@ -73,8 +73,6 @@ def create_channel_id(channels):
 
 def channels_create(token, name, is_public):
     """Create a new empty channel."""
-    data.init_channels()                    # Initialise the channels list.
-
     if len(name) > 20:                      # The length of channel name should <= 20.
         raise InputError
 
@@ -83,7 +81,7 @@ def channels_create(token, name, is_public):
     owner_fn = i['name_first']
     owner_ln = i['name_last']
 
-    channel_id = create_channel_id(data.channels)
+    channel_id = create_channel_id(data.return_channels())
     channel_new = {                         # Initialize the new channel.
         'name': name,
         'channel_id':channel_id,

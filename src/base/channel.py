@@ -28,7 +28,7 @@ from base.error import InputError, AccessError
 
 def add_one_in_channel(channel_id, user):
     """Adding a member into the channel."""
-    for i in data.channels:
+    for i in data.return_channels():
         if i['channel_id'] == channel_id:
             i['all_members'].append(user)
             break
@@ -54,7 +54,7 @@ def token_into_user_id(token):
 def find_channel(channel_id):
     """Interate the channels list by its id, return the channel we need."""
     answer = None
-    for i in data.channels:
+    for i in data.return_channels():
         if i['channel_id'] == channel_id:
             answer = i
             break
@@ -102,8 +102,6 @@ def channel_invite(token, channel_id, u_id):
         3. Repeated Invite
             - Repeated invite one person who is already in.
     """
-    data.init_channels()                       # Global variables.
-
     auth_id = token_into_user_id(token)     # InputError 1: invalid token.
     if auth_id == -1:
         raise InputError
@@ -155,8 +153,6 @@ def channel_details(token, channel_id):
         2. AccessError
             - the authorised user is not in this channel.
     """
-    data.init_channels()                    # Global variables.
-
     auth_id = token_into_user_id(token)     # InputError 1: invalid token.
     if auth_id == -1:
         raise InputError
@@ -201,7 +197,6 @@ def channel_messages(token, channel_id, start):
         2. AccessError
             - the authorised user is not in this channel.
     """
-    data.init_channels()                    # Global variables.
     end = start + 50
 
     auth_id = token_into_user_id(token)     # InputError 1: invalid token.
@@ -257,8 +252,7 @@ def channel_messages(token, channel_id, start):
 
 def remove_a_member_in_channel(u_id, channel_id):
     """Remove the member by user if from the channel."""
-    data.init_channels()
-    for users in data.channels:
+    for users in data.return_channels():
         if users['channel_id'] == channel_id:
             for member in users['all_members']:
                 if member['u_id'] == u_id:
@@ -267,9 +261,8 @@ def remove_a_member_in_channel(u_id, channel_id):
 
 def number_of_owners(channel_id):
     """Return the total number of owners."""
-    data.init_channels()
     num = 0
-    for chan in data.channels:
+    for chan in data.return_channels():
         if chan['channel_id'] == channel_id:
             num = len(chan['owner'])
             break
@@ -277,17 +270,15 @@ def number_of_owners(channel_id):
 
 def remove_whole_channel(channel_id):
     """If no owner exist, remove the whole channel."""
-    data.init_channels()
-    for chan in data.channels:
+    for chan in data.return_channels():
         if chan['channel_id'] == channel_id:
             chan.remove('chan')
         break
 
 def is_channel_public(channel_id):
     """To indicate if the channel is public."""
-    data.init_channels()
     is_public = False
-    for channel in data.channels:
+    for channel in data.return_channels():
         if channel['channel_id'] == channel_id:
             is_public = channel['is_public']
             break
@@ -314,8 +305,6 @@ def channel_leave(token, channel_id):
         2. AccessError
             - the authorised user is not in this channel.
     """
-    data.init_channels()                    # Global variables.
-
     target_channel = find_channel(channel_id)
     if target_channel is None:              # InputError 1: invalid channel_id.
         raise InputError
@@ -358,8 +347,6 @@ def channel_join(token, channel_id):
         2. AccessError
             - the channel is PRIVATE.
     """
-    data.init_channels()                    # Global variables.
-
     target_channel = find_channel(channel_id)
     if target_channel is None:              # InputError 1: invalid channel_id.
         raise InputError
@@ -408,15 +395,14 @@ def find_current_owner(channel, u_id):
 
 def add_owner_in_channel(channel_id, owners):
     """Add a member into the owner list."""
-    for users in data.channels:
+    for users in data.return_channels():
         if users['channel_id'] == channel_id:
             users['owner'].append(owners)
             break
 
 def rm_owner_in_channel(channel_id, owners):
     """Remove a member from the owner list."""
-    data.init_channels()
-    for users in data.channels:
+    for users in data.return_channels():
         if users['channel_id'] == channel_id:
             for onrs in users['owner']:
                 if onrs['u_id'] == owners:
@@ -447,8 +433,6 @@ def channel_addowner(token, channel_id, u_id):
             - when the authorized user is not an owner of the flockr;
             - or an owner of this channel(won't focus on flockr this iteration).
     """
-    data.init_channels()                    # Global variables.
-
     this_channel = find_channel(channel_id)
     if this_channel is None:                # InputError 1: invalid channel_id.
         raise InputError
@@ -496,8 +480,6 @@ def channel_removeowner(token, channel_id, u_id):
             - when the authorized user is not an owner of the flockr;
             - or an owner of this channel(won't focus on flockr this iteration).
     """
-    data.init_channels()                    # Global variables.
-
     this_channel = find_channel(channel_id)
     if this_channel is None:                # InputError 1: invalid channel_id.
         raise InputError

@@ -65,9 +65,8 @@ def test_channel_invite_work():
     # Assuming we the function running correctly, then we do check the channel details
     # expecially, the member infomation
     channel_member_num = 0
-    data.init_channels()
 
-    for i in data.channels:
+    for i in data.return_channels():
         if i['channel_id'] == channel_test_id:
             channel_member_num = len(i['all_members'])
             break
@@ -107,9 +106,8 @@ def test_channel_repeate_invite():
     channel_invite(u_token1,channel_test_id, u_id2)
 
     channel_member_num = 0
-    data.init_channels()
 
-    for i in data.channels:
+    for i in data.return_channels():
         if i['channel_id'] == channel_test_id:
             channel_member_num = len(i['all_members'])
             break
@@ -362,8 +360,7 @@ def msg_send(channel_id, msg_id, u_id, msg, time):
         'time_created': time,
     }
 
-    data.init_channels()
-    for i in data.channels:
+    for i in data.return_channels():
         if i['channel_id'] == channel_id:
             i['message'].insert(0, return_message)
             break
@@ -726,8 +723,8 @@ def test_channel_leave_normal():
     # We removed user2 and user3, so the owner and user should be remaining here.
     # The total number of members in the channel should be 2.
     user_num = 0
-    data.init_channels()
-    for chan in data.channels:
+
+    for chan in data.return_channels():
         if chan['channel_id'] == chan_id:
             user_num = len(chan['all_members'])
             break
@@ -894,8 +891,8 @@ def test_channel_addowner0():
     channel_addowner(token1, cid, u_id2)
     # Check if success
     owner_num = 0
-    data.init_channels()
-    for cnl in data.channels:
+
+    for cnl in data.return_channels():
         if cnl['channel_id'] == cid:
             owner_num = len(cnl['owner'])
             break
@@ -946,8 +943,8 @@ def test_channel_addowner1():
 
     # Check if success
     owner_num = 0
-    data.init_channels()
-    for cnl in data.channels:
+
+    for cnl in data.return_channels():
         if cnl['channel_id'] == cid:
             owner_num = len(cnl['owner'])
             break
@@ -992,8 +989,8 @@ def test_channel_addowner2():
 
     # Check if success
     owner_num = 0
-    data.init_channels()
-    for cnl in data.channels:
+
+    for cnl in data.return_channels():
         if cnl['channel_id'] == cid:
             owner_num = len(cnl['owner'])
             break
@@ -1058,8 +1055,8 @@ def test_channel_addowner3():
     channel_invite(token2, cid2, u_id1)
     # Check the owners
     owner_num = 0
-    data.init_channels()
-    for cnl in data.channels:
+
+    for cnl in data.return_channels():
         if cnl['channel_id'] == cid1:
             owner_num = len(cnl['owner'])
             break
@@ -1067,7 +1064,7 @@ def test_channel_addowner3():
     assert u_id1 == cnl['owner'][0]['u_id']
 
     owner_num = 0
-    for cnl in data.channels:
+    for cnl in data.return_channels():
         if cnl['channel_id'] == cid2:
             owner_num = len(cnl['owner'])
             break
@@ -1116,8 +1113,8 @@ def test_channel_removeowner0():
     # Check if success
     channel_addowner(token1, cid, u_id2)
     owner_num = 0
-    data.init_channels()
-    for cnl in data.channels:
+
+    for cnl in data.return_channels():
         if cnl['channel_id'] == cid:
             owner_num = len(cnl['owner'])
             break
@@ -1130,7 +1127,7 @@ def test_channel_removeowner0():
 
     # assert the user has been moved
     owner_num = 0
-    for cnl in data.channels:
+    for cnl in data.return_channels():
         if cnl['channel_id'] == cid:
             owner_num = len(cnl['owner'])
             break
@@ -1173,8 +1170,8 @@ def test_channel_removeowner1():
     assert cid != 1234567
 
     owner_num = 0
-    data.init_channels()
-    for cnl in data.channels:
+
+    for cnl in data.return_channels():
         if cnl['channel_id'] == cid:
             owner_num = len(cnl['owner'])
             break
@@ -1235,8 +1232,8 @@ def test_channel_removeowner2():
     channel_invite(token1, cid, u_id2)
 
     owner_num = 0
-    data.init_channels()
-    for cnl in data.channels:
+
+    for cnl in data.return_channels():
         if cnl['channel_id'] == cid:
             owner_num = len(cnl['owner'])
             break
@@ -1282,8 +1279,8 @@ def test_channel_removeowner3():
     channel_invite(token1, cid1, u_id2)
 
     owner_num = 0
-    data.init_channels()
-    for cnl in data.channels:
+
+    for cnl in data.return_channels():
         if cnl['channel_id'] == cid1:
             owner_num = len(cnl['owner'])
             break
@@ -1297,7 +1294,7 @@ def test_channel_removeowner3():
     channel_invite(token2, cid2, u_id1)
 
     owner_num = 0
-    for cnl in data.channels:
+    for cnl in data.return_channels():
         if cnl['channel_id'] == cid2:
             owner_num = len(cnl['owner'])
             break

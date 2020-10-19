@@ -37,7 +37,7 @@ def owner_from_token(token):
     return au_id
 
 def channels_list(token):
-    """List the channel you want."""
+    """Liuyuzi He did not implement this to spec."""
 
     # find the token
     i = owner_from_token(token)

@@ -8,6 +8,7 @@ from flask_cors import CORS
 
 import server.auth_http as auth_http
 import server.channel_http as channel_http
+import server.channels_http as channels_http
 import server.echo_http as echo_http
 
 def default_handler(err):
@@ -31,11 +32,10 @@ APP.register_error_handler(Exception, default_handler)
 # echo test
 APP.register_blueprint(echo_http.ECHOHTTP)
 
-# all functions from auth.py
+# all functions base
 APP.register_blueprint(auth_http.AUTHHTTP, url_prefix='/auth')
-
-# all functions from channel.py
 APP.register_blueprint(channel_http.CHANNELHTTP, url_prefix = '/channel')
+APP.register_blueprint(channels_http.CHANNELSHTTP, url_prefix = '/channels')
 
 if __name__ == "__main__":
     APP.run(port=45411) # Do not edit this port

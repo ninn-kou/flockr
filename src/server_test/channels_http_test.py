@@ -62,16 +62,22 @@ def create_channels(url, token, is_public, num):
     for i in range(num):
         # add a channel
         channel_name = 'channel' + str(i)
-        channel = json.loads(requests.post(url + '/channels/create', 
+        channel_id = json.loads(requests.post(url + '/channels/create', 
         json = {
             'token': token,
             'name': channel_name,
             'is_public': is_public
-        }).text)
+        }).text).get('channel_id')
 
-        # add it to the channel list
+        # find the channel data structure
+        channel = None
+        for chan in data.return_channels():
+            if chan.get('channel_id') == channel_id:
+                channel = chan
+                break
+
         channel_list.append(channel)
-    
+
     return channel_list
 
 def test_create(url):
@@ -114,10 +120,10 @@ def test_listall(url):
     channels = create_channels(url, token, True, 1)
 
     # list all channels
-    list_all_obj = requests.get(url + 'channels/listall',
+    list_all_obj = json.loads(requests.get(url + 'channels/listall',
     json = {
         'token': token
-    })
+    }).text)
 
     # make sure that there is one channel each
     assert len(list_all_obj) == len(channels)
@@ -148,10 +154,10 @@ def test_listall_two_users(url):
     user3_channels = create_channels(url, token3, False, 7)
 
     # list all channels
-    list_all_obj = requests.get(url + 'channels/listall',
+    list_all_obj = json.loads(requests.get(url + 'channels/listall',
     json = {
         'token': token1
-    })
+    }).text)
 
     # sum up all created channels
     created_channels = len(user1_channels) + len(user2_channels) + len(user3_channels)
@@ -173,6 +179,10 @@ def test_list(url):
     user1_channels = create_channels(url, token1, False, 1)
     user2_channels = create_channels(url, token2, False, 2)
     public_channels = create_channels(url, token3, True, 1)
+
+    print(user1_channels)
+    print(user2_channels)
+    print(public_channels)
 
     # authorised channels for user1
     auth_channels1 = json.loads(requests.get(url + 'channels/list', 

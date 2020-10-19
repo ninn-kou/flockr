@@ -93,38 +93,37 @@ def test_channels_listall():
     ]
 
 def test_channels_list():
+    '''
+    channels_list rewritten by Joseph to make it match spec
+    
+    Needs to return all channels where user1 is an admin
+    '''
     clear()
 
     #create two user and take their id and token
-    user1 = auth.auth_register('45@test.com', 'password', 'FirstN', 'LastN')
-    u1_id = user1['u_id']
-    u1_token = user1['token']
+    token1 = auth.auth_register('45@test.com', 'password', 'FirstN', 'LastN').get('token')
+    token2 = auth.auth_register('415@test.com', 'password2', 'FirstN21', 'LastN2').get('token')
+    token3 = auth.auth_register('425@test.com', 'password3', 'FirstN1', 'LastN3').get('token')
 
     #create a channel by user1 in channels and return its channel id
-    channel_1_id = channels.channels_create(u1_token,'team',True).get('channel_id')
+    user1_channels = [channels.channels_create(token1,'u1-1',False)]
+    user2_channels = [channels.channels_create(token2,'u2-1',False), channels.channels_create(token2,'u2-2',False)]
+    public_channels = [channels.channels_create(token3,'u3-1',True)]
 
-    #check if it only return the autherised one
-    channel_list1 = channels.channels_list(u1_token).get('channels')
-    assert channel_list1 == [
-        {
-            'name':'team',
-            'channel_id':channel_1_id,
-            'owner':[
-                {
-                    'u_id': u1_id,
-                    'name_first': 'FirstN',
-                    'name_last': 'LastN'
-                }
-            ],
-            'all_members':[
-                {
-                    'u_id': u1_id,
-                    'name_first': 'FirstN',
-                    'name_last': 'LastN'
-                }
-            ],
-            'is_public':True,
-            'message':[]
-        }
-    ]
+    # authorised channels for user1
+    auth_channels1 = channels.channels_list(token1).get('channels')
 
+    # user 1 should have 2 channels visible
+    assert len(auth_channels1) == (len(user1_channels) + len(public_channels))
+
+    # authorised channels for user2
+    auth_channels2 = channels.channels_list(token2).get('channels')
+
+    # user 2 should have 3 channels visible
+    assert len(auth_channels2) == (len(user2_channels) + len(public_channels))
+    
+    # authorised channels for user3
+    auth_channels3 = channels.channels_list(token3).get('channels')
+
+    # user 3 should only have public channels visible
+    assert len(auth_channels3) == len(public_channels)

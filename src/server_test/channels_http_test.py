@@ -189,8 +189,20 @@ def test_list(url):
     # user 1 should have 2 channels visible
     assert len(auth_channels1) == (len(user1_channels) + len(public_channels))
 
+    # authorised channels for user2
+    auth_channels2 = json.loads(requests.get(url + 'channels/list', 
+    json = {
+        'token': token2
+    }).text).get('channels')
+
     # user 2 should have 3 channels visible
-    assert len(auth_channels1) == (len(user2_channels) + len(public_channels))
+    assert len(auth_channels2) == (len(user2_channels) + len(public_channels))
     
+    # authorised channels for user3
+    auth_channels3 = json.loads(requests.get(url + 'channels/list', 
+    json = {
+        'token': token3
+    }).text).get('channels')
+
     # user 3 should only have public channels visible
-    assert len(auth_channels1) == len(public_channels)
+    assert len(auth_channels3) == len(public_channels)

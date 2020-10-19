@@ -19,7 +19,7 @@ def test_channels_create():
         channels.channels_create(u1_token,'A_very_very_very_ver_long_name',True)
 
     #create a channel in channels and return its channel id
-    channel_1_id = channels.channels_create(u1_token,'team',True)
+    channel_1_id = channels.channels_create(u1_token,'team',True).get('channel_id')
     #assert channel_1_id is int
     assert data.return_channels()[-1]['name'] == 'team'
     assert data.return_channels()[-1]['channel_id'] == channel_1_id
@@ -42,14 +42,14 @@ def test_channels_listall():
     u2_token = user2['token']
 
     #create a channel by user1 in channels and return its channel id
-    channel_1_id = channels.channels_create(u1_token,'team',True)
+    channel_1_id = channels.channels_create(u1_token,'team',True).get('channel_id')
 
     #create a channel by user2 in channels and return its channel id
-    channel_2_id = channels.channels_create(u2_token,'team2',True)
+    channel_2_id = channels.channels_create(u2_token,'team2',True).get('channel_id')
 
     #check if the function return them all
 
-    assert channels.channels_listall(u1_token) == [
+    assert channels.channels_listall(u1_token).get('channels') == [
         {
             'name':'team',
             'channel_id':channel_1_id,
@@ -97,17 +97,14 @@ def test_channels_list():
 
     #create two user and take their id and token
     user1 = auth.auth_register('45@test.com', 'password', 'FirstN', 'LastN')
-    user1 = auth.auth_login('45@test.com', 'password')
     u1_id = user1['u_id']
     u1_token = user1['token']
 
-
-
     #create a channel by user1 in channels and return its channel id
-    channel_1_id = channels.channels_create(u1_token,'team',True)
+    channel_1_id = channels.channels_create(u1_token,'team',True).get('channel_id')
 
     #check if it only return the autherised one
-    channel_list1 = channels.channels_list(u1_token)
+    channel_list1 = channels.channels_list(u1_token).get('channels')
     assert channel_list1 == [
         {
             'name':'team',

@@ -17,13 +17,11 @@ def create():
 
     input_obj = request.json
 
-    channel_id = channels.channels_create(
+    output = channels.channels_create(
         input_obj.get('token'),
         input_obj.get('name'),
         input_obj.get('is_public')
     )
-
-    output = {'channel_id': channel_id}
 
     return jsonify(output)
 

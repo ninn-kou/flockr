@@ -123,7 +123,7 @@ def test_listall(url):
     list_all_obj = json.loads(requests.get(url + 'channels/listall',
     json = {
         'token': token
-    }).text)
+    }).text).get('channels')
 
     # make sure that there is one channel each
     assert len(list_all_obj) == len(channels)
@@ -157,7 +157,7 @@ def test_listall_two_users(url):
     list_all_obj = json.loads(requests.get(url + 'channels/listall',
     json = {
         'token': token1
-    }).text)
+    }).text).get('channels')
 
     # sum up all created channels
     created_channels = len(user1_channels) + len(user2_channels) + len(user3_channels)
@@ -180,15 +180,11 @@ def test_list(url):
     user2_channels = create_channels(url, token2, False, 2)
     public_channels = create_channels(url, token3, True, 1)
 
-    print(user1_channels)
-    print(user2_channels)
-    print(public_channels)
-
     # authorised channels for user1
     auth_channels1 = json.loads(requests.get(url + 'channels/list', 
     json = {
         'token': token1
-    }).text)
+    }).text).get('channels')
 
     # user 1 should have 2 channels visible
     assert len(auth_channels1) == (len(user1_channels) + len(public_channels))

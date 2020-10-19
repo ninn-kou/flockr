@@ -54,6 +54,26 @@ def register_user_token(url, email, password, name_first, name_last):
 
     return json.loads(resp.text).get('token')
 
+def create_channels(url, token, is_public, num):
+    ''' create a specified number of channels '''
+
+    channel_list = []
+
+    for i in range(num):
+        # add a channel
+        channel_name = 'channel' + str(i)
+        channel = json.loads(requests.post(url + '/channels/create', 
+        json = {
+            'token': token,
+            'name': channel_name,
+            'is_public': is_public
+        }).text)
+
+        # add it to the channel list
+        channel_list.append(channel)
+    
+    return channel_list
+
 def test_create(url):
     ''' testing creation of channels '''
     # clear out the databases
@@ -81,28 +101,6 @@ def test_create(url):
             break
 
     assert check
-
-def create_channels(url, token, is_public, num):
-    ''' create a specified number of channels '''
-    # clear out the databases
-    clear()
-
-    channel_list = []
-
-    for i in range(num):
-        # add a channel
-        channel_name = 'channel' + str(i)
-        channel = json.loads(requests.post(url + '/channels/create', 
-        json = {
-            'token': token,
-            'name': channel_name,
-            'is_public': is_public
-        })).text
-
-        # add it to the channel list
-        channel_list.append(channel)
-    
-    return channel_list
 
 def test_listall(url):
     ''' testing channels_listall '''
@@ -177,10 +175,10 @@ def test_list(url):
     public_channels = create_channels(url, token3, True, 1)
 
     # authorised channels for user1
-    auth_channels1 = json.loads(requests.get(url + 'channels/list'), 
+    auth_channels1 = json.loads(requests.get(url + 'channels/list', 
     json = {
         'token': token1
-    }).text
+    }).text)
 
     # user 1 should have 2 channels visible
     assert len(auth_channels1) == (len(user1_channels) + len(public_channels))

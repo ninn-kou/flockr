@@ -144,6 +144,22 @@ def send_random_messages(channel_id, num):
 
     return messages
 
+def check_in_index(url, user1, user2, channel, index):
+    ''' checks if specified member is in index '''
+    # find out channel from user1's perspective
+    details = send_request('GET', url, 'channel/details', {
+        'token': user1['token'],
+        'channel_id': channel['channel_id']
+    })
+
+    # check if user2 is in channel
+    check = False
+    for member in details.get(index):
+        if member.get('u_id') == user2.get('u_id'):
+            check = True
+            break
+    return check
+
 def test_invite(url):
     ''' testing channel_invite requests '''
 
@@ -239,11 +255,45 @@ def test_leave(url):
     # clear out the databases
     clear()
 
+    # register a new user and create a new channel
+    user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
+    channels = create_channels(url, user1.get('token'), True, 1)
+
+    # invite second user to invite
+    user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
+    invite_user(user1, channels[0].get('channel_id'), user2)
+
+    # leave as user1
+    send_request('POST', url, 'channel/leave', {
+        'token': user1.get('token'),
+        'channel_id': channels[0].get('channel_id')
+    })
+
+    # check whether user is in channel
+    check = check_in_index(url, user2, user1, channels[0], 'all_members')
+    assert check is False
+
 def test_join(url):
     ''' testing channel_join requests '''
 
     # clear out the databases
     clear()
+
+    # register a new user and create a new channel
+    user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
+    channels = create_channels(url, user1.get('token'), True, 1)
+
+    # get user2 who wants to join
+    user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
+
+    # get user2 to join
+    send_request('POST', url, 'channel/join', {
+        'token': user2.get('token'),
+        'channel_id': channels[0].get('channel_id')
+    })
+
+    # check whether user is in channel
+    assert check_in_index(url, user1, user2, channels[0], 'all_members')
 
 def test_addowner(url):
     ''' testing channel_join requests '''
@@ -251,8 +301,50 @@ def test_addowner(url):
     # clear out the databases
     clear()
 
+    # register a new user and create a new channel
+    user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
+    channels = create_channels(url, user1.get('token'), True, 1)
+
+    # create second user to invite
+    user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
+
+    # invite user2
+    send_request('POST', url, 'channel/addowner', {
+        'token': user1.get('token'),
+        'channel_id': channels[0].get('channel_id'),
+        'u_id': user2.get('u_id')
+    })
+
+    # check if both members are in channel
+    assert check_in_index(url, user2, user2, channels[0], 'owner')
+
 def test_removeowner(url):
     ''' testing channel_removeowner requests '''
 
     # clear out the databases
     clear()
+
+    # register a new user and create a new channel
+    user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
+    channels = create_channels(url, user1.get('token'), True, 1)
+
+    # create second user to invite
+    user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
+
+    # invite user2
+    send_request('POST', url, 'channel/addowner', {
+        'token': user1.get('token'),
+        'channel_id': channels[0].get('channel_id'),
+        'u_id': user2.get('u_id')
+    })
+
+    # remove user1 as owner
+    send_request('POST', url, 'channel/removeowner', {
+        'token': user2.get('token'),
+        'channel_id': channels[0].get('channel_id'),
+        'u_id': user1.get('token')
+    })
+
+    # check that user1 is gone as an owner
+    check = check_in_index(url, user2, user1, channels[0], 'owner')
+    assert check is False

@@ -3,11 +3,11 @@ Main file to run in order to run backend server
 '''
 
 from json import dumps
-from flask import Flask, request
+from flask import Flask
 from flask_cors import CORS
-from base.error import InputError
 
 import server.auth_http as auth_http
+import server.echo_http as echo_http
 
 def default_handler(err):
     ''' system error handler '''
@@ -27,18 +27,8 @@ CORS(APP)
 APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, default_handler)
 
-@APP.route("/echo", methods=['GET'])
-def echo():
-    '''
-    sanity test domain for echo
-    No other purpose than a basic server test
-    '''
-    data = request.args.get('data')
-    if data == 'echo':
-        raise InputError(description='Cannot echo "echo"')
-    return dumps({
-        'data': data
-    })
+# echo test
+APP.register_blueprint(echo_http.ECHOHTTP)
 
 # all functions from auth.py
 APP.register_blueprint(auth_http.AUTHHTTP, url_prefix='/auth')

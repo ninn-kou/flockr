@@ -22,14 +22,14 @@ def owner_from_token(token):
 
     try:
         email = jwt.decode(token, jwt_secret, algorithms=['HS256']).get('email')
-    except:
-        raise InputError
+    except jwt.DecodeError as error :
+        raise InputError("Couldn't Decode Token") from error
 
     au_id = None
     for i in data.return_users():
         if i['email'] == email:
             au_id = i
-    
+
     # make sure user is actually returned
     if au_id is None:
         raise InputError
@@ -53,7 +53,7 @@ def channels_list(token):
 
 def channels_listall(token):
     """just return all channels? sure about that?"""
-    
+
     # check that token exists
     owner_from_token(token)
 

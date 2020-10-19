@@ -31,7 +31,7 @@ def return_users():
     users = None
 
     # open the json file
-    with open('users.json', 'r') as file:
+    with open('src/data/users.json', 'r') as file:
         users = json.load(file)
 
     # return the json information
@@ -44,21 +44,21 @@ def append_users(user):
     users = None
 
     # open current json file
-    with open('users.json', 'r') as file:
+    with open('src/data/users.json', 'r') as file:
         users = json.load(file)
 
     # append the user
     users.append(user)
 
     # write json to file
-    with open('users.json', 'w') as file:
+    with open('src/data/users.json', 'w') as file:
         json.dump(users, file)
 
 def clear_users():
     ''' clear out users file '''
 
     # write json to file
-    with open('users.json', 'w') as file:
+    with open('src/data/users.json', 'w') as file:
         json.dump([], file)
 
 

@@ -37,13 +37,18 @@ def owner_from_token(token):
     return au_id
 
 def channels_list(token):
-    """Liuyuzi He did not implement this to spec in iteration 1 F """
+    """Need to fix implementation """
 
     # find the token
     i = owner_from_token(token)
     user_id = i['u_id']
 
     channel_list = []
+    for channel in data.return_channels():
+        for user in 
+
+
+
     for i in range(len(data.return_channels())):     # Use loops to check if user in channel.
         for j in range(len(data.return_channels()[i]['all_members'])):
             if data.return_channels()[i]['all_members'][j]['u_id'] == user_id:
@@ -104,4 +109,4 @@ def channels_create(token, name, is_public):
     }
 
     data.append_channels(channel_new)       # Add this new channel into data.
-    return channel_id
+    return {'channel_id': channel_id}

@@ -3,6 +3,7 @@ import base.channels as channels
 import pytest
 import data.data as data
 from base.error import InputError
+import base.channel as channel
 import random
 from base.other import clear
 
@@ -96,19 +97,27 @@ def test_channels_list():
     '''
     channels_list rewritten by Joseph to make it match spec
     
-    Needs to return all channels where user1 is an admin
+    Needs to return all channels where user1 is a member
     '''
     clear()
 
     #create two user and take their id and token
-    token1 = auth.auth_register('45@test.com', 'password', 'FirstN', 'LastN').get('token')
-    token2 = auth.auth_register('415@test.com', 'password2', 'FirstN21', 'LastN2').get('token')
-    token3 = auth.auth_register('425@test.com', 'password3', 'FirstN1', 'LastN3').get('token')
+    user1 = auth.auth_register('45@test.com', 'password', 'FirstN', 'LastN')
+    token1 = user1.get('token')
+    user2 = auth.auth_register('415@test.com', 'password2', 'FirstN21', 'LastN2')
+    token2 = user2.get('token')
+    user3 = auth.auth_register('425@test.com', 'password3', 'FirstN1', 'LastN3')
+    token3 = user3.get('token')
 
-    #create a channel by user1 in channels and return its channel id
-    user1_channels = [channels.channels_create(token1,'u1-1',False)]
-    user2_channels = [channels.channels_create(token2,'u2-1',False), channels.channels_create(token2,'u2-2',False)]
+    # create channels and invite users into each channel
     public_channels = [channels.channels_create(token3,'u3-1',True)]
+    # create user1 and invite them to the public channel
+    user1_channels = [channels.channels_create(token1,'u1-1',False)]
+    channel.channel_invite(token3, public_channels[0].get('channel_id'), user1.get('token'))
+
+    # create user2 and invite them to the public channel
+    user2_channels = [channels.channels_create(token2,'u2-1',False), channels.channels_create(token2,'u2-2',False)]
+    channel.channel_invite(token3, public_channels[0].get('channel_id'), user2.get('token'))
 
     # authorised channels for user1
     auth_channels1 = channels.channels_list(token1).get('channels')

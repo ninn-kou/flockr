@@ -13,6 +13,7 @@ import signal
 from time import sleep
 import json
 import requests
+from base.channel import channel_invite
 
 import pytest
 
@@ -43,7 +44,7 @@ def url():
         server.kill()
         raise Exception("Couldn't get URL from local server")
 
-def register_user_token(url, email, password, name_first, name_last):
+def register_user(url, email, password, name_first, name_last):
     resp = requests.post(url + 'auth/register',
     json = {
         'email': email,
@@ -52,7 +53,7 @@ def register_user_token(url, email, password, name_first, name_last):
         'name_last': name_last
     })
 
-    return json.loads(resp.text).get('token')
+    return json.loads(resp.text)
 
 def create_channels(url, token, is_public, num):
     ''' create a specified number of channels '''
@@ -86,7 +87,7 @@ def test_create(url):
     clear()
 
     # register a new user
-    token = register_user_token(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
+    token = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo').get('token')
 
     # create a new channel
     resp = requests.post(url + '/channels/create', 
@@ -114,7 +115,7 @@ def test_listall(url):
     clear()
 
     # register a new user
-    token = register_user_token(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
+    token = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo').get('token')
 
     # create a new channel
     channels = create_channels(url, token, True, 1)
@@ -144,9 +145,9 @@ def test_listall_two_users(url):
     clear()
 
     # register new tokens
-    token1 = register_user_token(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
-    token2 = register_user_token(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
-    token3 = register_user_token(url, 'test3@example.com', 'emilyisshort3', 'Emily3', 'Luo3')
+    token1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo').get('token')
+    token2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2').get('token')
+    token3 = register_user(url, 'test3@example.com', 'emilyisshort3', 'Emily3', 'Luo3').get('token')
 
     # register new channels
     user1_channels = create_channels(url, token1, False, 10)
@@ -171,14 +172,19 @@ def test_list(url):
     clear()
 
     # register new tokens
-    token1 = register_user_token(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
-    token2 = register_user_token(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
-    token3 = register_user_token(url, 'test3@example.com', 'emilyisshort3', 'Emily3', 'Luo3')
+    user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
+    token1 = user1.get('token')
+    user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
+    token2 = user2.get('token')
+    user3 = register_user(url, 'test3@example.com', 'emilyisshort3', 'Emily3', 'Luo3')
+    token3 = user3.get('token')
 
     # register new channels
-    user1_channels = create_channels(url, token1, False, 1)
-    user2_channels = create_channels(url, token2, False, 2)
     public_channels = create_channels(url, token3, True, 1)
+    user1_channels = create_channels(url, token1, False, 1)
+    channel_invite(token3, public_channels[0].get('channel_id'), user1.get('token'))
+    user2_channels = create_channels(url, token2, False, 2)
+    channel_invite(token3, public_channels[0].get('channel_id'), user2.get('token'))
 
     # authorised channels for user1
     auth_channels1 = json.loads(requests.get(url + 'channels/list', 

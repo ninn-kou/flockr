@@ -8,12 +8,12 @@ from base.error import InputError
 
 def user_profile(token, u_id):
     try:
-        email = jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
-    except DecodeError as e:
+        jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
+    except DecodeError:
         return {'is_success': False}
     try:
         u_id=int(u_id)
-    except Exception as e:
+    except Exception:
         raise InputError('terrible uid')
     user=check_in_users("u_id",data.return_users(),u_id)
     if user:

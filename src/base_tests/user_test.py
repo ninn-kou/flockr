@@ -11,8 +11,8 @@ def test_user_profile_correct_return():
     clear()
     registration = auth.auth_register('valid@example.com', 'password', 'Test Person', 'Bam')
 
-    token= registration['token']
-    u_id=registration["u_id"]
+    token = registration['token']
+    u_id = registration["u_id"]
 
     result = user.user_profile(token,u_id)
 
@@ -34,7 +34,7 @@ def test_user_profile_input_error_invalid_token():
     clear()
     registration = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old')
     token = registration['token']
-    u_id=registration["u_id"]
+    u_id = registration["u_id"]
 
     # # - returns false when invalid token
     invalid_token = '500000'

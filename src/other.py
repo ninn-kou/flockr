@@ -13,22 +13,25 @@ def clear():
     data.users = []
 
 def users_all(token):
-    return {
-        'users': [
-            {
-                'u_id': 1,
-                'email': 'cs1531@cse.unsw.edu.au',
-                'name_first': 'Hayden',
-                'name_last': 'Jacobs',
-                'handle_str': 'hjacobs',
-            },
-        ],
-    }
+    found = 0
+    for user in data.users:                      # Check that token exists.
+        if user['token'] == token:
+            found = 1
+            break
+    if found != 1:
+        raise InputError
+    return data.users
 
 def admin_userpermission_change(token, u_id, permission_id):
     pass
 
 def search(token, query_str):
+    set = []
+    for channel in data.channels:
+        for i in channel['messages']:
+            if query_str in i['message']:
+                set.append(i)
+    '''            
     return {
         'messages': [
             {
@@ -39,3 +42,5 @@ def search(token, query_str):
             }
         ],
     }
+    '''
+    return set

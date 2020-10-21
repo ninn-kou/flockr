@@ -2,8 +2,9 @@
 functions of create a new channel and return the specific channel
 '''
 import random
-import data
-from error import InputError
+import jwt
+import data.data as data
+from base.error import InputError
 
 ################################################################################
 ################################################################################
@@ -13,13 +14,35 @@ from error import InputError
 ################################################################################
 ################################################################################
 
+def owner_from_token(token):
+    ''' find owner from token'''
+    # Adding in a little bit here to improve token handling
+    with open('src/data/JWT_SECRET.txt', 'r') as file:
+        jwt_secret = file.read()
+
+    try:
+        email = jwt.decode(token, jwt_secret, algorithms=['HS256']).get('email')
+    except jwt.DecodeError as error :
+        raise InputError("Couldn't Decode Token") from error
+
+    au_id = None
+    for i in data.return_users():
+        if i['email'] == email:
+            au_id = i
+
+    # make sure user is actually returned
+    if au_id is None:
+        raise InputError
+
+    return au_id
 
 def channels_list(token):
     """List the channel you want."""
-    for i in data.users:                    # Transfer token into u_id.
-        if i['token'] == token:
-            user_id = i['u_id']
-            break
+
+    # find the token
+    i = owner_from_token(token)
+    user_id = i['u_id']
+
     channel_list = []
     for i in range(len(data.channels)):     # Use loops to check if user in channel.
         for j in range(len(data.channels[i]['all_members'])):
@@ -30,13 +53,10 @@ def channels_list(token):
 
 def channels_listall(token):
     """just return all channels? sure about that?"""
-    found = 0
-    for user in data.users:                      # Check that token exists.
-        if user['token'] == token:
-            found = 1
-            break
-    if found != 1:
-        raise InputError
+
+    # check that token exists
+    owner_from_token(token)
+
     return data.channels
 
 def create_channel_id(channels):
@@ -58,12 +78,10 @@ def channels_create(token, name, is_public):
     if len(name) > 20:                      # The length of channel name should <= 20.
         raise InputError
 
-    for i in data.users:                    # Find the details of the user by token.
-        if i['token'] == token:
-            owner_id = i['u_id']
-            owner_fn = i['name_first']
-            owner_ln = i['name_last']
-            break
+    i = owner_from_token(token)
+    owner_id = i['u_id']
+    owner_fn = i['name_first']
+    owner_ln = i['name_last']
 
     channel_id = create_channel_id(data.channels)
     channel_new = {                         # Initialize the new channel.

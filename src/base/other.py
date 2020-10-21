@@ -2,15 +2,14 @@
     Other functions to help testing
 '''
 
-import data
+import data.data as data
 
 def clear():
     ''' clear the backend state '''
     data.init_channels()
-    data.init_users()
 
     data.channels = []
-    data.users = []
+    data.clear_users()
 
 def users_all(token):
     found = 0

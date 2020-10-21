@@ -1,10 +1,12 @@
 '''
 A collection of data structures used between programs
+
+accessed from root/src
 '''
 
-users = []
+import json
 
-def init_users():
+def users_notes():
     '''
     initialise users as a global variable
 
@@ -17,32 +19,47 @@ def init_users():
             'name_first':'',
             'name_last':'',
             'handle_str': '',
-            'token': '',
             'password': ''
         }
     ]
     '''
-    global users
+
+def return_users():
+    ''' return all the users in the file '''
+
+    # declare users outside
+    users = None
+
+    # open the json file
+    with open('src/data/users.json', 'r') as file:
+        users = json.load(file)
+
+    # return the json information
+    return users
 
 def append_users(user):
     ''' append user to list '''
+
+    # declare users outside
+    users = None
+
+    # open current json file
+    with open('src/data/users.json', 'r') as file:
+        users = json.load(file)
+
+    # append the user
     users.append(user)
 
-def add_token(token_object):
-    ''' add token to user '''
-    for user in users:
-        if token_object['u_id'] == user['u_id']:
-            user['token'] = token_object['token']
-            return user
-    return None
+    # write json to file
+    with open('src/data/users.json', 'w') as file:
+        json.dump(users, file)
 
-def remove_token(token):
-    ''' remove token from user '''
-    for user in users:
-        if token == user['token']:
-            user.pop('token', None)
-            return user
-    return None
+def clear_users():
+    ''' clear out users file '''
+
+    # write json to file
+    with open('src/data/users.json', 'w') as file:
+        json.dump([], file)
 
 
 ##########################################################################################

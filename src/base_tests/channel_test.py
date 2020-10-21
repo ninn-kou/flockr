@@ -1,12 +1,12 @@
 # this file is using for pytest of channel.py .
-from channel import channel_invite, channel_details, channel_messages, channel_leave, channel_join, channel_addowner, channel_removeowner
-from channels import channels_create
-from auth import auth_login, auth_register, auth_logout
-from error import InputError, AccessError
-import data
+from base.channel import channel_invite, channel_details, channel_messages, channel_leave, channel_join, channel_addowner, channel_removeowner
+from base.channels import channels_create
+from base.auth import auth_login, auth_register, auth_logout
+from base.error import InputError, AccessError
+import data.data as data
 import pytest
-import other
-from message import message_send
+import base.other as other
+from base.message import message_send
 
 
 #########################################################################
@@ -59,11 +59,8 @@ def test_channel_invite_work():
     # create channel for testing
     channel_test_id = channels_create(u_token1,"channel_test",True)
 
-
     # testing for channel invite function
     channel_invite(u_token1,channel_test_id,u_id2)
-
-
 
     # Assuming we the function running correctly, then we do check the channel details
     # expecially, the member infomation
@@ -76,7 +73,7 @@ def test_channel_invite_work():
             break
 
     # check the totoal members number is 2
-    assert channel_member_num ==2
+    assert channel_member_num == 2
     # check the diff people info correct
     assert u_id1 ==  i['all_members'][0]['u_id']
     assert u_id2 ==  i['all_members'][1]['u_id']

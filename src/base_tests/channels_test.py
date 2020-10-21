@@ -1,20 +1,17 @@
-import auth
-import channels
+import base.auth as auth
+import base.channels as channels
 import pytest
-import data
-from error import InputError
+import data.data as data
+from base.error import InputError
 import random
-from other import clear
+from base.other import clear
 
 def test_channels_create():
     clear()
     #initialise the channels list
     data.init_channels()
-    # initialise the users list
-    data.init_users()
     #create a user and take its  id and token
     user1 = auth.auth_register('12345@test.com', 'password', 'FirstN', 'LastN')
-    user1 = auth.auth_login('12345@test.com', 'password')
     u1_id = user1['u_id']
     u1_token = user1['token']
 
@@ -35,8 +32,6 @@ def test_channels_listall():
     clear()
     #initialise the channels list
     data.init_channels()
-    # initialise the users list
-    data.init_users()
     #create two user and take their id and token
     user1 = auth.auth_register('1234@test.com', 'password', 'FirstN', 'LastN')
     user1 = auth.auth_login('1234@test.com', 'password')
@@ -103,8 +98,6 @@ def test_channels_list():
     clear()
     #initialise the channels list
     data.init_channels()
-    # initialise the users list
-    data.init_users()
     #create two user and take their id and token
     user1 = auth.auth_register('45@test.com', 'password', 'FirstN', 'LastN')
     user1 = auth.auth_login('45@test.com', 'password')

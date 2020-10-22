@@ -124,7 +124,7 @@ def message_send(token, channel_id, message):
         raise AccessError(description='auth not in channel')
 
     # Case 5: no error, add the message
-    new_msg_id = len(['message']) + 1
+    new_msg_id = len(channel_got['message']) + 1
 
     # record the time rightnow
     now = datetime.utcnow()

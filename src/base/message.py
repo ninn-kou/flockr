@@ -25,16 +25,35 @@ from base.error import InputError, AccessError
 ############################################################
 #      Helper Functions
 ############################################################
-def find_message(msg_id):
-    '''look up one message id'''
-    '''
-    return_message = {}
-    for i in data.channels:
-        for msg in i['messages']
-        if msg['message_id'] == channel_id:
-            i['all_members'].append(user)
+def if_auth_channel_owner(u_id, channel_id):
+    """check if the u_id is the owner of the channel"""
+    test = False
+    channel_got = find_channel(channel_id)
+    for i in channel_got['owner']:
+        if i['u_id'] == u_id:
+            test = True
             break
-            '''
+    return test
+
+def delete_msg_in_list(msg):
+    """Interate the messages list by its id, return the message we need."""
+    data.init_messages()
+    data.messages.remove(msg)
+    data.init_channels()
+    for c in data.channels:
+        if c['channel_id'] == msg['channel_id']:
+            c['message'].remove(msg)
+            break
+
+def find_message(msg_id):
+    """Interate the messages list by its id, return the message we need."""
+    return_message = None
+    for i in data.messages:
+        if i['message_id'] == msg_id:
+            return_message = i
+            break
+    return return_message
+
 def add_one_in_channel(channel_id, user):
     """Adding a member into the channel."""
     for i in data.channels:
@@ -181,9 +200,31 @@ def message_remove(token, message_id):
     - Message with message_id was sent by the authorised user making this reques
     - The authorised user is an owner of this channel or the flockr
     '''
+    # Global variables.
+    data.init_channels()
+    data.init_messages()
 
-    return {
-    }
+    # InputError 1: invalid token.
+    auth_id = token_into_user_id(token)
+    if auth_id == -1:
+        raise InputError(description='invalid token.')
+
+    # InputError 2: Message id is not exist
+    message_using = find_message(message_id)
+    if message_using is None:
+        raise InputError(description='invalid message id.')
+
+    # AccessError 3: excluding message sender and channel_owner
+    test_owener = if_auth_channel_owner(auth_id, message_using['channel_id'])
+    # if it is neither channel owner nor messager sender
+    # raise for access error
+    if test_owener == False and message_using['u_id'] != auth_id:
+        raise AccessError(description='neither message sender nor channel_owner.')
+
+    # Case 4: no error, delete the message
+    delete_msg_in_list(message_using)
+
+    return {}
 
 def message_edit(token, message_id, message):
     return {

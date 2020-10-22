@@ -99,9 +99,10 @@ def init_channels():
                 }
             ],
             'is_public': True,
-            'messages':[
+            'message':[
                 {
                     'message_id': 1,
+                    'channel_id': 1,
                     'u_id': 1,
                     'message': 'Hello world',
                     'time_created': 1582426789,
@@ -117,3 +118,23 @@ def init_channels():
 def append_channels(channel):
     ''' add a channel in the channels list '''
     channels.append(channel)
+
+#######################################################################
+messages = []
+
+def init_messages():
+    ''' initialise the messages list
+
+    the struct using for messages
+    'messages':[
+        {
+            'message_id': 1,
+            'channel_id': 1,
+            'u_id': 1,
+            'message': 'Hello world',
+            'time_created': 1582426789,
+        },
+    ]
+
+    '''
+    global messages

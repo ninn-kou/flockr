@@ -102,37 +102,44 @@ def message_send(token, channel_id, message):
     - cannot find the channel_id
 
     """
-    data.init_channels()                                # Global variables.
+    # Global variables.
+    data.init_channels()
 
-    auth_id = token_into_user_id(token)                 # InputError 1: invalid token.
+    # InputError 1: invalid token.
+    auth_id = token_into_user_id(token)
     if auth_id == -1:
         raise InputError(description='invalid token.')
 
-
-    if len(message) > 1000:                              # InputError 2: Message is more than 1000 characters.
+    # InputError 2: Message is more than 1000 characters.
+    if len(message) > 1000:
         raise InputError(description='Message is more than 1000 characters.')
 
-    channel_got = find_channel(channel_id)              # AccessError 3: invalid channel_id.
+    # AccessError 3: invalid channel_id.
+    channel_got = find_channel(channel_id)
     if channel_got is None:
         raise AccessError(description='invalid channel_id.')
 
-    if not find_one_in_channel(channel_got, auth_id):   # AccessError 4: if the auth not in channel.
+    # AccessError 4: if the auth not in channel.
+    if not find_one_in_channel(channel_got, auth_id):
         raise AccessError(description='auth not in channel')
 
-
-    new_msg_id = len(['message']) + 1                   # Case 5: no error, add the message
+    # Case 5: no error, add the message
+    new_msg_id = len(['message']) + 1
 
     # record the time rightnow
-    timestamp = datetime.now().replace(tzinfo=timezone.utc).timestamp()
+    now = datetime.utcnow()
+    timestamp = int(now.replace(tzinfo=timezone.utc).timestamp())
 
-    return_message = {                                  # create the message struct
+    # create the message struct
+    return_message = {
         'message_id': new_msg_id,
         'u_id': auth_id,
         'message': message,
         'time_created': timestamp,
     }
 
-    channel_got['message'].insert(0, return_message)    # insert the message in the top of messages in the channel.
+    # insert the message in the top of messages in the channel.
+    channel_got['message'].insert(0, return_message)
 
     return {
         'message_id': new_msg_id,

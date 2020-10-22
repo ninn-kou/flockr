@@ -220,5 +220,5 @@ def test_channel_message_correct_message_infors():
     # 2. check the function can return the message correctly.
     check_work_msg = channel_messages(u_token1, channel_test_id, 0)
     assert check_work_msg['messages'][0]['message'] == 'msg test 03'
-    assert check_work_msg['messages'][0]['message'] == 'msg test 02'
-    assert check_work_msg['messages'][0]['message'] == 'msg test 01'
+    assert check_work_msg['messages'][1]['message'] == 'msg test 02'
+    assert check_work_msg['messages'][2]['message'] == 'msg test 01'

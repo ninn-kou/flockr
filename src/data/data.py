@@ -99,7 +99,7 @@ def init_channels():
                 }
             ],
             'is_public': True,
-            'messages':[
+            'message':[
                 {
                     'message_id': 1,
                     'channel_id': 1,

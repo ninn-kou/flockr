@@ -40,9 +40,9 @@ def delete_msg_in_list(msg):
     data.init_messages()
     data.messages.remove(msg)
     data.init_channels()
-    for c in data.channels:
-        if c['channel_id'] == msg['channel_id']:
-            c['message'].remove(msg)
+    for i in data.channels:
+        if i['channel_id'] == msg['channel_id']:
+            i['message'].remove(msg)
             break
 
 def find_message(msg_id):

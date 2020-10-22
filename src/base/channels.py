@@ -44,8 +44,8 @@ def channels_list(token):
     user_id = i['u_id']
 
     channel_list = []
-    for channel in data.return_channels():
-        for user in 
+    # for channel in data.return_channels():
+    #     for user in 
 
 
 

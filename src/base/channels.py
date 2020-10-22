@@ -44,25 +44,20 @@ def channels_list(token):
     user_id = i['u_id']
 
     channel_list = []
-    # for channel in data.return_channels():
-    #     for user in 
-
-
-
     for i in range(len(data.return_channels())):     # Use loops to check if user in channel.
         for j in range(len(data.return_channels()[i]['all_members'])):
             if data.return_channels()[i]['all_members'][j]['u_id'] == user_id:
                 channel_list.append(data.return_channels()[i])
-    return channel_list
+    return {'channels': channel_list}
 
 
 def channels_listall(token):
     """just return all channels? sure about that?"""
 
     # check that token exists
-    owner_from_token(token)
+    # owner_from_token(token)
 
-    return data.return_channels()
+    return {'channels': data.return_channels()}
 
 def create_channel_id(channels):
     """Create a random channel id."""

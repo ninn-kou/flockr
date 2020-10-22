@@ -182,9 +182,9 @@ def test_list(url):
     # register new channels
     public_channels = create_channels(url, token3, True, 1)
     user1_channels = create_channels(url, token1, False, 1)
-    channel_invite(token3, public_channels[0].get('channel_id'), user1.get('token'))
+    channel_invite(token3, public_channels[0].get('channel_id'), user1.get('u_id'))
     user2_channels = create_channels(url, token2, False, 2)
-    channel_invite(token3, public_channels[0].get('channel_id'), user2.get('token'))
+    channel_invite(token3, public_channels[0].get('channel_id'), user2.get('u_id'))
 
     # authorised channels for user1
     auth_channels1 = json.loads(requests.get(url + 'channels/list', 

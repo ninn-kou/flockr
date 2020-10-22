@@ -113,11 +113,11 @@ def test_channels_list():
     public_channels = [channels.channels_create(token3,'u3-1',True)]
     # create user1 and invite them to the public channel
     user1_channels = [channels.channels_create(token1,'u1-1',False)]
-    channel.channel_invite(token3, public_channels[0].get('channel_id'), user1.get('token'))
+    channel.channel_invite(token3, public_channels[0].get('channel_id'), user1.get('u_id'))
 
     # create user2 and invite them to the public channel
     user2_channels = [channels.channels_create(token2,'u2-1',False), channels.channels_create(token2,'u2-2',False)]
-    channel.channel_invite(token3, public_channels[0].get('channel_id'), user2.get('token'))
+    channel.channel_invite(token3, public_channels[0].get('channel_id'), user2.get('u_id'))
 
     # authorised channels for user1
     auth_channels1 = channels.channels_list(token1).get('channels')

@@ -49,10 +49,11 @@ def url():
 def send_request(method, url, url_extension, json_obj):
     ''' function to help send requests more easily'''
     resp = None
+    url_time = url + url_extension
     if method == 'GET':
-        resp = requests.get(url + url_extension, json = json_obj)
+        resp = requests.get(url_time, json = json_obj)
     elif method == 'POST':
-        resp = requests.post(url + url_extension, json = json_obj)
+        resp = requests.post(url_time, json = json_obj)
 
     return json.loads(resp.text)
 
@@ -73,18 +74,21 @@ def create_channels(url, token, is_public, num):
     for i in range(num):
         # add a channel
         channel_name = 'channel' + str(i)
-        channel = send_request('POST', url, 'channels/create', {
+        channel_id = send_request('POST', url, 'channels/create', {
             'token': token,
             'name': channel_name,
             'is_public': is_public
-        })
+        }).get('channel_id')
 
-        # add it to the channel list
-        channel_list.append(channel)
-    
+        # add the channel object, not just the channel itself
+        for channel in data.return_channels():
+            if channel['channel_id'] == channel_id:
+                # add it to the channel list
+                channel_list.append(channel)
+
     return channel_list
 
-def invite_user(user1, channel_id, user2):
+def invite_user(url, user1, channel_id, user2):
     ''' user1 invites user2 to channel '''
     send_request('POST', url, 'channel/invite', {
         'token': user1.get('token'),
@@ -160,6 +164,24 @@ def check_in_index(url, user1, user2, channel, index):
             break
     return check
 
+def check_user_list(user_list_1, user_list_2):
+    '''
+    Compare sets of user_ids 
+    
+    This doesn't actually work right now
+    '''
+    # add u_ids to list
+    user_id_1 = []
+    for user in user_list_1:
+        user_id_1.append(user.get('u_id'))
+    
+    user_id_2 = []
+    for user in user_list_2:
+        user_id_2.append(user.get('u_id'))
+    
+    # return bool of whether the sets match
+    return set(user_id_1) == set(user_id_2)
+
 def test_invite(url):
     ''' testing channel_invite requests '''
 
@@ -174,14 +196,17 @@ def test_invite(url):
     user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
 
     # invite user2
-    invite_user(user1, channels[0].get('channel_id'), user2)
+    invite_user(url, user1, channels[0].get('channel_id'), user2)
 
     # check if both members are in channel
     check = False
     for channel in data.return_channels():
         if channel['channel_id'] == channels[0]['channel_id']:
-            check = set(channel['all_members']) == set(channels[0]['all_members'])
+            print(channel)
+            print(channels[0])
+            check = check_user_list(channel['all_members'], channels[0]['all_members'])
             break
+    assert False
     assert check
 
 def test_details(url):
@@ -196,7 +221,7 @@ def test_details(url):
 
     # invite second user to invite
     user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
-    invite_user(user1, channels[0].get('channel_id'), user2)
+    invite_user(url, user1, channels[0].get('channel_id'), user2)
 
     u_id_list = [user1.get('u_id'), user2.get('u_id')]
 
@@ -228,7 +253,7 @@ def test_messages(url):
 
     # invite second user to invite
     user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
-    invite_user(user1, channels[0].get('channel_id'), user2)
+    invite_user(url, user1, channels[0].get('channel_id'), user2)
 
     # create and send 150 messages
     # in order of time from earliest to latest
@@ -261,7 +286,7 @@ def test_leave(url):
 
     # invite second user to invite
     user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
-    invite_user(user1, channels[0].get('channel_id'), user2)
+    invite_user(url, user1, channels[0].get('channel_id'), user2)
 
     # leave as user1
     send_request('POST', url, 'channel/leave', {

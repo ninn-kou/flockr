@@ -310,3 +310,36 @@ def test_message_remoe_wrong_msg_id():
         message_remove(u_token1, message_test_id + 0xf)
 
     auth_logout(u_token1)
+
+#######################  test for access error  #########################
+def test_message_remoe_neither_sender_and_owner():
+    '''
+    this test using for check when the auth people is neither sender
+    and channel or flockr owner
+    '''
+    # create 2 users
+    other.clear()
+    user1 = auth_register("test1@test.com", "check_test", "Xingyu", "TAN")
+    user1 = auth_login("test1@test.com", "check_test")
+    u_token1 = user1['token']
+
+    user2 = auth_register("test2@test.com", "check_test", "steve", "TAN")
+    user2 = auth_login("test2@test.com", "check_test")
+    u_id2 = user2['u_id']
+    u_token2 = user2['token']
+
+    # create channel for testing
+    channel_test_id = channels_create(u_token1, "channel_test", True)
+    channel_invite(u_token1, channel_test_id, u_id2)
+
+    #create test message we needed
+    message_send(u_token1, channel_test_id, "msg test 01")
+    message_send(u_token1, channel_test_id, "msg test 02")
+    message_test_id = message_send(u_token1, channel_test_id, "msg test 03")['message_id']
+
+    # testing for channel message function for invalid message id inputError
+    with pytest.raises(AccessError):
+        message_remove(u_token2, message_test_id)
+
+    auth_logout(u_token1)
+    auth_logout(u_token2)

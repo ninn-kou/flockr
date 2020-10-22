@@ -91,14 +91,15 @@ def init_channels():
             'is_public': True,
             'messages':[
                 {
-                    'message_id': 0,
-                    'message': 'abcd',
-                    'sender': 'steve',
-                    'send_time': "time",
+                    'message_id': 1,
+                    'u_id': 1,
+                    'message': 'Hello world',
+                    'time_created': 1582426789,
                 },
             ]
         }
     ]
+ 
 
     '''
     global channels

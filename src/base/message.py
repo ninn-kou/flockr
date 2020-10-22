@@ -75,3 +75,47 @@ def find_one_in_channel(channel, u_id):
             return True
     return False
 
+
+############################################################
+#       message_send(token, channel_id, message)
+############################################################
+def message_send(token, channel_id, message):
+    """
+    message_send()
+    Send a message from authorised_user to the channel specified by channel_id
+
+    Args:
+        token: the token of the sender.
+        channel_id: the channel which is the target of message.
+        message: the message we send.
+
+    RETURNS:
+    { message_id }
+
+
+    THEREFORE, TEST EVERYTHING BELOW:
+    1. inputError
+    - Message is more than 1000 characters
+
+    2. accessError
+    - the authorised user has not joined the channel they are trying to post to
+    - cannot find the channel_id
+
+    """
+    data.init_channels()                                # Global variables.
+
+    auth_id = token_into_user_id(token)                 # InputError 1: invalid token.
+    if auth_id == -1:
+        raise InputError(description='invalid token.')
+
+
+    if len(message) > 1000:                              # InputError 2: Message is more than 1000 characters.
+        raise InputError(description='Message is more than 1000 characters.')
+
+    channel_got = find_channel(channel_id)              # AccessError 3: invalid channel_id.
+    if channel_got is None:
+        raise AccessError(description='invalid channel_id.')
+
+    if not find_one_in_channel(channel_got, auth_id):   # AccessError 4: if the auth not in channel.
+        raise AccessError(description='auth not in channel')
+

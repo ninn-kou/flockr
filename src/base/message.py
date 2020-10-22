@@ -119,3 +119,29 @@ def message_send(token, channel_id, message):
     if not find_one_in_channel(channel_got, auth_id):   # AccessError 4: if the auth not in channel.
         raise AccessError(description='auth not in channel')
 
+
+    new_msg_id = len(['message']) + 1                   # Case 5: no error, add the message
+
+    # record the time rightnow
+    timestamp = datetime.now().replace(tzinfo=timezone.utc).timestamp()
+
+    return_message = {                                  # create the message struct
+        'message_id': new_msg_id,
+        'u_id': auth_id,
+        'message': message,
+        'time_created': timestamp,
+    }
+
+    channel_got['message'].insert(0, return_message)    # insert the message in the top of messages in the channel.
+
+    return {
+        'message_id': new_msg_id,
+    }
+
+def message_remove(token, message_id):
+    return {
+    }
+
+def message_edit(token, message_id, message):
+    return {
+    }

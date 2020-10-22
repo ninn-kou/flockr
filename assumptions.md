@@ -81,8 +81,8 @@ Most recent changing log for this Markdown document here:
     'is public': True,
     'messages':[
       {
-        'msg_id': 0,
-        'msg': 'abcd',
+        'message_id': 0,
+        'message': 'abcd',
         'sender': 'steve',
         'send_time': "time",
       },

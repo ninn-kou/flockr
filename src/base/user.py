@@ -42,8 +42,21 @@ def user_profile_setname(token, name_first, name_last):
     return {}
 
 def user_profile_setemail(token, email):
-    return {
-    }
+    try:
+        email_now = jwt.decode(token, JWT_SECRET, algorithms=['HS256']).get('email')
+    except DecodeError:
+        return {'is_success': False}
+
+    regex_email_check(email)
+
+    # Check if email is already used.
+    user=check_in_users('email', data.return_users(), email_now)
+    if user is None:
+        raise InputError('email not found')
+
+    user['email']=email
+    data.updateByEmail(user,email_now)
+    return {}
 
 def user_profile_sethandle(token, handle_str):
     return {

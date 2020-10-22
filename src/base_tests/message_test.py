@@ -380,3 +380,39 @@ def test_message_remove_works_normally_for_message_sender_only():
 
     auth_logout(u_token1)
     auth_logout(u_token2)
+#########################################################################################
+def test_message_remove_works_normally_for_channel_owner_only():
+    '''
+    this test using for check if the message_remove can normal running
+    if we meet above conditions
+    '''
+    # create 2 users
+    other.clear()
+    user1 = auth_register("test1@test.com", "check_test", "Xingyu", "TAN")
+    user1 = auth_login("test1@test.com", "check_test")
+    u_token1 = user1['token']
+
+    user2 = auth_register("test2@test.com", "check_test", "steve", "TAN")
+    user2 = auth_login("test2@test.com", "check_test")
+    u_id2 = user2['u_id']
+    u_token2 = user2['token']
+
+    # create channel for testing
+    channel_test_id = channels_create(u_token1, "channel_test", True)
+    channel_invite(u_token1, channel_test_id, u_id2)
+
+    #create test message we needed
+    message_send(u_token1, channel_test_id, "msg test 01")
+    message_send(u_token1, channel_test_id, "msg test 02")
+    message_test_id = message_send(u_token2, channel_test_id, "msg test 03")['message_id']
+
+    # 1. remove the message we need
+    message_remove(u_token2, message_test_id)
+
+    # 2. check the function can return the message correctly.
+    check_work_msg = channel_messages(u_token1, channel_test_id, 0)
+    assert check_work_msg['messages'][0]['message'] == 'msg test 02'
+    assert check_work_msg['messages'][1]['message'] == 'msg test 01'
+
+    auth_logout(u_token1)
+    auth_logout(u_token2)

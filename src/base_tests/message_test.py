@@ -245,3 +245,35 @@ def test_channel_message_correct_send_return_id():
     assert message_send(u_token1, channel_test_id, "msg test 02")['message_id'] == 2
     assert message_send(u_token1, channel_test_id, "msg test 03")['message_id'] == 3
 
+
+#########################################################################
+#
+#                     test for message_remove Function
+#
+##########################################################################
+# Xingyu TAN working on message_test.py for message_remove function
+# 22 Oct. 2020
+
+"""
+    message_remove()
+    Given a message_id for a message, this message is removed from the channel
+
+    Args:
+        token: the token of the people who authority.
+        channel_id: the channel which is the target of message.
+
+    RETURNS:
+    {}
+
+
+    THEREFORE, TEST EVERYTHING BELOW:
+    1. inputError
+    - Message id is not exist
+
+    2. accessError
+    - the authorised user has not joined the channel they are trying to post to
+    - cannot find the channel_id
+
+"""
+########################################################################
+#######################  test for input error  #########################

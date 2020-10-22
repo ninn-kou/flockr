@@ -89,7 +89,14 @@ def init_channels():
                 }
             ],
             'is_public': True,
-            'messages':[]
+            'messages':[
+                {
+                    'message_id': 0,
+                    'message': 'abcd',
+                    'sender': 'steve',
+                    'send_time': "time",
+                },
+            ]
         }
     ]
 

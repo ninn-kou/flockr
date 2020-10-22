@@ -82,3 +82,42 @@ def test_user_profile_setname_invalid_name():
         user.user_profile_setname(token, '', 'Old')
     with pytest.raises(InputError):
         user.user_profile_setname(token, 'Mate', '')
+
+##################################################################################
+def test_user_profile_setemail_correct_return():
+    ''' checks correct return from login'''
+    clear()
+    registration = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old')
+    token = registration['token']
+    email = "236ggg@example.com"
+    result = user.user_profile_setemail(token, email)
+
+    # - Dict structure -> {u_id, token}
+    assert isinstance(result, dict)
+
+def test_user_profile_email_input_error_invalid_token():
+    clear()
+    registration = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old')
+    token = registration['token']
+    email = "valid@example.com"
+
+    # # - returns false when invalid token
+    invalid_token = '500000'
+    if invalid_token == token:
+        raise Exception('The token in program is actually valid')
+    is_success = user.user_profile_setemail(invalid_token, email)
+    assert is_success['is_success'] is False
+
+def test_user_profile_input_error_invalid_email():
+    clear()
+    registration = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old')
+    token = registration['token']
+    with pytest.raises(InputError):
+        user.user_profile_setemail(token, "invalid@example")
+
+def test_user_profile_input_error_existing_email():
+    clear()
+    registration = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old')
+    token = registration['token']
+    with pytest.raises(InputError):
+        user.user_profile_setemail(token, "valid@example.com")

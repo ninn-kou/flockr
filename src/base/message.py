@@ -1,10 +1,11 @@
 '''
     channel.py written by Xingyu Tan.
 '''
+from datetime import timezone, datetime
 import jwt
 import data.data as data
 from base.error import InputError, AccessError
-from datetime import timezone, datetime
+
 ################################################################################
 ################################################################################
 ##
@@ -24,7 +25,16 @@ from datetime import timezone, datetime
 ############################################################
 #      Helper Functions
 ############################################################
-
+def find_message(msg_id):
+    '''look up one message id'''
+    '''
+    return_message = {}
+    for i in data.channels:
+        for msg in i['messages']
+        if msg['message_id'] == channel_id:
+            i['all_members'].append(user)
+            break
+            '''
 def add_one_in_channel(channel_id, user):
     """Adding a member into the channel."""
     for i in data.channels:
@@ -104,7 +114,7 @@ def message_send(token, channel_id, message):
     """
     # Global variables.
     data.init_channels()
-
+    data.init_messages()
     # InputError 1: invalid token.
     auth_id = token_into_user_id(token)
     if auth_id == -1:
@@ -125,8 +135,8 @@ def message_send(token, channel_id, message):
 
     # Case 5: no error, add the message
     new_msg_id = 1
-    if len(channel_got['message']) != 0:
-        new_msg_id = channel_got['message'][0]['message_id'] + 1
+    if len(data.messages) != 0:
+        new_msg_id = data.messages[0]['message_id'] + 1
 
     # record the time rightnow
     now = datetime.utcnow()
@@ -135,6 +145,7 @@ def message_send(token, channel_id, message):
     # create the message struct
     return_message = {
         'message_id': new_msg_id,
+        'channel_id': channel_id,
         'u_id': auth_id,
         'message': message,
         'time_created': timestamp,
@@ -142,12 +153,35 @@ def message_send(token, channel_id, message):
 
     # insert the message in the top of messages in the channel.
     channel_got['message'].insert(0, return_message)
-
+    data.messages.insert(0, return_message)
     return {
         'message_id': new_msg_id,
     }
-
+############################################################
+#       message_remove(token, message_id)
+############################################################
 def message_remove(token, message_id):
+    '''
+    message_remove()
+    Given a message_id for a message, this message is removed from the channel
+
+    Args:
+        token: the token of the people who authority.
+        channel_id: the channel which is the target of message.
+
+    RETURNS:
+    {}
+
+
+    THEREFORE, TEST EVERYTHING BELOW:
+    1. inputError
+    - Message id is not exist
+
+    2. accessError excluding
+    - Message with message_id was sent by the authorised user making this reques
+    - The authorised user is an owner of this channel or the flockr
+    '''
+
     return {
     }
 

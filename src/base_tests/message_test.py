@@ -56,7 +56,7 @@ def test_message_input_error():
 
     # create a message which is more than 1000 characters
     message_test = "aaaaa"
-    message_test = 300 * message_test
+    message_test = 3000 * message_test
 
     # testing for channel invite function for length more than 1000 words
     with pytest.raises(InputError):
@@ -119,6 +119,35 @@ def test_access_error_invalid_channelid():
     # testing for channel message function for invalid channel id inputError
     with pytest.raises(AccessError):
         message_send(u_token1, channel_test_id + 0xf, message_test)
+
+    auth_logout(u_token1)
+
+###########################################################################################
+def test_access_error_invalid_tokenid():
+    '''
+    This test is using for check when token we had is invalid
+
+    '''
+    # create 2 users
+    other.clear()
+    user1 = auth_register("test1@test.com", "check_test", "Xingyu", "TAN")
+    user1 = auth_login("test1@test.com", "check_test")
+    u_token1 = user1['token']
+
+    user2 = auth_register("test2@test.com", "check_test", "steve", "TAN")
+    user2 = auth_login("test2@test.com", "check_test")
+    u_id2 = user2['u_id']
+
+    # create channel for testing
+    channel_test_id = channels_create(u_token1, "channel_test", True)
+    channel_invite(u_token1, channel_test_id, u_id2)
+
+    # create a message
+    message_test = "msg test"
+
+    # testing for channel message function for invalid channel id inputError
+    with pytest.raises(InputError):
+        message_send(u_token1 + 'abc', channel_test_id, message_test)
 
     auth_logout(u_token1)
 
@@ -202,7 +231,7 @@ def test_channel_message_newest_one_index():
 
     auth_logout(u_token1)
 ###########################################################################################
-# case 4: test if we can show the correct channel_message information
+# case 4: test if we can show the correct message_send information
 def test_channel_message_correct_message_infors():
     '''
     this test using for check if the channel function can return correctly
@@ -232,7 +261,7 @@ def test_channel_message_correct_message_infors():
 
     auth_logout(u_token1)
 ###########################################################################################
-# case 5: test if we can show the correct channel_message information
+# case 5: test if we can show the correct messsage_send return
 def test_channel_message_correct_send_return_id():
     '''
     this test using for check if the channel function can return correctly
@@ -284,135 +313,3 @@ def test_channel_message_correct_send_return_id():
 #    - Message with message_id was sent by the authorised user making this reques
 #    - The authorised user is an owner of this channel or the flockr
 ##########################################################################
-
-#######################  test for input error  #########################
-def test_message_remoe_wrong_msg_id():
-    '''
-    this test using for check if the message id given is valid
-    '''
-    # create 2 users
-    other.clear()
-    user1 = auth_register("test1@test.com", "check_test", "Xingyu", "TAN")
-    user1 = auth_login("test1@test.com", "check_test")
-    u_token1 = user1['token']
-
-
-    # create channel for testing
-    channel_test_id = channels_create(u_token1, "channel_test", True)
-
-    #create test message we needed
-    message_send(u_token1, channel_test_id, "msg test 01")
-    message_send(u_token1, channel_test_id, "msg test 02")
-    message_test_id = message_send(u_token1, channel_test_id, "msg test 03")['message_id']
-
-    # testing for channel message function for invalid message id inputError
-    with pytest.raises(InputError):
-        message_remove(u_token1, message_test_id + 0xf)
-
-    auth_logout(u_token1)
-
-#######################  test for access error  #########################
-def test_message_remoe_neither_sender_and_owner():
-    '''
-    this test using for check when the auth people is neither sender
-    and channel or flockr owner
-    '''
-    # create 2 users
-    other.clear()
-    user1 = auth_register("test1@test.com", "check_test", "Xingyu", "TAN")
-    user1 = auth_login("test1@test.com", "check_test")
-    u_token1 = user1['token']
-
-    user2 = auth_register("test2@test.com", "check_test", "steve", "TAN")
-    user2 = auth_login("test2@test.com", "check_test")
-    u_id2 = user2['u_id']
-    u_token2 = user2['token']
-
-    # create channel for testing
-    channel_test_id = channels_create(u_token1, "channel_test", True)
-    channel_invite(u_token1, channel_test_id, u_id2)
-
-    #create test message we needed
-    message_send(u_token1, channel_test_id, "msg test 01")
-    message_send(u_token1, channel_test_id, "msg test 02")
-    message_test_id = message_send(u_token1, channel_test_id, "msg test 03")['message_id']
-
-    # testing for channel message function for invalid message id inputError
-    with pytest.raises(AccessError):
-        message_remove(u_token2, message_test_id)
-
-    auth_logout(u_token1)
-    auth_logout(u_token2)
-
-##############################  test for normal running ###################################
-def test_message_remove_works_normally_for_message_sender_only():
-    '''
-    this test using for check if the message_remove can normal running
-    if we meet above conditions
-    '''
-    # create 2 users
-    other.clear()
-    user1 = auth_register("test1@test.com", "check_test", "Xingyu", "TAN")
-    user1 = auth_login("test1@test.com", "check_test")
-    u_token1 = user1['token']
-
-    user2 = auth_register("test2@test.com", "check_test", "steve", "TAN")
-    user2 = auth_login("test2@test.com", "check_test")
-    u_id2 = user2['u_id']
-    u_token2 = user2['token']
-
-    # create channel for testing
-    channel_test_id = channels_create(u_token1, "channel_test", True)
-    channel_invite(u_token1, channel_test_id, u_id2)
-
-    #create test message we needed
-    message_send(u_token1, channel_test_id, "msg test 01")
-    message_send(u_token1, channel_test_id, "msg test 02")
-    message_test_id = message_send(u_token2, channel_test_id, "msg test 03")['message_id']
-
-    # 1. remove the message we need
-    message_remove(u_token2, message_test_id)
-
-    # 2. check the function can return the message correctly.
-    check_work_msg = channel_messages(u_token2, channel_test_id, 0)
-    assert check_work_msg['messages'][0]['message'] == 'msg test 02'
-    assert check_work_msg['messages'][1]['message'] == 'msg test 01'
-
-    auth_logout(u_token1)
-    auth_logout(u_token2)
-#########################################################################################
-def test_message_remove_works_normally_for_channel_owner_only():
-    '''
-    this test using for check if the message_remove can normal running
-    if we meet above conditions
-    '''
-    # create 2 users
-    other.clear()
-    user1 = auth_register("test1@test.com", "check_test", "Xingyu", "TAN")
-    user1 = auth_login("test1@test.com", "check_test")
-    u_token1 = user1['token']
-
-    user2 = auth_register("test2@test.com", "check_test", "steve", "TAN")
-    user2 = auth_login("test2@test.com", "check_test")
-    u_id2 = user2['u_id']
-    u_token2 = user2['token']
-
-    # create channel for testing
-    channel_test_id = channels_create(u_token1, "channel_test", True)
-    channel_invite(u_token1, channel_test_id, u_id2)
-
-    #create test message we needed
-    message_send(u_token1, channel_test_id, "msg test 01")
-    message_send(u_token1, channel_test_id, "msg test 02")
-    message_test_id = message_send(u_token2, channel_test_id, "msg test 03")['message_id']
-
-    # 1. remove the message we need
-    message_remove(u_token2, message_test_id)
-
-    # 2. check the function can return the message correctly.
-    check_work_msg = channel_messages(u_token1, channel_test_id, 0)
-    assert check_work_msg['messages'][0]['message'] == 'msg test 02'
-    assert check_work_msg['messages'][1]['message'] == 'msg test 01'
-
-    auth_logout(u_token1)
-    auth_logout(u_token2)

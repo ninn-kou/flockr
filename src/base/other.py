@@ -9,6 +9,7 @@ def clear():
     data.init_channels()
 
     data.channels = []
+    data.messages = []
     data.clear_users()
 
 def users_all(token):

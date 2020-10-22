@@ -24,8 +24,22 @@ def user_profile(token, u_id):
         raise InputError('not user')
 
 def user_profile_setname(token, name_first, name_last):
-    return {
-    }
+    try:
+        email = jwt.decode(token, JWT_SECRET, algorithms=['HS256']).get('email')
+    except DecodeError:
+        return {'is_success': False}
+    # Check first name matches requirements.
+    if len(name_first) < 1 or len(name_first) > 50:
+        raise InputError('1')
+
+    # Check Last Name matches requirements.
+    if len(name_last) < 1 or len(name_last) > 50:
+        raise InputError('1')
+    user=check_in_users("email",data.return_users(),email)
+    user['name_first']=name_first
+    user['name_last']=name_last
+    data.updateByEmail(user,email)
+    return {}
 
 def user_profile_setemail(token, email):
     return {

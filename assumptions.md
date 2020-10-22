@@ -10,6 +10,8 @@ For every member of our team, please use the below TOC to jump to the chapter yo
 
 Most recent changing log for this Markdown document here:
 
+> 22 October, Xingyu Tan: Added more assumptions for message.py.
+>
 > 02 October, Yuhan Yan: Added more assumptions for iteration 1.
 >
 > 01 October, Hao Ren: Re-formatted this Markdown file.
@@ -17,6 +19,7 @@ Most recent changing log for this Markdown document here:
 > 31 September, Xingyu Tan: Created the formal assumption file.
 >
 > 26 September, Yuhan Yan: Added 3 assumptions to the first draft of assumption.
+
 
 ## 1. Iteration 1
 
@@ -76,7 +79,14 @@ Most recent changing log for this Markdown document here:
         }
     ],
     'is public': True,
-    'messages':[]
+    'messages':[
+      {
+          'message_id': 1,
+          'u_id': 1,
+          'message': 'Hello world',
+          'time_created': 1582426789,
+      },
+    ]
  }
  ```
 
@@ -91,3 +101,7 @@ Most recent changing log for this Markdown document here:
 
 - If the user is the only one owner in the channel:
   - Remove the whole channel cause a no-owner channel is banned.
+
+### 2.1 message_send()
+
+- for each message send, the new one always the toppest one.

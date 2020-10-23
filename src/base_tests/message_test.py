@@ -471,3 +471,71 @@ def test_message_remove_works_normally_for_channel_owner_only():
 
     auth_logout(u_token1)
     auth_logout(u_token2)
+
+#########################################################################
+#
+#                     test for message_edit Function
+#
+##########################################################################
+# Xingyu TAN working on message_test.py for message_edit function
+# 23 Oct. 2020
+
+##########################################################################
+#    message_edit()
+#    Given a message, update it's text with new text.
+#    If the new message is an empty string, the message is deleted.
+#
+#    Args:
+#        token: the token of the people who edit it.
+#        channel_id: the channel which is the target of message.
+#        message: the new message.
+#
+#    RETURNS:
+#    { }
+#
+#
+#    THEREFORE, TEST EVERYTHING BELOW:
+#    1. inputError
+#    - None
+#
+#    2. accessError
+#    - the authorised user is the message sender
+#    - the authorised user is the owener of flocker or channel
+#
+#    3. if the new message is empty
+#    - delete the message
+############################################################################
+
+########################################################################
+#######################  test for input error  #########################
+def test_message_access_error_neither_owener_nor_sender():
+    '''
+    this test using for check the message_edit for the auther who is
+    neither owener nor sender
+    '''
+    # create 2 users
+    other.clear()
+    user1 = auth_register("test1@test.com", "check_test", "Xingyu", "TAN")
+    user1 = auth_login("test1@test.com", "check_test")
+    u_token1 = user1['token']
+
+    user2 = auth_register("test2@test.com", "check_test", "steve", "TAN")
+    user2 = auth_login("test2@test.com", "check_test")
+    u_token2 = user2['token']
+
+    # create channel for testing
+    channel_test_id = channels_create(u_token1, "channel_test", True).get('channel_id')
+
+    # create a message
+    message_test = "msg test"
+
+    #send one message
+    message_test_id = message_send(u_token1, channel_test_id, message_test)['message_id']
+
+
+    # testing for channel invite function for length more than 1000 words
+    with pytest.raises(AccessError):
+        message_edit(u_token2, message_test_id, "message_edit")
+
+    auth_logout(u_token1)
+    auth_logout(u_token2)

@@ -17,13 +17,11 @@ def invite():
 
     input_obj = request.json
 
-    output = channel.channel_invite(
+    channel.channel_invite(
         input_obj.get('token'),
         input_obj.get('channel_id'),
         input_obj.get('u_id')
     )
-
-    return jsonify(output)
 
 @CHANNELHTTP.route('/details', methods = ['GET'])
 def details():
@@ -58,12 +56,10 @@ def leave():
 
     input_obj = request.json
 
-    output = channel.channel_leave(
+    channel.channel_leave(
         input_obj.get('token'),
         input_obj.get('channel_id')
     )
-
-    return jsonify(output)
 
 @CHANNELHTTP.route('/join', methods = ['POST'])
 def join():
@@ -71,12 +67,11 @@ def join():
 
     input_obj = request.json
 
-    output = channel.channel_join(
+    channel.channel_join(
         input_obj.get('token'),
         input_obj.get('channel_id')
     )
 
-    return jsonify(output)
 
 @CHANNELHTTP.route('/addowner', methods = ['POST'])
 def addowner():
@@ -84,13 +79,12 @@ def addowner():
 
     input_obj = request.json
 
-    output = channel.channel_addowner(
+    channel.channel_addowner(
         input_obj.get('token'),
         input_obj.get('channel_id'),
         input_obj.get('u_id')
     )
 
-    return jsonify(output)
 
 @CHANNELHTTP.route('/removeowner', methods = ['POST'])
 def removeowner():
@@ -98,10 +92,8 @@ def removeowner():
 
     input_obj = request.json
 
-    output = channel.channel_removeowner(
+    channel.channel_removeowner(
         input_obj.get('token'),
         input_obj.get('channel_id'),
         input_obj.get('u_id')
     )
-
-    return jsonify(output)

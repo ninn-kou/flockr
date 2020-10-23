@@ -1,4 +1,4 @@
-''' this file is using for pytest of base/message.py .'''
+"""''' this file is using for pytest of base/message.py .'''
 import pytest
 from base.channel import channel_invite, channel_messages
 from base.channels import channels_create
@@ -472,3 +472,4 @@ def test_message_remove_works_normally_for_channel_owner_only():
 
     auth_logout(u_token1)
     auth_logout(u_token2)
+"""

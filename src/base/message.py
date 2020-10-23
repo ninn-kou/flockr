@@ -271,7 +271,9 @@ def message_remove(token, message_id):
     # Case 4: no error, delete the message
     delete_msg_in_list(message_using)
     return {}
-
+############################################################
+#       message_edit(token, message_id, message)
+############################################################
 def message_edit(token, message_id, message):
     '''
     message_edit()
@@ -314,4 +316,3 @@ def message_edit(token, message_id, message):
     else:
         edit_msg_in_list(message_using, message)
     return {}
-

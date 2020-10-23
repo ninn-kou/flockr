@@ -135,7 +135,6 @@ def append_channels(channel):
     # append the user
     channels.append(channel)
 
-<<<<<<< src/data/data.py
     # write json to file
     with open('src/data/channels.json', 'w') as file:
         json.dump(channels, file)

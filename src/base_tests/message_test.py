@@ -539,3 +539,39 @@ def test_message_access_error_neither_owener_nor_sender():
 
     auth_logout(u_token1)
     auth_logout(u_token2)
+
+#######################  test for normally working  #########################
+def test_message_edit_works_for_sender():
+    '''
+    this test using for check the message_edit works normally for the message sender
+    '''
+    # create 2 users
+    other.clear()
+    user1 = auth_register("test1@test.com", "check_test", "Xingyu", "TAN")
+    user1 = auth_login("test1@test.com", "check_test")
+    u_token1 = user1['token']
+
+    user2 = auth_register("test2@test.com", "check_test", "steve", "TAN")
+    user2 = auth_login("test2@test.com", "check_test")
+    u_id2 = user2['u_id']
+    u_token2 = user2['token']
+
+    # create channel for testing
+    channel_test_id = channels_create(u_token1, "channel_test", True).get('channel_id')
+    channel_invite(u_token1, channel_test_id, u_id2)
+
+    #create test message we needed
+    message_send(u_token1, channel_test_id, "msg test 01")
+    message_send(u_token1, channel_test_id, "msg test 02")
+    message_test_id = message_send(u_token2, channel_test_id, "msg test 03")['message_id']
+
+    # 1. edits the message we need
+    message_edit(u_token2, message_test_id, "message_edit")
+
+    # 2. check the function can return the message correctly.
+    check_work_msg = channel_messages(u_token1, channel_test_id, 0)
+    assert check_work_msg['messages'][0]['message'] == 'message_edit'
+
+
+    auth_logout(u_token1)
+    auth_logout(u_token2)

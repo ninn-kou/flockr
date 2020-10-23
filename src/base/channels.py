@@ -85,7 +85,7 @@ def channels_create(token, name, is_public):
     channel_new = {                         # Initialize the new channel.
         'name': name,
         'channel_id':channel_id,
-        'owner': [
+        'owner_members': [
             {
                 'u_id': owner_id,
                 'name_first': owner_fn,

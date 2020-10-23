@@ -884,11 +884,11 @@ def test_channel_addowner0():
 
     for cnl in data.return_channels():
         if cnl['channel_id'] == cid:
-            owner_num = len(cnl['owner'])
+            owner_num = len(cnl['owner_members'])
             break
     assert owner_num == 2
-    assert u_id1 == cnl['owner'][0]['u_id']
-    assert u_id2 == cnl['owner'][1]['u_id']
+    assert u_id1 == cnl['owner_members'][0]['u_id']
+    assert u_id2 == cnl['owner_members'][1]['u_id']
 
 ###########################################################################################
 """
@@ -936,10 +936,10 @@ def test_channel_addowner1():
 
     for cnl in data.return_channels():
         if cnl['channel_id'] == cid:
-            owner_num = len(cnl['owner'])
+            owner_num = len(cnl['owner_members'])
             break
     assert owner_num == 1
-    assert u_id1 == cnl['owner'][0]['u_id']
+    assert u_id1 == cnl['owner_members'][0]['u_id']
 ###########################################################################################
 """
     user(u_id) is already the owner
@@ -982,11 +982,11 @@ def test_channel_addowner2():
 
     for cnl in data.return_channels():
         if cnl['channel_id'] == cid:
-            owner_num = len(cnl['owner'])
+            owner_num = len(cnl['owner_members'])
             break
     assert owner_num == 2
-    assert u_id1 == cnl['owner'][0]['u_id']
-    assert u_id2 == cnl['owner'][1]['u_id']
+    assert u_id1 == cnl['owner_members'][0]['u_id']
+    assert u_id2 == cnl['owner_members'][1]['u_id']
 
     # Raise error when add it again
     with pytest.raises(InputError):
@@ -1048,18 +1048,18 @@ def test_channel_addowner3():
 
     for cnl in data.return_channels():
         if cnl['channel_id'] == cid1:
-            owner_num = len(cnl['owner'])
+            owner_num = len(cnl['owner_members'])
             break
     assert owner_num == 1
-    assert u_id1 == cnl['owner'][0]['u_id']
+    assert u_id1 == cnl['owner_members'][0]['u_id']
 
     owner_num = 0
     for cnl in data.return_channels():
         if cnl['channel_id'] == cid2:
-            owner_num = len(cnl['owner'])
+            owner_num = len(cnl['owner_members'])
             break
     assert owner_num == 1
-    assert u_id2 == cnl['owner'][0]['u_id']
+    assert u_id2 == cnl['owner_members'][0]['u_id']
 
     # raise input error for unexist owner
     with pytest.raises(AccessError):
@@ -1106,11 +1106,11 @@ def test_channel_removeowner0():
 
     for cnl in data.return_channels():
         if cnl['channel_id'] == cid:
-            owner_num = len(cnl['owner'])
+            owner_num = len(cnl['owner_members'])
             break
     assert owner_num == 2
-    assert u_id1 == cnl['owner'][0]['u_id']
-    assert u_id2 == cnl['owner'][1]['u_id']
+    assert u_id1 == cnl['owner_members'][0]['u_id']
+    assert u_id2 == cnl['owner_members'][1]['u_id']
 
     # Delete the added owner
     channel_removeowner(token1, cid, u_id2)
@@ -1119,10 +1119,10 @@ def test_channel_removeowner0():
     owner_num = 0
     for cnl in data.return_channels():
         if cnl['channel_id'] == cid:
-            owner_num = len(cnl['owner'])
+            owner_num = len(cnl['owner_members'])
             break
     assert owner_num == 1
-    assert u_id1 == cnl['owner'][0]['u_id']
+    assert u_id1 == cnl['owner_members'][0]['u_id']
 
 ###########################################################################################
 
@@ -1163,10 +1163,10 @@ def test_channel_removeowner1():
 
     for cnl in data.return_channels():
         if cnl['channel_id'] == cid:
-            owner_num = len(cnl['owner'])
+            owner_num = len(cnl['owner_members'])
             break
     assert owner_num == 1
-    assert u_id1 == cnl['owner'][0]['u_id']
+    assert u_id1 == cnl['owner_members'][0]['u_id']
 
     # user1 invite and add user2 as an owner
     channel_invite(token1, cid, u_id2)
@@ -1180,11 +1180,11 @@ def test_channel_removeowner1():
     owner_num = 0
     for cnl in data.return_channels():
         if cnl['channel_id'] == cid:
-            owner_num = len(cnl['owner'])
+            owner_num = len(cnl['owner_members'])
             break
     assert owner_num == 2
-    assert u_id1 == cnl['owner'][0]['u_id']
-    assert u_id2 == cnl['owner'][1]['u_id']
+    assert u_id1 == cnl['owner_members'][0]['u_id']
+    assert u_id2 == cnl['owner_members'][1]['u_id']
 
 ###########################################################################################
 
@@ -1225,10 +1225,10 @@ def test_channel_removeowner2():
 
     for cnl in data.return_channels():
         if cnl['channel_id'] == cid:
-            owner_num = len(cnl['owner'])
+            owner_num = len(cnl['owner_members'])
             break
     assert owner_num == 1
-    assert u_id1 == cnl['owner'][0]['u_id']
+    assert u_id1 == cnl['owner_members'][0]['u_id']
 
     # raise input error for unexist owner
     with pytest.raises(InputError):
@@ -1272,10 +1272,10 @@ def test_channel_removeowner3():
 
     for cnl in data.return_channels():
         if cnl['channel_id'] == cid1:
-            owner_num = len(cnl['owner'])
+            owner_num = len(cnl['owner_members'])
             break
     assert owner_num == 1
-    assert u_id1 == cnl['owner'][0]['u_id']
+    assert u_id1 == cnl['owner_members'][0]['u_id']
 
     # user2 create a channel and user1 join
     cid2 = channels_create(token2, "Team4", True).get('channel_id')
@@ -1286,10 +1286,10 @@ def test_channel_removeowner3():
     owner_num = 0
     for cnl in data.return_channels():
         if cnl['channel_id'] == cid2:
-            owner_num = len(cnl['owner'])
+            owner_num = len(cnl['owner_members'])
             break
     assert owner_num == 1
-    assert u_id2 == cnl['owner'][0]['u_id']
+    assert u_id2 == cnl['owner_members'][0]['u_id']
 
     # raise input error for unexist owner
     with pytest.raises(AccessError):

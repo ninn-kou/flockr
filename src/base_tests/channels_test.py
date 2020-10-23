@@ -25,7 +25,7 @@ def test_channels_create():
     assert data.return_channels()[-1]['name'] == 'team'
     assert data.return_channels()[-1]['channel_id'] == channel_1_id
     assert data.return_channels()[-1]['is_public'] == True
-    assert data.return_channels()[-1]['owner'] == [{'u_id':u1_id,'name_first':'FirstN','name_last':'LastN'}]
+    assert data.return_channels()[-1]['owner_members'] == [{'u_id':u1_id,'name_first':'FirstN','name_last':'LastN'}]
     assert data.return_channels()[-1]['all_members'] == [{'u_id':u1_id,'name_first':'FirstN','name_last':'LastN'}]
 
 def test_channels_listall():
@@ -54,7 +54,7 @@ def test_channels_listall():
         {
             'name':'team',
             'channel_id':channel_1_id,
-            'owner':[
+            'owner_members':[
                 {
                     'u_id': u1_id,
                     'name_first': 'FirstN',
@@ -74,7 +74,7 @@ def test_channels_listall():
         } , {
             'name':'team2',
             'channel_id':channel_2_id,
-            'owner':[
+            'owner_members':[
                 {
                     'u_id': u2_id,
                     'name_first': 'FirstN2',

@@ -151,7 +151,7 @@ def channel_details(token, channel_id):
 
     Returns:
         {'name': channel_got['name'],
-        'owner_members':channel_got['owner'],
+        'owner_members':channel_got['owner_members'],
         'all_members': channel_got['all_members'],}
 
     Raises:
@@ -174,7 +174,7 @@ def channel_details(token, channel_id):
 
     return {                                # Case 4: all passed, return channel.
         'name': channel_got['name'],
-        'owner_members':channel_got['owner'],
+        'owner_members':channel_got['owner_members'],
         'all_members': channel_got['all_members'],
     }
 
@@ -277,7 +277,7 @@ def number_of_owners(channel_id):
     num = 0
     for chan in data.return_channels():
         if chan['channel_id'] == channel_id:
-            num = len(chan['owner'])
+            num = len(chan['owner_members'])
             break
     return num
 
@@ -406,7 +406,7 @@ def channel_join(token, channel_id):
 
 def find_current_owner(channel, u_id):
     """Check if the user we input is the owner."""
-    for owners in channel['owner']:
+    for owners in channel['owner_members']:
         if owners['u_id'] == u_id:
             return True
     return False
@@ -418,7 +418,7 @@ def add_owner_in_channel(channel_id, owners):
 
     for users in channels:
         if users['channel_id'] == channel_id:
-            users['owner'].append(owners)
+            users['owner_members'].append(owners)
             break
     
     data.replace_channels(channels)
@@ -430,10 +430,10 @@ def rm_owner_in_channel(channel_id, owners):
 
     for users in channels:
         if users['channel_id'] == channel_id:
-            for onrs in users['owner']:
+            for onrs in users['owner_members']:
                 if onrs['u_id'] == owners:
-                    users['owner'].remove(onrs)
-            break
+                    users['owner_members'].remove(onrs)
+                    break
     
     data.replace_channels(channels)
 
@@ -483,7 +483,6 @@ def channel_addowner(token, channel_id, u_id):
         'name_last': owner_detail['name_last'],
     }
     add_owner_in_channel(channel_id, owners)
-    add_one_in_channel(channel_id, owners)
 
 ############################################################
 #       channel_removeowner(token, channel_id, u_id)
@@ -527,4 +526,3 @@ def channel_removeowner(token, channel_id, u_id):
         raise AccessError                  # AccessError 5: if the auth not in channel.
 
     rm_owner_in_channel(channel_id, u_id)   # Case 6: if all passed, pop the user off.
-    remove_a_member_in_channel(u_id, channel_id)

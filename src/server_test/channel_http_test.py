@@ -21,7 +21,7 @@ import pytest
 import data.data as data
 from base_tests.channel_test import msg_send
 from base.other import clear
-from server.channel_http import details
+from server.channel_http import details, invite
 
 # copy-pasted this straight out of echo_http_test.py
 # Use this fixture to get the URL of the server. It starts the server for you,
@@ -150,18 +150,19 @@ def send_random_messages(channel_id, num):
     return messages
 
 def check_in_index(url, user1, user2, channel, index):
-    ''' checks if specified member is in index '''
+    ''' checks if user2 is in index from user1's perspective '''
     # find out channel from user1's perspective
     details = send_request('GET', url, 'channel/details', {
         'token': user1['token'],
         'channel_id': channel['channel_id']
     })
-    print(details)
-    print(data.return_channels())
+
     # check if user2 is in channel
     check = False
     for member in details.get(index):
         if member.get('u_id') == user2.get('u_id'):
+            print(member)
+            print(user2)
             check = True
             break
     return check
@@ -332,8 +333,9 @@ def test_addowner(url):
 
     # create second user to invite
     user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
+    invite_user(url, user1, channels[0]['channel_id'], user2)
 
-    # invite user2
+    # add user2 to chnnel
     send_request('POST', url, 'channel/addowner', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
@@ -355,6 +357,7 @@ def test_removeowner(url):
 
     # create second user to invite
     user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
+    invite_user(url, user1, channels[0]['channel_id'], user2)
 
     # invite user2
     send_request('POST', url, 'channel/addowner', {
@@ -367,7 +370,7 @@ def test_removeowner(url):
     send_request('POST', url, 'channel/removeowner', {
         'token': user2.get('token'),
         'channel_id': channels[0].get('channel_id'),
-        'u_id': user1.get('token')
+        'u_id': user1.get('u_id')
     })
 
     # check that user1 is gone as an owner

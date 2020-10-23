@@ -341,7 +341,7 @@ def test_addowner(url):
     })
 
     # check if both members are in channel
-    assert check_in_index(url, user2, user2, channels[0], 'owner')
+    assert check_in_index(url, user2, user2, channels[0], 'owner_members')
 
 def test_removeowner(url):
     ''' testing channel_removeowner requests '''
@@ -371,5 +371,5 @@ def test_removeowner(url):
     })
 
     # check that user1 is gone as an owner
-    check = check_in_index(url, user2, user1, channels[0], 'owner')
+    check = check_in_index(url, user2, user1, channels[0], 'owner_members')
     assert check is False

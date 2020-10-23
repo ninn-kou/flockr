@@ -285,12 +285,12 @@ def remove_whole_channel(channel_id):
     """If no owner exist, remove the whole channel."""
 
     channels = data.return_channels()
-    
+
     for chan in channels:
         if chan['channel_id'] == channel_id:
             chan.remove('chan')
         break
-    
+
     data.replace_channels(channels)
 
 def is_channel_public(channel_id):

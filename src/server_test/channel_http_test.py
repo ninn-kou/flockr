@@ -21,6 +21,7 @@ import pytest
 import data.data as data
 from base_tests.channel_test import msg_send
 from base.other import clear
+from server.channel_http import details
 
 # copy-pasted this straight out of echo_http_test.py
 # Use this fixture to get the URL of the server. It starts the server for you,
@@ -155,7 +156,8 @@ def check_in_index(url, user1, user2, channel, index):
         'token': user1['token'],
         'channel_id': channel['channel_id']
     })
-
+    print(details)
+    print(data.return_channels())
     # check if user2 is in channel
     check = False
     for member in details.get(index):
@@ -232,7 +234,7 @@ def test_details(url):
     # check channel name
     assert details.get('name') == channels[0]['name']
     # check owner members
-    assert details.get('owner_members')['u_id'] == user1['u_id']
+    assert details.get('owner_members')[0]['u_id'] == user1['u_id']
     # check all members
     member_ids = []
     for member in details.get('all_members'):
@@ -257,14 +259,14 @@ def test_messages(url):
     # in order of time from earliest to latest
     # will have the largest index as the latest message
     max_index = 149
-    messages = send_random_messages(channels.get('channel_id'), max_index + 1)
+    messages = send_random_messages(channels[0].get('channel_id'), max_index + 1)
 
     # get the sent messages in channel
     start_index = 0
     interval = 50
     resp = send_request('GET', url, 'channel/messages', {
         'token': user1.get('token'),
-        'channel_id': channels.get('channel_id'),
+        'channel_id': channels[0].get('channel_id'),
         'start': start_index
     })
     

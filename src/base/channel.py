@@ -483,7 +483,7 @@ def channel_addowner(token, channel_id, u_id):
         'name_last': owner_detail['name_last'],
     }
     add_owner_in_channel(channel_id, owners)
-
+    add_one_in_channel(channel_id, owners)
 
 ############################################################
 #       channel_removeowner(token, channel_id, u_id)
@@ -527,3 +527,4 @@ def channel_removeowner(token, channel_id, u_id):
         raise AccessError                  # AccessError 5: if the auth not in channel.
 
     rm_owner_in_channel(channel_id, u_id)   # Case 6: if all passed, pop the user off.
+    remove_a_member_in_channel(u_id, channel_id)

@@ -72,7 +72,7 @@ def return_channels():
         channel:  {
             'name': 'Hayden',
             'channel_id':
-            'owner': [
+            'owner_members': [
                 {
                     'u_id': 1,
                     'name_first': 'Hayden',

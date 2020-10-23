@@ -8,7 +8,7 @@ def clear():
     ''' clear the backend state '''
 
     data.clear_channels()
-    data.messages = []
+    data.clear_messages()
     data.clear_users()
 
 def users_all(token):

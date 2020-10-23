@@ -37,7 +37,7 @@ def add_one_in_channel(channel_id, user):
         if i['channel_id'] == channel_id:
             i['all_members'].append(user)
             break
-    
+
     # add it to memory
     data.replace_channels(channels)
 

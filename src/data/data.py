@@ -153,10 +153,9 @@ def clear_channels():
     with open('src/data/channels.json', 'w') as file:
         json.dump([], file)
 
-messages = []
 
-def init_messages():
-    ''' initialise the messages list
+def return_messages():
+    ''' return the messages list
 
     the struct using for messages
     'messages':[
@@ -170,5 +169,43 @@ def init_messages():
     ]
 
     '''
-    global messages
+    # declare messages outside
+    messages = None
 
+    # open the json file
+    with open('src/data/messages.json', 'r') as file:
+        messages = json.load(file)
+
+    # return the json information
+    return messages
+
+def insert_messages(message):
+    ''' insert_messages to list '''
+
+    # declare message outside
+    messages = None
+
+    # open current json file
+    with open('src/data/messages.json', 'r') as file:
+        messages = json.load(file)
+
+    # append the user
+    messages.insert(0, message)
+
+    # write json to file
+    with open('src/data/messages.json', 'w') as file:
+        json.dump(messages, file)
+
+def replace_messages(message):
+    ''' replace persistent database with input'''
+
+    # write json to file
+    with open('src/data/messages.json', 'w') as file:
+        json.dump(message, file)
+
+def clear_messages():
+    ''' clear out channels file '''
+
+    # write json to file
+    with open('src/data/messages.json', 'w') as file:
+        json.dump([], file)

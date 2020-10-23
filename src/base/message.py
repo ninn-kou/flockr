@@ -37,38 +37,40 @@ def if_auth_channel_owner(u_id, channel_id):
 
 def delete_msg_in_list(msg):
     """Interate the messages list by its id, return the message we need."""
-    data.messages.remove(msg)
+
     # get the channels
     channels = data.return_channels()
+    messages = data.return_messages()
 
     # deleting message from memory
     for i in channels:
         if i['channel_id'] == msg['channel_id']:
             i['message'].remove(msg)
             break
-
+    messages.remove(msg)
     # add it to memory
     data.replace_channels(channels)
+    data.replace_messages(messages)
+
 
 
 def adding_message(return_message, channel_id):
     # get the channels
     channels = data.return_channels()
-
     # add user into memory
     for i in channels:
         if i['channel_id'] == channel_id:
             i['message'].insert(0, return_message)
             break
-    data.messages.insert(0, return_message)
 
     # add it to memory
     data.replace_channels(channels)
+    data.insert_messages(return_message)
 
 def find_message(msg_id):
     """Interate the messages list by its id, return the message we need."""
     return_message = None
-    for i in data.messages:
+    for i in data.return_messages():
         if i['message_id'] == msg_id:
             return_message = i
             break
@@ -159,9 +161,7 @@ def message_send(token, channel_id, message):
     - cannot find the channel_id
 
     """
-    # Global variables.
 
-    data.init_messages()
     # InputError 1: invalid token.
     auth_id = token_into_user_id(token)
     if auth_id == -1:
@@ -182,8 +182,8 @@ def message_send(token, channel_id, message):
 
     # Case 5: no error, add the message
     new_msg_id = 1
-    if len(data.messages) != 0:
-        new_msg_id = data.messages[0]['message_id'] + 1
+    if len(data.return_messages()) != 0:
+        new_msg_id = data.return_messages()[0]['message_id'] + 1
 
     # record the time rightnow
     now = datetime.utcnow()
@@ -228,8 +228,6 @@ def message_remove(token, message_id):
     - Message with message_id was sent by the authorised user making this reques
     - The authorised user is an owner of this channel or the flockr
     """
-    # Global variables.
-    data.init_messages()
 
     # InputError 1: invalid token.
     auth_id = token_into_user_id(token)

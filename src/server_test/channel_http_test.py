@@ -178,7 +178,7 @@ def check_user_list(user_list_1, user_list_2):
     user_id_2 = []
     for user in user_list_2:
         user_id_2.append(user.get('u_id'))
-    
+
     # return bool of whether the sets match
     return set(user_id_1) == set(user_id_2)
 
@@ -200,13 +200,11 @@ def test_invite(url):
 
     # check if both members are in channel
     check = False
+    user_list = [{'u_id': user1.get('u_id')}, {'u_id': user2.get('u_id')}]
     for channel in data.return_channels():
         if channel['channel_id'] == channels[0]['channel_id']:
-            print(channel)
-            print(channels[0])
-            check = check_user_list(channel['all_members'], channels[0]['all_members'])
+            check = check_user_list(channel['all_members'], user_list)
             break
-    assert False
     assert check
 
 def test_details(url):

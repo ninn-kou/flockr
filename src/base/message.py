@@ -25,6 +25,28 @@ from base.error import InputError, AccessError
 ############################################################
 #      Helper Functions
 ############################################################
+def edit_msg_in_list(msg, text):
+    """Interate the messages list by its id, return the message after edit."""
+    # get the channels
+    channels = data.return_channels()
+    messages = data.return_messages()
+
+    # deleting message from memory
+    for i in channels:
+        if i['channel_id'] == msg['channel_id']:
+            for temp in i['message']:
+                if temp['message_id'] == msg['message_id']:
+                    temp['message'] = text
+                    break
+        break
+    for temp in messages:
+        if temp['message_id'] == msg['message_id']:
+            temp['message'] = text
+            break
+    # add it to memory
+    data.replace_channels(channels)
+    data.replace_messages(messages)
+
 def if_auth_channel_owner(u_id, channel_id):
     """check if the u_id is the owner of the channel"""
     test = False
@@ -251,6 +273,45 @@ def message_remove(token, message_id):
     return {}
 
 def message_edit(token, message_id, message):
-    return {
-    }
+    '''
+    message_edit()
+    Given a message, update it's text with new text.
+    If the new message is an empty string, the message is deleted.
+
+    Args:
+        token: the token of the people who edit it.
+        channel_id: the channel which is the target of message.
+        message: the new message.
+    RETURNS:
+    { }
+
+
+    THEREFORE, TEST EVERYTHING BELOW:
+    1. inputError
+    - None
+
+    2. accessError
+    - the authorised user is the message sender
+    - the authorised user is the owener of flocker or channel
+
+    3. if the new message is empty
+    - delete the message
+
+    '''
+    # AccessError 1: excluding message sender and channel_owner
+    auth_id = token_into_user_id(token)
+    message_using = find_message(message_id)
+    test_owener = if_auth_channel_owner(auth_id, message_using['channel_id'])
+    # if it is neither channel owner nor messager sender
+    # raise for access error
+    if test_owener == False and message_using['u_id'] != auth_id:
+        raise AccessError(description='neither message sender nor channel_owner.')
+    # case 2: if empty msg, delete it
+    if len(message) == 0:
+        delete_msg_in_list(message_using)
+
+    # Case 3: no error, edit the message
+    else:
+        edit_msg_in_list(message_using, message)
+    return {}
 

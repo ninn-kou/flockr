@@ -6,7 +6,7 @@ from base.error import InputError, AccessError
 import data.data as data
 import pytest
 import base.other as other
-from base.message import message_send
+# from base.message import message_send
 
 
 #########################################################################

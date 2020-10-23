@@ -1,10 +1,10 @@
 '''
     Other functions to help testing
 '''
-
+import jwt
 import data.data as data
 from base.error import InputError, AccessError
-import jwt
+
 
 def owner_from_token(token):
     ''' find owner from token'''
@@ -14,7 +14,7 @@ def owner_from_token(token):
 
     try:
         email = jwt.decode(token, jwt_secret, algorithms=['HS256']).get('email')
-    except jwt.DecodeError as error :
+    except jwt.DecodeError as error:
         raise InputError("Couldn't Decode Token") from error
 
     au_id = None
@@ -27,24 +27,26 @@ def owner_from_token(token):
         raise InputError
 
     return au_id
-    
+
 def clear():
     ''' clear the backend state '''
-    data.init_channels()
 
-    data.channels = []
+    data.clear_channels()
+    data.messages = []
     data.clear_users()
 
 def users_all(token):
+    '''return all of the users list'''
     # check that token exists
     owner_from_token(token)
     users = data.return_users()
     return users
 
-def admin_userpermission_change(token, u_id, permission_id):    
+def admin_userpermission_change(token, u_id, permission_id):
+    '''change the permission if the admin is a owner'''
     i = owner_from_token(token)                     # check that token exists
-    
-    users = data.return_users()        
+
+    users = data.return_users()
     found = 0
     for user in users:                          # Check that u_id is valid.
         if user['u_id'] == u_id:
@@ -52,35 +54,27 @@ def admin_userpermission_change(token, u_id, permission_id):
             break
     if found != 1:
         raise InputError
-    
+
     if permission_id != 1 or permission_id != 2:
         raise InputError                        # Check the permission_id.
-    
+
     if i['permission_id'] != 1:                 # The admin is not a owner_num
         raise AccessError
-    
+
     for user in users:                          # Find the user.
         if user['u_id'] == u_id:
             user['permission_id'] = permission_id
-            
+
     return {}
-            
+
 def search(token, query_str):
+    '''search the message with the specific query_str'''
+    # check that token exists
+    owner_from_token(token)
     mes_list = []
-    for channel in data.channels:
+    channels = data.return_channels()
+    for channel in channels:
         for i in channel['messages']:
             if query_str in i['message']:
                 mes_list.append(i)
-    '''            
-    return {
-        'messages': [
-            {
-                'message_id': 1,
-                'u_id': 1,
-                'message': 'Hello world',
-                'time_created': 1582426789,
-            }
-        ],
-    }
-    '''
     return mes_list

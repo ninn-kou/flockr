@@ -1,4 +1,4 @@
-import data.data as data
+"""import data.data as data
 
 import jwt
 from   jwt import DecodeError
@@ -64,5 +64,19 @@ def user_profile_setemail(token, email):
 
 
 def user_profile_sethandle(token, handle_str):
+<<<<<<< HEAD
     return {
     }
+=======
+    try:
+        email = jwt.decode(token, JWT_SECRET, algorithms=['HS256']).get('email')
+    except DecodeError:
+        return {'is_success': False}
+    if len(handle_str) < 3 or len(handle_str) > 20:
+        raise InputError('1')
+    user=check_in_users("email",data.return_users(),email)
+    user['handle_str']=handle_str
+    data.updateByEmail(user,email)
+    return {}
+"""
+>>>>>>> master

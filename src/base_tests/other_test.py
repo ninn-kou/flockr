@@ -51,7 +51,7 @@ def test_users_all():
 def test_admin_userpermission_change():
     other.clear()
     # initialise the users list
-    data.init_users()
+    #data.init_users()
     
     #create a user
     user1 = auth.auth_register('12345@test.com', 'password', 'FirstN', 'LastN')
@@ -94,7 +94,7 @@ def test_admin_userpermission_change():
 def test_search():
     other.clear()
     #initialise the channels list
-    data.init_channels()
+    #data.init_channels()
     #create two users and take their id and token
     user1 = auth.auth_register('12345@test.com', 'password', 'FirstN', 'LastN')
     user1 = auth.auth_login('12345@test.com', 'password')

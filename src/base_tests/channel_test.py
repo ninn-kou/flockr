@@ -6,7 +6,7 @@ from base.error import InputError, AccessError
 import data.data as data
 import pytest
 import base.other as other
-from base.message import message_send
+# from base.message import message_send
 
 
 #########################################################################
@@ -57,7 +57,7 @@ def test_channel_invite_work():
     u_id2 = user2['u_id']
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1,"channel_test",True)
+    channel_test_id = channels_create(u_token1,"channel_test",True).get('channel_id')
 
     # testing for channel invite function
     channel_invite(u_token1,channel_test_id,u_id2)
@@ -65,9 +65,8 @@ def test_channel_invite_work():
     # Assuming we the function running correctly, then we do check the channel details
     # expecially, the member infomation
     channel_member_num = 0
-    data.init_channels()
 
-    for i in data.channels:
+    for i in data.return_channels():
         if i['channel_id'] == channel_test_id:
             channel_member_num = len(i['all_members'])
             break
@@ -97,8 +96,7 @@ def test_channel_repeate_invite():
     u_id2 = user2['u_id']
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1,"channel_test",True)
-
+    channel_test_id = channels_create(u_token1,"channel_test",True).get('channel_id')
 
     # invite people first time
     channel_invite(u_token1,channel_test_id,u_id2)
@@ -107,9 +105,8 @@ def test_channel_repeate_invite():
     channel_invite(u_token1,channel_test_id, u_id2)
 
     channel_member_num = 0
-    data.init_channels()
 
-    for i in data.channels:
+    for i in data.return_channels():
         if i['channel_id'] == channel_test_id:
             channel_member_num = len(i['all_members'])
             break
@@ -136,8 +133,7 @@ def test_channel_invite_invalid_channelId_input_error():
     u_id2 = user2['u_id']
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1,"channel_test",True)
-
+    channel_test_id = channels_create(u_token1,"channel_test",True).get('channel_id')
 
     # testing for channel invite function for invalid channel id inputError
     with pytest.raises(InputError):
@@ -161,8 +157,7 @@ def test_channel_invite_invalid_userId_input_error():
     u_id2 = user2['u_id']
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1,"channel_test",True)
-
+    channel_test_id = channels_create(u_token1,"channel_test",True).get('channel_id')
 
     # testing for channel invite function for invalid user id inputError
     with pytest.raises(InputError):
@@ -191,8 +186,7 @@ def test_channel_non_member_invite():
     u_token3 = user3['token']
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1,"channel_test",True)
-
+    channel_test_id = channels_create(u_token1,"channel_test",True).get('channel_id')
 
     # testing for channel invite function for invalid token people.
     with pytest.raises(AccessError):
@@ -242,12 +236,11 @@ def test_channel_details_work():
     u_id2 = user2['u_id']
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1,"channel_test",True)
+    channel_test_id = channels_create(u_token1,"channel_test",True).get('channel_id')
 
     # testing for channel invite function
     channel_invite(u_token1,channel_test_id,u_id2)
     channel_test_details = channel_details(u_token1,channel_test_id)
-
 
     # Assuming we the function running correctly, then we do check the channel details
     # expecially, the member infomation
@@ -278,7 +271,7 @@ def test_channel_details_invalid_channelId():
     u_id2 = user2['u_id']
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1,"channel_test",True)
+    channel_test_id = channels_create(u_token1,"channel_test",True).get('channel_id')
 
     channel_invite(u_token1,channel_test_id, u_id2)
 
@@ -307,7 +300,7 @@ def test_channel_non_member_call_details():
     u_token3 = user3['token']
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1,"channel_test",True)
+    channel_test_id = channels_create(u_token1,"channel_test",True).get('channel_id')
 
 
     # testing for channel invite function for invalid token people.
@@ -362,13 +355,14 @@ def msg_send(channel_id, msg_id, u_id, msg, time):
         'time_created': time,
     }
 
-    data.init_channels()
-    for i in data.channels:
+    channels = data.return_channels()
+
+    for i in channels:
         if i['channel_id'] == channel_id:
             i['message'].insert(0, return_message)
             break
 
-    return
+    data.replace_channels(channels)
 
 ###################     INPUT ERROR        ##################
 def test_inputError_channel_message_channelId_start_invalid():
@@ -387,7 +381,7 @@ def test_inputError_channel_message_channelId_start_invalid():
     u_id2 = user2['u_id']
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1,"channel_test",True)
+    channel_test_id = channels_create(u_token1,"channel_test",True).get('channel_id')
     channel_invite(u_token1,channel_test_id, u_id2)
 
     # testing for channel message function for invalid message start
@@ -411,7 +405,7 @@ def test_inputError_channel_message_invalid_channelId():
     u_id2 = user2['u_id']
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1,"channel_test",True)
+    channel_test_id = channels_create(u_token1,"channel_test",True).get('channel_id')
     channel_invite(u_token1,channel_test_id, u_id2)
 
     # testing for channel message function for invalid channel id inputError
@@ -437,14 +431,11 @@ def test_channel_message_non_member_call_details():
     u_token3 = user3['token']
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1,"channel_test",True)
-
+    channel_test_id = channels_create(u_token1,"channel_test",True).get('channel_id')
 
     # testing for channel invite function for invalid token people.
     with pytest.raises(AccessError):
         channel_messages(u_token3,channel_test_id,0)
-
-
 
 ######   test  for normally channel_messsge work and  correct return #########
 # case 1: return -1 : for no more message after start
@@ -459,10 +450,8 @@ def test_channel_message_return_negative_one():
     user1 = auth_login("test1@test.com","check_test")
     u_token1 = user1['token']
 
-
-
     # create channel for testing
-    channel_test_id = channels_create(u_token1,"channel_test",True)
+    channel_test_id = channels_create(u_token1,"channel_test",True).get('channel_id')
 
     # 1. return -1 : for no more message after start
     check_return_negative_one = channel_messages(u_token1,channel_test_id,0)
@@ -485,7 +474,7 @@ def test_channel_message_return50_end():
 
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1,"channel_test",True)
+    channel_test_id = channels_create(u_token1,"channel_test",True).get('channel_id')
 
      # 2. check the function can return the message correctly.
     for i in range(1,3):
@@ -509,8 +498,7 @@ def test_channel_message_newest_one_index():
     u_token1 = user1['token']
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1,"channel_test",True)
-
+    channel_test_id = channels_create(u_token1,"channel_test",True).get('channel_id')
 
     # the exist messages after start more than 50, just return the top 50 ones.
     for i in range(1,60):
@@ -539,9 +527,8 @@ def test_channel_message_correct_message_infors():
     user1 = auth_login("test1@test.com","check_test")
     u_token1 = user1['token']
 
-
     # create channel for testing
-    channel_test_id = channels_create(u_token1,"channel_test",True)
+    channel_test_id = channels_create(u_token1,"channel_test",True).get('channel_id')
 
     # 2. check the function can return the message correctly.
     for i in range(1,3):
@@ -584,7 +571,7 @@ def test_channel_join_normal():
     assert type(token_user) is str
 
     # Owner creates a test channel.
-    chan_id = channels_create(token_owner, "Test_Channel", True)
+    chan_id = channels_create(token_owner, "Test_Channel", True).get('channel_id')
     assert chan_id
     assert type(chan_id) is int
 
@@ -619,7 +606,7 @@ def test_channel_join_invalid_channel_id():
     assert type(token_user) is str
 
     # Owner creates a test channel.
-    chan_id = channels_create(token_owner, "Test_Channel", True)
+    chan_id = channels_create(token_owner, "Test_Channel", True).get('channel_id')
     assert chan_id
     assert type(chan_id) is int
 
@@ -656,7 +643,7 @@ def test_channel_join_for_private():
 
     # Owner creates a test channel.
     # However, this case we need a PRIVATE channel.
-    chan_id = channels_create(token_owner, "Test_Channel", False)
+    chan_id = channels_create(token_owner, "Test_Channel", False).get('channel_id')
     assert chan_id
     assert type(chan_id) is int
 
@@ -711,7 +698,7 @@ def test_channel_leave_normal():
     assert token_user3
 
     # Owner creates a test channel.
-    chan_id = channels_create(token_owner, "Test_Channel", True)
+    chan_id = channels_create(token_owner, "Test_Channel", True).get('channel_id')
     assert chan_id
     assert type(chan_id) is int
 
@@ -726,8 +713,8 @@ def test_channel_leave_normal():
     # We removed user2 and user3, so the owner and user should be remaining here.
     # The total number of members in the channel should be 2.
     user_num = 0
-    data.init_channels()
-    for chan in data.channels:
+
+    for chan in data.return_channels():
         if chan['channel_id'] == chan_id:
             user_num = len(chan['all_members'])
             break
@@ -776,7 +763,7 @@ def test_channel_leave_invalid_channel():
     assert token_user3
 
     # Owner creates a test channel.
-    chan_id = channels_create(token_owner, "Test_Channel", True)
+    chan_id = channels_create(token_owner, "Test_Channel", True).get('channel_id')
     assert chan_id
     assert type(chan_id) is int
 
@@ -835,7 +822,7 @@ def test_channel_leave_not_a_member():
     assert token_user3
 
     # Owner creates a test channel.
-    chan_id = channels_create(token_owner, "Test_Channel", True)
+    chan_id = channels_create(token_owner, "Test_Channel", True).get('channel_id')
     assert chan_id
     assert type(chan_id) is int
 
@@ -883,7 +870,7 @@ def test_channel_addowner0():
     assert type(token2) is str
 
     # user1 create a channel
-    cid = channels_create(token1, "Vicmnss", True)
+    cid = channels_create(token1, "Vicmnss", True).get('channel_id')
     assert cid
     assert type(cid) is int
 
@@ -894,14 +881,14 @@ def test_channel_addowner0():
     channel_addowner(token1, cid, u_id2)
     # Check if success
     owner_num = 0
-    data.init_channels()
-    for cnl in data.channels:
+
+    for cnl in data.return_channels():
         if cnl['channel_id'] == cid:
-            owner_num = len(cnl['owner'])
+            owner_num = len(cnl['owner_members'])
             break
     assert owner_num == 2
-    assert u_id1 == cnl['owner'][0]['u_id']
-    assert u_id2 == cnl['owner'][1]['u_id']
+    assert u_id1 == cnl['owner_members'][0]['u_id']
+    assert u_id2 == cnl['owner_members'][1]['u_id']
 
 ###########################################################################################
 """
@@ -932,7 +919,7 @@ def test_channel_addowner1():
     assert type(token2) is str
 
     # user1 create a channel
-    cid = channels_create(token1, "Vicmnss", True)
+    cid = channels_create(token1, "Vicmnss", True).get('channel_id')
     assert cid
     assert type(cid) is int
     assert cid != 1234567
@@ -946,13 +933,13 @@ def test_channel_addowner1():
 
     # Check if success
     owner_num = 0
-    data.init_channels()
-    for cnl in data.channels:
+
+    for cnl in data.return_channels():
         if cnl['channel_id'] == cid:
-            owner_num = len(cnl['owner'])
+            owner_num = len(cnl['owner_members'])
             break
     assert owner_num == 1
-    assert u_id1 == cnl['owner'][0]['u_id']
+    assert u_id1 == cnl['owner_members'][0]['u_id']
 ###########################################################################################
 """
     user(u_id) is already the owner
@@ -982,7 +969,7 @@ def test_channel_addowner2():
     assert type(token2) is str
 
     # user1 create a channel
-    cid = channels_create(token1, "Vicmnss", True)
+    cid = channels_create(token1, "Vicmnss", True).get('channel_id')
     assert cid
     assert type(cid) is int
 
@@ -992,14 +979,14 @@ def test_channel_addowner2():
 
     # Check if success
     owner_num = 0
-    data.init_channels()
-    for cnl in data.channels:
+
+    for cnl in data.return_channels():
         if cnl['channel_id'] == cid:
-            owner_num = len(cnl['owner'])
+            owner_num = len(cnl['owner_members'])
             break
     assert owner_num == 2
-    assert u_id1 == cnl['owner'][0]['u_id']
-    assert u_id2 == cnl['owner'][1]['u_id']
+    assert u_id1 == cnl['owner_members'][0]['u_id']
+    assert u_id2 == cnl['owner_members'][1]['u_id']
 
     # Raise error when add it again
     with pytest.raises(InputError):
@@ -1045,34 +1032,34 @@ def test_channel_addowner3():
     assert type(token3) is str
 
     # user1 create a channel and user2 join
-    cid1 = channels_create(token1, "Vicmnss", True)
+    cid1 = channels_create(token1, "Vicmnss", True).get('channel_id')
     assert cid1
     assert type(cid1) is int
     channel_invite(token1, cid1, u_id2)
     channel_invite(token1, cid1, u_id3)
 
     # user2 create a channel and user1 join
-    cid2 = channels_create(token2, "Team4", True)
+    cid2 = channels_create(token2, "Team4", True).get('channel_id')
     assert cid2
     assert type(cid2) is int
     channel_invite(token2, cid2, u_id1)
     # Check the owners
     owner_num = 0
-    data.init_channels()
-    for cnl in data.channels:
+
+    for cnl in data.return_channels():
         if cnl['channel_id'] == cid1:
-            owner_num = len(cnl['owner'])
+            owner_num = len(cnl['owner_members'])
             break
     assert owner_num == 1
-    assert u_id1 == cnl['owner'][0]['u_id']
+    assert u_id1 == cnl['owner_members'][0]['u_id']
 
     owner_num = 0
-    for cnl in data.channels:
+    for cnl in data.return_channels():
         if cnl['channel_id'] == cid2:
-            owner_num = len(cnl['owner'])
+            owner_num = len(cnl['owner_members'])
             break
     assert owner_num == 1
-    assert u_id2 == cnl['owner'][0]['u_id']
+    assert u_id2 == cnl['owner_members'][0]['u_id']
 
     # raise input error for unexist owner
     with pytest.raises(AccessError):
@@ -1109,33 +1096,33 @@ def test_channel_removeowner0():
     assert type(token2) is str
 
     # user1 create a channel
-    cid = channels_create(token1, "Vicmnss", True)
+    cid = channels_create(token1, "Vicmnss", True).get('channel_id')
     assert cid
     assert type(cid) is int
 
     # Check if success
     channel_addowner(token1, cid, u_id2)
     owner_num = 0
-    data.init_channels()
-    for cnl in data.channels:
+
+    for cnl in data.return_channels():
         if cnl['channel_id'] == cid:
-            owner_num = len(cnl['owner'])
+            owner_num = len(cnl['owner_members'])
             break
     assert owner_num == 2
-    assert u_id1 == cnl['owner'][0]['u_id']
-    assert u_id2 == cnl['owner'][1]['u_id']
+    assert u_id1 == cnl['owner_members'][0]['u_id']
+    assert u_id2 == cnl['owner_members'][1]['u_id']
 
     # Delete the added owner
     channel_removeowner(token1, cid, u_id2)
 
     # assert the user has been moved
     owner_num = 0
-    for cnl in data.channels:
+    for cnl in data.return_channels():
         if cnl['channel_id'] == cid:
-            owner_num = len(cnl['owner'])
+            owner_num = len(cnl['owner_members'])
             break
     assert owner_num == 1
-    assert u_id1 == cnl['owner'][0]['u_id']
+    assert u_id1 == cnl['owner_members'][0]['u_id']
 
 ###########################################################################################
 
@@ -1167,19 +1154,19 @@ def test_channel_removeowner1():
     assert type(token2) is str
 
     # user1 create a channel
-    cid = channels_create(token1, "Vicmnss", True)
+    cid = channels_create(token1, "Vicmnss", True).get('channel_id')
     assert cid
     assert type(cid) is int
     assert cid != 1234567
 
     owner_num = 0
-    data.init_channels()
-    for cnl in data.channels:
+
+    for cnl in data.return_channels():
         if cnl['channel_id'] == cid:
-            owner_num = len(cnl['owner'])
+            owner_num = len(cnl['owner_members'])
             break
     assert owner_num == 1
-    assert u_id1 == cnl['owner'][0]['u_id']
+    assert u_id1 == cnl['owner_members'][0]['u_id']
 
     # user1 invite and add user2 as an owner
     channel_invite(token1, cid, u_id2)
@@ -1191,13 +1178,13 @@ def test_channel_removeowner1():
 
     # assert the user hasnot been moved
     owner_num = 0
-    for cnl in data.channels:
+    for cnl in data.return_channels():
         if cnl['channel_id'] == cid:
-            owner_num = len(cnl['owner'])
+            owner_num = len(cnl['owner_members'])
             break
     assert owner_num == 2
-    assert u_id1 == cnl['owner'][0]['u_id']
-    assert u_id2 == cnl['owner'][1]['u_id']
+    assert u_id1 == cnl['owner_members'][0]['u_id']
+    assert u_id2 == cnl['owner_members'][1]['u_id']
 
 ###########################################################################################
 
@@ -1229,19 +1216,19 @@ def test_channel_removeowner2():
     assert type(token2) is str
 
     # user1 create a channel and invite user2
-    cid = channels_create(token1, "Vicmnss", True)
+    cid = channels_create(token1, "Vicmnss", True).get('channel_id')
     assert cid
     assert type(cid) is int
     channel_invite(token1, cid, u_id2)
 
     owner_num = 0
-    data.init_channels()
-    for cnl in data.channels:
+
+    for cnl in data.return_channels():
         if cnl['channel_id'] == cid:
-            owner_num = len(cnl['owner'])
+            owner_num = len(cnl['owner_members'])
             break
     assert owner_num == 1
-    assert u_id1 == cnl['owner'][0]['u_id']
+    assert u_id1 == cnl['owner_members'][0]['u_id']
 
     # raise input error for unexist owner
     with pytest.raises(InputError):
@@ -1276,33 +1263,33 @@ def test_channel_removeowner3():
     assert type(token2) is str
 
     # user1 create a channel and user2 join
-    cid1 = channels_create(token1, "Vicmnss", True)
+    cid1 = channels_create(token1, "Vicmnss", True).get('channel_id')
     assert cid1
     assert type(cid1) is int
     channel_invite(token1, cid1, u_id2)
 
     owner_num = 0
-    data.init_channels()
-    for cnl in data.channels:
+
+    for cnl in data.return_channels():
         if cnl['channel_id'] == cid1:
-            owner_num = len(cnl['owner'])
+            owner_num = len(cnl['owner_members'])
             break
     assert owner_num == 1
-    assert u_id1 == cnl['owner'][0]['u_id']
+    assert u_id1 == cnl['owner_members'][0]['u_id']
 
     # user2 create a channel and user1 join
-    cid2 = channels_create(token2, "Team4", True)
+    cid2 = channels_create(token2, "Team4", True).get('channel_id')
     assert cid2
     assert type(cid2) is int
     channel_invite(token2, cid2, u_id1)
 
     owner_num = 0
-    for cnl in data.channels:
+    for cnl in data.return_channels():
         if cnl['channel_id'] == cid2:
-            owner_num = len(cnl['owner'])
+            owner_num = len(cnl['owner_members'])
             break
     assert owner_num == 1
-    assert u_id2 == cnl['owner'][0]['u_id']
+    assert u_id2 == cnl['owner_members'][0]['u_id']
 
     # raise input error for unexist owner
     with pytest.raises(AccessError):

@@ -81,7 +81,7 @@ def test_message_access_error_wrong_token():
     u_token2 = user2['token']
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1, "channel_test", True)
+    channel_test_id = channels_create(u_token1, "channel_test", True).get('channel_id')
 
     # create a message
     message_test = "msg test"
@@ -110,7 +110,7 @@ def test_access_error_invalid_channelid():
     u_id2 = user2['u_id']
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1, "channel_test", True)
+    channel_test_id = channels_create(u_token1, "channel_test", True).get('channel_id')
     channel_invite(u_token1, channel_test_id, u_id2)
 
     # create a message
@@ -139,7 +139,7 @@ def test_access_error_invalid_tokenid():
     u_id2 = user2['u_id']
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1, "channel_test", True)
+    channel_test_id = channels_create(u_token1, "channel_test", True).get('channel_id')
     channel_invite(u_token1, channel_test_id, u_id2)
 
     # create a message
@@ -165,7 +165,7 @@ def test_channel_message_return_negative_one():
     u_token1 = user1['token']
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1, "channel_test", True)
+    channel_test_id = channels_create(u_token1, "channel_test", True).get('channel_id')
 
     # 1. return -1 : for no more message after start
     check_return_negative_one = channel_messages(u_token1, channel_test_id, 0)
@@ -189,7 +189,7 @@ def test_channel_message_return50_end():
 
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1, "channel_test", True)
+    channel_test_id = channels_create(u_token1, "channel_test", True).get('channel_id')
 
     # check the function can return the message correctly.
     message_send(u_token1, channel_test_id, "msg test 01")
@@ -215,7 +215,7 @@ def test_channel_message_newest_one_index():
     u_token1 = user1['token']
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1, "channel_test", True)
+    channel_test_id = channels_create(u_token1, "channel_test", True).get('channel_id')
 
 
     # the exist messages after start more than 50, just return the top 50 ones.
@@ -246,7 +246,7 @@ def test_channel_message_correct_message_infors():
 
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1, "channel_test", True)
+    channel_test_id = channels_create(u_token1, "channel_test", True).get('channel_id')
 
     #create test message we needed
     message_send(u_token1, channel_test_id, "msg test 01")
@@ -276,13 +276,12 @@ def test_channel_message_correct_send_return_id():
 
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1, "channel_test", True)
+    channel_test_id = channels_create(u_token1, "channel_test", True).get('channel_id')
 
     #create test message we needed and check return
     assert message_send(u_token1, channel_test_id, "msg test 01")['message_id'] == 1
     assert message_send(u_token1, channel_test_id, "msg test 02")['message_id'] == 2
     assert message_send(u_token1, channel_test_id, "msg test 03")['message_id'] == 3
-
     auth_logout(u_token1)
 
 #########################################################################
@@ -329,7 +328,7 @@ def test_message_remoe_wrong_msg_id():
 
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1, "channel_test", True)
+    channel_test_id = channels_create(u_token1, "channel_test", True).get('channel_id')
 
     #create test message we needed
     message_send(u_token1, channel_test_id, "msg test 01")
@@ -354,7 +353,7 @@ def test_message_remoe_wrong_token_id():
 
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1, "channel_test", True)
+    channel_test_id = channels_create(u_token1, "channel_test", True).get('channel_id')
 
     #create test message we needed
     message_send(u_token1, channel_test_id, "msg test 01")
@@ -385,7 +384,7 @@ def test_message_remoe_neither_sender_and_owner():
     u_token2 = user2['token']
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1, "channel_test", True)
+    channel_test_id = channels_create(u_token1, "channel_test", True).get('channel_id')
     channel_invite(u_token1, channel_test_id, u_id2)
 
     #create test message we needed
@@ -418,7 +417,7 @@ def test_message_remove_works_normally_for_message_sender_only():
     u_token2 = user2['token']
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1, "channel_test", True)
+    channel_test_id = channels_create(u_token1, "channel_test", True).get('channel_id')
     channel_invite(u_token1, channel_test_id, u_id2)
 
     #create test message we needed
@@ -454,7 +453,7 @@ def test_message_remove_works_normally_for_channel_owner_only():
     u_token2 = user2['token']
 
     # create channel for testing
-    channel_test_id = channels_create(u_token1, "channel_test", True)
+    channel_test_id = channels_create(u_token1, "channel_test", True).get('channel_id')
     channel_invite(u_token1, channel_test_id, u_id2)
 
     #create test message we needed

@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 [{"u_id": 1887638105, "email": "test@example.com", "name_first": "Emily", "name_last": "Luo?", "handle_str": "EmilyLuo?", "password": "fb174773328eaa628cc182428d92811d9acd85e1ab62bf4c72b461efd3912110", "session_secret": "h!/9NL2<_?:6YS\"|DP#7kR$\"1L=r<3[$`m~0<=/VMn_Q/hsso@"}]
+=======
+[{"u_id": 3499937731, "email": "test1@test.com", "name_first": "Xingyu", "name_last": "TAN", "handle_str": "XingyuTAN", "password": "ccc91800ae1c326ef37cf0dc6a07f0b8c3b78c427d5a0a907bb08515f710aba7"}, {"u_id": 2244987308, "email": "test2@test.com", "name_first": "steve", "name_last": "TAN", "handle_str": "steveTAN", "password": "ccc91800ae1c326ef37cf0dc6a07f0b8c3b78c427d5a0a907bb08515f710aba7"}]
+>>>>>>> master

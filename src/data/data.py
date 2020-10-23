@@ -61,6 +61,16 @@ def clear_users():
     with open('src/data/users.json', 'w') as file:
         json.dump([], file)
 
+def updateByEmail(user,email):
+    with open('src/data/users.json', 'r') as file:
+        users = json.load(file)
+    newusers=[]
+    for i in users:
+        if i['email']==email:
+            i=user
+        newusers.append(i)
+    with open('src/data/users.json', 'w') as file:
+        json.dump(newusers, file)
 
 ##########################################################################################
 
@@ -87,9 +97,18 @@ def return_channels():
                 }
             ],
             'is_public': True,
-            'messages':[]
+            'message':[
+                {
+                    'message_id': 1,
+                    'channel_id': 1,
+                    'u_id': 1,
+                    'message': 'Hello world',
+                    'time_created': 1582426789,
+                },
+            ]
         }
     ]
+ 
 
     '''
 
@@ -116,6 +135,7 @@ def append_channels(channel):
     # append the user
     channels.append(channel)
 
+<<<<<<< src/data/data.py
     # write json to file
     with open('src/data/channels.json', 'w') as file:
         json.dump(channels, file)
@@ -133,3 +153,23 @@ def clear_channels():
     # write json to file
     with open('src/data/channels.json', 'w') as file:
         json.dump([], file)
+
+messages = []
+
+def init_messages():
+    ''' initialise the messages list
+
+    the struct using for messages
+    'messages':[
+        {
+            'message_id': 1,
+            'channel_id': 1,
+            'u_id': 1,
+            'message': 'Hello world',
+            'time_created': 1582426789,
+        },
+    ]
+
+    '''
+    global messages
+

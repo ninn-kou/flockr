@@ -19,9 +19,16 @@ def users_notes():
             'name_first':'',
             'name_last':'',
             'handle_str': '',
-            'password': ''
+            'password': '',
+            'session_secret': '',
+            'permission_id': ''
         }
     ]
+
+    - session_secret needs to be implemented
+    - auth_register needs to be changed, so that the very first user has p_id = 1
+    everyone else is created p_id = 2
+    - need to make token thing
     '''
 
 def return_users():

@@ -1,6 +1,6 @@
 '''
     channel.py written by Xingyu Tan.
-'''
+
 from datetime import timezone, datetime
 import jwt
 import data.data as data
@@ -180,7 +180,7 @@ def message_send(token, channel_id, message):
 #       message_remove(token, message_id)
 ############################################################
 def message_remove(token, message_id):
-    '''
+    """
     message_remove()
     Given a message_id for a message, this message is removed from the channel
 
@@ -199,7 +199,7 @@ def message_remove(token, message_id):
     2. accessError excluding
     - Message with message_id was sent by the authorised user making this reques
     - The authorised user is an owner of this channel or the flockr
-    '''
+    """
     # Global variables.
     data.init_channels()
     data.init_messages()
@@ -229,3 +229,4 @@ def message_remove(token, message_id):
 def message_edit(token, message_id, message):
     return {
     }
+'''

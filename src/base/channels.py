@@ -37,27 +37,27 @@ def owner_from_token(token):
     return au_id
 
 def channels_list(token):
-    """List the channel you want."""
+    """Need to fix implementation """
 
     # find the token
     i = owner_from_token(token)
     user_id = i['u_id']
 
     channel_list = []
-    for i in range(len(data.channels)):     # Use loops to check if user in channel.
-        for j in range(len(data.channels[i]['all_members'])):
-            if data.channels[i]['all_members'][j]['u_id'] == user_id:
-                channel_list.append(data.channels[i])
-    return channel_list
+    for i in range(len(data.return_channels())):     # Use loops to check if user in channel.
+        for j in range(len(data.return_channels()[i]['all_members'])):
+            if data.return_channels()[i]['all_members'][j]['u_id'] == user_id:
+                channel_list.append(data.return_channels()[i])
+    return {'channels': channel_list}
 
 
 def channels_listall(token):
     """just return all channels? sure about that?"""
 
     # check that token exists
-    owner_from_token(token)
+    # owner_from_token(token)
 
-    return data.channels
+    return {'channels': data.return_channels()}
 
 def create_channel_id(channels):
     """Create a random channel id."""
@@ -73,8 +73,6 @@ def create_channel_id(channels):
 
 def channels_create(token, name, is_public):
     """Create a new empty channel."""
-    data.init_channels()                    # Initialise the channels list.
-
     if len(name) > 20:                      # The length of channel name should <= 20.
         raise InputError
 
@@ -83,11 +81,11 @@ def channels_create(token, name, is_public):
     owner_fn = i['name_first']
     owner_ln = i['name_last']
 
-    channel_id = create_channel_id(data.channels)
+    channel_id = create_channel_id(data.return_channels())
     channel_new = {                         # Initialize the new channel.
         'name': name,
         'channel_id':channel_id,
-        'owner': [
+        'owner_members': [
             {
                 'u_id': owner_id,
                 'name_first': owner_fn,
@@ -106,4 +104,4 @@ def channels_create(token, name, is_public):
     }
 
     data.append_channels(channel_new)       # Add this new channel into data.
-    return channel_id
+    return {'channel_id': channel_id}

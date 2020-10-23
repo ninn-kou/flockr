@@ -74,17 +74,15 @@ def updateByEmail(user,email):
 
 ##########################################################################################
 
-channels = []
-
-def init_channels():
-    ''' initialise the channels list
+def return_channels():
+    ''' return the channels list
 
     the struct using for channel
     channels = [
         channel:  {
             'name': 'Hayden',
             'channel_id':
-            'owner': [
+            'owner_members': [
                 {
                     'u_id': 1,
                     'name_first': 'Hayden',
@@ -113,13 +111,49 @@ def init_channels():
  
 
     '''
-    global channels
+
+    # declare users outside
+    channels = None
+
+    # open the json file
+    with open('src/data/channels.json', 'r') as file:
+        channels = json.load(file)
+
+    # return the json information
+    return channels
 
 def append_channels(channel):
-    ''' add a channel in the channels list '''
+    ''' append user to list '''
+
+    # declare users outside
+    channels = None
+
+    # open current json file
+    with open('src/data/channels.json', 'r') as file:
+        channels = json.load(file)
+
+    # append the user
     channels.append(channel)
 
-#######################################################################
+    # write json to file
+    with open('src/data/channels.json', 'w') as file:
+        json.dump(channels, file)
+
+def replace_channels(channels):
+    ''' replace persistent database with input'''
+
+    # write json to file
+    with open('src/data/channels.json', 'w') as file:
+        json.dump(channels, file)
+
+def clear_channels():
+    ''' clear out channels file '''
+
+    # write json to file
+    with open('src/data/channels.json', 'w') as file:
+        json.dump([], file)
+
+
 messages = []
 
 def init_messages():
@@ -138,3 +172,4 @@ def init_messages():
 
     '''
     global messages
+

@@ -1,5 +1,5 @@
 '''
-    channel.py written by Xingyu Tan.
+    messages.py written by Xingyu Tan.
 '''
 from datetime import timezone, datetime
 import jwt
@@ -29,7 +29,7 @@ def if_auth_channel_owner(u_id, channel_id):
     """check if the u_id is the owner of the channel"""
     test = False
     channel_got = find_channel(channel_id)
-    for i in channel_got['owner']:
+    for i in channel_got['owner_members']:
         if i['u_id'] == u_id:
             test = True
             break
@@ -37,13 +37,33 @@ def if_auth_channel_owner(u_id, channel_id):
 
 def delete_msg_in_list(msg):
     """Interate the messages list by its id, return the message we need."""
-    data.init_messages()
     data.messages.remove(msg)
-    data.init_channels()
-    for i in data.channels:
+    # get the channels
+    channels = data.return_channels()
+
+    # deleting message from memory
+    for i in channels:
         if i['channel_id'] == msg['channel_id']:
             i['message'].remove(msg)
             break
+
+    # add it to memory
+    data.replace_channels(channels)
+
+
+def adding_message(return_message, channel_id):
+    # get the channels
+    channels = data.return_channels()
+
+    # add user into memory
+    for i in channels:
+        if i['channel_id'] == channel_id:
+            i['message'].insert(0, return_message)
+            break
+    data.messages.insert(0, return_message)
+
+    # add it to memory
+    data.replace_channels(channels)
 
 def find_message(msg_id):
     """Interate the messages list by its id, return the message we need."""
@@ -56,10 +76,18 @@ def find_message(msg_id):
 
 def add_one_in_channel(channel_id, user):
     """Adding a member into the channel."""
-    for i in data.channels:
+
+    # get the channels
+    channels = data.return_channels()
+
+    # add user into memory
+    for i in channels:
         if i['channel_id'] == channel_id:
             i['all_members'].append(user)
             break
+
+    # add it to memory
+    data.replace_channels(channels)
 
 def token_into_user_id(token):
     """Transfer the token into the user id."""
@@ -82,7 +110,7 @@ def token_into_user_id(token):
 def find_channel(channel_id):
     """Interate the channels list by its id, return the channel we need."""
     answer = None
-    for i in data.channels:
+    for i in data.return_channels():
         if i['channel_id'] == channel_id:
             answer = i
             break
@@ -132,7 +160,7 @@ def message_send(token, channel_id, message):
 
     """
     # Global variables.
-    data.init_channels()
+
     data.init_messages()
     # InputError 1: invalid token.
     auth_id = token_into_user_id(token)
@@ -171,8 +199,8 @@ def message_send(token, channel_id, message):
     }
 
     # insert the message in the top of messages in the channel.
-    channel_got['message'].insert(0, return_message)
-    data.messages.insert(0, return_message)
+    adding_message(return_message, channel_id)
+
     return {
         'message_id': new_msg_id,
     }
@@ -180,7 +208,7 @@ def message_send(token, channel_id, message):
 #       message_remove(token, message_id)
 ############################################################
 def message_remove(token, message_id):
-    '''
+    """
     message_remove()
     Given a message_id for a message, this message is removed from the channel
 
@@ -199,9 +227,8 @@ def message_remove(token, message_id):
     2. accessError excluding
     - Message with message_id was sent by the authorised user making this reques
     - The authorised user is an owner of this channel or the flockr
-    '''
+    """
     # Global variables.
-    data.init_channels()
     data.init_messages()
 
     # InputError 1: invalid token.
@@ -223,9 +250,9 @@ def message_remove(token, message_id):
 
     # Case 4: no error, delete the message
     delete_msg_in_list(message_using)
-
     return {}
 
 def message_edit(token, message_id, message):
     return {
     }
+

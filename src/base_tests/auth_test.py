@@ -111,14 +111,13 @@ def test_auth_register_multiple_users():
 
     clear()
 
-    array_size = 10000
+    array_size = 100
     array = [0] * array_size
 
     i = 0
     while i < array_size:
-        print(i)
         array[i] = (auth.auth_register('test' + str(i)
-        + '@example.com', 'password', 'Test', 'Person')['u_id'])
+        + '@example.com', 'password', 'Test', 'Pee')['u_id'])
         i += 1
 
     assert len(array) == len(set(array))

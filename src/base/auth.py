@@ -82,129 +82,22 @@ def create_u_id(users):
 
     return u_id
 
-def add_random_character_to_index(users, handle, og_index, iter):
-    ''' adds random character to specified index'''
+def handle_generator(name_first, name_last, u_id):
+    """
+    Generates a unique handle.
+    Much simpler than the thing I had before
+    """
 
-    # valid characters to add to string
-    variabliser = string.digits + string.ascii_letters
-
-    # iterate through every character and see if handle created is unique
-    for i in range(iter):
-        index = og_index - i + 1
-        for char in variabliser:
-            handle[index] = char
-            if check_in_users('handle_str', users, to_string(handle)) is None:
-                return handle
-        # if it iterates through all all of them, there is no valid character 
-        # in that index
-        return None
-
-def add_characters_to_handle(users, handle, num_additive_chars, max_index_len):
-    # try adding characters first
-    for i in range(num_additive_chars):
-        index = max_index_len + i
-        result = add_random_character_to_index(users, handle, index, i)
-        # if it is a valid handle, return it
-        if result is not None:
-            return result
-    return None
-
-def handle_variabliser(handle, users):
-    ''' make sure every handle is unique (I spent way too much time on this)'''
-
-    # if handle is unique, return it straight away
-    if check_in_users('handle_str', users, to_string(handle)) is None:
-        return handle
-
-    len_handle = 0
-    for char in handle:
-        if char == '':
-            break
-        len_handle += 1
-
-    # find the maximum index of original handle
-    max_index_len = len_handle
-
-    # specify max index of string
-    max_index = 19
-    num_additive_chars = max_index - max_index_len + 1
-
-    # try adding characters to handle first
-    result = add_characters_to_handle(users, handle, num_additive_chars, max_index_len)
-    if result is not None:
-        return result
-
-    # if it reaches end of previous loop, it means that it can no longer add characters
-    # therefore, we must start destroying previous characters
-    # however, each destroyed character can also add characters
-    # for every subtractive character, try adding additional characters
-    for i in range(max_index_len):
-        index = max_index_len - i
-        # try changing the last index
-        result = add_random_character_to_index(users, handle, index)
-        if result is not None:
-            return result
-        # if simply changing previous characters doesn't work, try adding to it
-        result = add_characters_to_handle(users, handle, num_additive_chars, max_index_len)
-        if result is not None:
-            return result
-
-    # if it reaches end of previous loop, it means that there are literall no possible handles
-    # I guess we'll just return no handle
-    return None
-
-
-# def handle_variabliser(handle, variabliser_num, variabliser, users, original_len):
-#     """
-#     Creates variable numbers at the end of the string, flawed because it isn't
-#     optimal randomisation. BUT it does the job -> every handle will ALWAYS be unique,
-#     even 10,000 of the same name...
-#     """
-#     # Check if the handle is unique, if not modify it further.
-#     check = check_in_users('handle_str', users, handle)
-
-#     if check is not None:
-#         # Check if there are any variabliser characters to iterate through,
-#         # if not, variabilise more characters.
-#         if not variabliser:
-#             variabliser = string.ascii_letters + string.digits
-#             # need to modify it further
-#             variabliser_num += 1
-
-#         # If true, try other variable characters.
-#         else:
-#             if len(handle) < 20:
-#                 handle += random.choice(variabliser)
-#             else:
-#                 # Variabilise the string accordingly.
-#                 handle_ending = [(original_len - 1), 19]
-#                 handle = handle[0:(original_len - 1)]
-
-#                 for _ in range(variabliser_num):
-#                     character = random.choice(variabliser)
-#                     variabliser = variabliser.replace(character, '')
-#                     handle = handle + character + handle_ending
-
-#         handle = handle_variabliser(handle, variabliser_num, variabliser, users, original_len)
-#     return handle
-
-def handle_generator(name_first, name_last, users):
-    """Generates a unique handle."""
+    u_id_len = len(str(u_id))
 
     # Create base concatenation.
     raw_concatenation = name_first + name_last
+    # 20 is maximum lenth of handle
+    cut_concatenation = raw_concatenation[0:20-u_id_len]
+    # u_id is already verified to be unique
+    u_id_concatenation = cut_concatenation + str(u_id)
 
-    if len(raw_concatenation) > 20:
-        raw_concatenation = raw_concatenation[:20]
-    raw_concatenation = list(raw_concatenation)
-    for _ in range(20 - len(raw_concatenation)):
-        raw_concatenation.append('')
-    # make sure handle is unique
-    # original_len = len(raw_concatenation)
-    # handle = handle_variabliser(raw_concatenation, 0, '', users, original_len)
-    handle = to_string(handle_variabliser(raw_concatenation, users))
-
-    return handle
+    return u_id_concatenation
 
 def auth_register_error_check(email, password, name_first, name_last):
     """Handles error checking for auth_register."""
@@ -314,10 +207,9 @@ def auth_register(email, password, name_first, name_last):
     u_id = create_u_id(data.return_users())
     session_secret = create_secret()
     token = create_token(u_id, session_secret)
-    handle = handle_generator(name_first, name_last, data.return_users())
+    handle = handle_generator(name_first, name_last, u_id)
     password = hash_(password)
     permission_id = determine_permission_id()
-    print(handle)
     # Create and store a user object.
     user = {
         'u_id': u_id,

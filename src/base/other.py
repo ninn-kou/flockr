@@ -39,13 +39,13 @@ def admin_userpermission_change(token, u_id, permission_id):
             found = 1
             break
     if found != 1:
-        raise InputError
+        raise InputError(description='The u_id is invalid.')
 
-    if permission_id not in range(1, 3):
-        raise InputError                        # Check the permission_id.
+    if permission_id not in range(1, 3):        # Check the permission_id.
+        raise InputError(description='The permission_id is invalid.')
 
     if i['permission_id'] != 1:                 # The admin is not a owner_num.
-        raise AccessError
+        raise AccessError(description='The admin is not a owner.')
 
     data.update_user(u_id, 'permission_id', permission_id)
 

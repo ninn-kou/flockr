@@ -1,4 +1,3 @@
-"""
 import pytest
 
 import data.data as data
@@ -159,4 +158,3 @@ def test_user_profile_handle_input_error_invalid_handle():
         user.user_profile_sethandle(token, "27")
     with pytest.raises(InputError):
         user.user_profile_setemail(token, "2367brehjrtjehjtrghjtjrtjtjk")
-"""

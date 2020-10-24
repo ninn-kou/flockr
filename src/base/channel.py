@@ -121,7 +121,6 @@ def channel_invite(token, channel_id, u_id):
     if find_one_in_channel(channel_got, u_id):
         return                              # Case 5: if the member already in, skip it.
 
-
     user_struct = find_user(u_id)           # Case 6: no error, add the member.
     user = {                                # Create a new struct to store user's info.
         'u_id': u_id,

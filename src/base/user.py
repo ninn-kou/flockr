@@ -12,11 +12,6 @@ def user_profile(token, u_id):
     except DecodeError:
         return {'is_success': False}
 
-    try:
-        u_id = int(u_id)
-    except Exception:
-        raise InputError('terrible uid')
-
     user = check_in_users("u_id",data.return_users(),u_id)
     if user:
         return user

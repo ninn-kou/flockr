@@ -1,4 +1,4 @@
-'''Other functions to help testing'''
+'''Some other useful functions'''
 import data.data as data
 from base.auth import decode_token
 from base.error import InputError, AccessError

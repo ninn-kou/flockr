@@ -6,6 +6,7 @@ import random
 import string
 import hashlib
 import os.path
+import pickle
 import jwt
 from jwt import DecodeError
 
@@ -25,14 +26,15 @@ def read_token_secret():
     ''' read token_secret from file '''
 
     # check if token file exists
-    if os.path.isfile('src/data/JWT_SECRET.txt') is False:
-        with open('src/data/JWT_SECRET.txt', 'w') as file:
+    if os.path.isfile('src/data/JWT_SECRET.p') is False:
+        with open('src/data/JWT_SECRET.p', 'wb') as file:
             new_token = create_secret() * 50
-            file.write(new_token)
+            pickle.dump(new_token, file)
 
     # read token_secret from file
-    with open('src/data/JWT_SECRET.txt', 'r') as file:
-        token_secret = file.read()
+    # stored in pickle so user can't read it *dab*
+    with open('src/data/JWT_SECRET.p', 'rb') as file:
+        token_secret = pickle.load(file)
 
     return token_secret
 

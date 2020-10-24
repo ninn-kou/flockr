@@ -1276,7 +1276,7 @@ def test_channel_addowner_not_owner():
         if cnl['channel_id'] == cid2:
             owner_num = len(cnl['owner_members'])
             break
-    assert owner_num == 1
+    assert owner_num == 2
     assert u_id2 == cnl['owner_members'][0]['u_id']
 
     # raise input error for unexist owner
@@ -1568,7 +1568,7 @@ def test_channel_removeowner_nonchannel_owner():
         if cnl['channel_id'] == cid2:
             owner_num = len(cnl['owner_members'])
             break
-    assert owner_num == 1
+    assert owner_num == 2
     assert u_id2 == cnl['owner_members'][0]['u_id']
 
     # raise input error for unexist owner

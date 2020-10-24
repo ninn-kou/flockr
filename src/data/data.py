@@ -56,7 +56,7 @@ def update_user(u_id, index, value):
     # open current json file
     with open('src/data/users.json', 'r') as file:
         users = json.load(file)
-    
+
     for user in users:
         if user.get('u_id') == u_id:
             user[index] = value

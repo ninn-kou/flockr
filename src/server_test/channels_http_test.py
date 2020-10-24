@@ -14,6 +14,7 @@ from time import sleep
 import json
 import requests
 from base.channel import channel_invite
+from base.auth import JWT_SECRET
 
 import pytest
 
@@ -182,6 +183,7 @@ def test_list(url):
     # register new channels
     public_channels = create_channels(url, token3, True, 1)
     user1_channels = create_channels(url, token1, False, 1)
+
     channel_invite(token3, public_channels[0].get('channel_id'), user1.get('u_id'))
     user2_channels = create_channels(url, token2, False, 2)
     channel_invite(token3, public_channels[0].get('channel_id'), user2.get('u_id'))

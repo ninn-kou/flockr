@@ -41,7 +41,7 @@ def test_channels_listall():
     user2 = auth.auth_login('2345@test.com', 'password')
     u2_id = user2['u_id']
     u2_token = user2['token']
-    print(u1_token)
+
     #create a channel by user1 in channels and return its channel id
     channel_1_id = channels.channels_create(u1_token,'team',True).get('channel_id')
 
@@ -108,7 +108,7 @@ def test_channels_list():
     token2 = user2.get('token')
     user3 = auth.auth_register('425@test.com', 'password3', 'FirstN1', 'LastN3')
     token3 = user3.get('token')
-
+    print(token3)
     # create channels and invite users into each channel
     public_channels = [channels.channels_create(token3,'u3-1',True)]
     # create user1 and invite them to the public channel

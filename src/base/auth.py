@@ -5,6 +5,7 @@ import re
 import random
 import string
 import hashlib
+import os.path
 import jwt
 from jwt import DecodeError
 
@@ -20,22 +21,23 @@ def create_secret():
     # create token of that length and with specified characters
     return "".join(random.choices(valid_characters, k = token_length))
 
-def create_token_secret():
-    ''' create secret and create file 
-    not currently being used'''
+def read_token_secret():
+    ''' read token_secret from file '''
 
-    # double long server secret
-    token_secret = create_secret() + create_secret()
+    # check if token file exists
+    if os.path.isfile('src/data/JWT_SECRET.txt') is False:
+        with open('src/data/JWT_SECRET.txt', 'w') as file:
+            new_token = create_secret() * 50
+            file.write(new_token)
 
-    with open('src/data/JWT_SECRET.txt', 'w') as file:
-        file.write(token_secret)
+    # read token_secret from file
+    with open('src/data/JWT_SECRET.txt', 'r') as file:
+        token_secret = file.read()
 
     return token_secret
 
-# a new JWT_SECRET every time the server restarts
-# may not be the most practical, but it is secure :)
-# double the length of every other secret to be even more secure
-JWT_SECRET = create_secret() + create_secret()
+# reads token from file
+JWT_SECRET = read_token_secret()
 
 def regex_email_check(email):
     """Check that the email is validly formatted email."""

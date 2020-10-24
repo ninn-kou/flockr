@@ -5,7 +5,7 @@ import jwt
 
 import data.data as data
 from base.error import InputError, AccessError
-from base.auth import decode_token
+from base.auth import decode_token, JWT_SECRET
 
 ################################################################################
 ################################################################################

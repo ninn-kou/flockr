@@ -1,9 +1,1 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-[{"u_id": 295137010, "email": "12345@test.com", "name_first": "FirstN", "name_last": "LastN", "handle_str": "FirstNLastN", "password": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"}, {"u_id": 743145784, "email": "2345@test.com", "name_first": "FirstN2", "name_last": "LastN2", "handle_str": "FirstN2LastN2", "password": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"}]
-=======
-[{"u_id": 3742406262, "email": "valid@example.com", "name_first": "Mate", "name_last": "Old", "handle_str": "MateOld", "password": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"}]
->>>>>>> master
-=======
-[{"u_id": 1745131146, "email": "test@example.com", "name_first": "Emily", "name_last": "Luo", "handle_str": "EmilyLuo", "password": "fb174773328eaa628cc182428d92811d9acd85e1ab62bf4c72b461efd3912110"}, {"u_id": 1018631236, "email": "test2@example.com", "name_first": "Emily2", "name_last": "Luo2", "handle_str": "Emily2Luo2", "password": "014f0e4ffb2d41468187a0feb60a6dc5f1212dca743e06e5eac04b33e48515ef"}, {"u_id": 2382231745, "email": "test3@example.com", "name_first": "Emily3", "name_last": "Luo3", "handle_str": "Emily3Luo3", "password": "d25cccbe7d6aeba2b4719815cf0a489e45d4e4f6aa22ebb729c2ef264194725e"}]
->>>>>>> master
+[{"u_id": 3446735043, "email": "12345@test.com", "name_first": "FirstN", "name_last": "LastN", "handle_str": "FirstNLastN", "password": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"}, {"u_id": 360507476, "email": "2345@test.com", "name_first": "FirstN2", "name_last": "LastN2", "handle_str": "FirstN2LastN2", "password": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"}]

@@ -32,7 +32,7 @@ def clear():
     ''' clear the backend state '''
 
     data.clear_channels()
-    data.messages = []
+    data.clear_messages()
     data.clear_users()
 
 def users_all(token):
@@ -70,11 +70,11 @@ def admin_userpermission_change(token, u_id, permission_id):
 def search(token, query_str):
     '''search the message with the specific query_str'''
     # check that token exists
-    owner_from_token(token)
+    user = owner_from_token(token)
     mes_list = []
-    channels = data.return_channels()
-    for channel in channels:
-        for i in channel['messages']:
+    messages = data.return_messages()
+    for i in messages:
+        if user['u_id'] == messages['u_id']:    # focus on the messages which is joinned by the user
             if query_str in i['message']:
                 mes_list.append(i)
     return mes_list

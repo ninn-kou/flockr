@@ -4,6 +4,9 @@ Joseph Jeong 15 OCT 2020
 After experimentation with Flask Blueprints, I'm setting up a server to allow auth.py
 to interface with the frontend
 
+None of these tests follow spec because the frontend doesn't follow spec
+frontend has been prioritised in these tests
+
 '''
 
 import re
@@ -93,8 +96,8 @@ def invite_user(url, user1, channel_id, user2):
     ''' user1 invites user2 to channel '''
     send_request('POST', url, 'channel/invite', {
         'token': user1.get('token'),
-        'channel_id': channel_id,
-        'u_id': user2.get('u_id')
+        'channel_id': str(channel_id),
+        'u_id': str(user2.get('u_id'))
     })
 
 def create_random_message(characters, i):
@@ -132,7 +135,7 @@ def send_random_messages(channel_id, num):
         msg = create_random_message(characters, i)
         return_message = {
         'message_id': i,
-        'u_id': random.choice(focus_channel['all_members'])['u_id'],
+        'u_id': str(random.choice(focus_channel['all_members'])['u_id']),
         'message': msg,
         'time_created': i,
         }
@@ -154,7 +157,7 @@ def check_in_index(url, user1, user2, channel, index):
     # find out channel from user1's perspective
     details = send_request('GET', url, 'channel/details', {
         'token': user1['token'],
-        'channel_id': channel['channel_id']
+        'channel_id': str(channel['channel_id'])
     })
 
     # check if user2 is in channel
@@ -227,7 +230,7 @@ def test_details(url):
     # get channel details
     details = send_request('GET', url, 'channel/details', {
         'token': user1['token'],
-        'channel_id': channels[0]['channel_id']
+        'channel_id': str(channels[0]['channel_id'])
     })
 
     # check channel name

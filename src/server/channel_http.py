@@ -44,7 +44,6 @@ def messages():
     ''' gets messages from a specific channel '''
 
     input_obj = request.args
-    print(input_obj)
 
     output = channel.channel_messages(
         input_obj.get('token'),
@@ -59,7 +58,6 @@ def leave():
     ''' leaves channel for user '''
 
     input_obj = request.json
-    print(input_obj)
 
     channel.channel_leave(
         input_obj.get('token'),
@@ -73,7 +71,6 @@ def join():
     ''' join channel for user '''
 
     input_obj = request.json
-    print(int(input_obj.get('channel_id')))
 
     channel.channel_join(
         input_obj.get('token'),
@@ -88,7 +85,6 @@ def addowner():
     ''' add a new user as admin '''
 
     input_obj = request.json
-    print(input_obj)
 
     channel.channel_addowner(
         input_obj.get('token'),
@@ -104,7 +100,6 @@ def removeowner():
     ''' add a new user as admin '''
 
     input_obj = request.json
-    print(input_obj)
 
     channel.channel_removeowner(
         input_obj.get('token'),

@@ -65,5 +65,3 @@ def search(token, query_str):
                 mes_list.append(i)
     return mes_list
     
-i = data.return_users()
-print(i)

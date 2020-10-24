@@ -96,7 +96,7 @@ def test_auth_register_permission_id():
     u_id2 = auth.auth_register('test2@example.com', 'emilyisshor2t', 'Emil2y', 'Luo2?').get('u_id')
     u_id3 = auth.auth_register('test32@example.com', 'emilyissh3or2t', 'Emi3l2y', 'Lu3o2?').get('u_id')
 
-
+    # test permission_id's are correct
     assert user_from_u_id(u_id1).get('permission_id') == 1
     assert user_from_u_id(u_id2).get('permission_id') == 2
     assert user_from_u_id(u_id3).get('permission_id') == 2

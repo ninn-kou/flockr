@@ -22,7 +22,7 @@ def create_secret():
     # create token of that length and with specified characters
     return "".join(random.choices(valid_characters, k = token_length))
 
-def read_token_secret():
+def read_jwt_secret():
     ''' read token_secret from file '''
 
     # check if token file exists
@@ -42,7 +42,7 @@ def read_token_secret():
     return token_secret
 
 # reads token from file
-JWT_SECRET = read_token_secret()
+JWT_SECRET = read_jwt_secret()
 
 def regex_email_check(email):
     """Check that the email is validly formatted email."""
@@ -182,9 +182,7 @@ def decode_token(token):
     # find user with session secret
     focus_user = None
     for user in data.return_users():
-        if user.get('session_secret') is None:
-            continue
-        elif (user.get('u_id') == u_id and user.get('session_secret') == stored_secret):
+        if (user.get('session_secret') == stored_secret and user.get('u_id') == u_id):
             # if user is correct and matches the session
             focus_user = user
             break
@@ -275,19 +273,14 @@ def auth_logout(token):
 
     focus_user = None
 
-    # decode the email from the token
-    decode = decode_token(token)
-    if decode is None:
+    # decode the user from the token
+    user = decode_token(token)
+    if user is None:
         return {'is_success': False}
-    email = decode.get('email')
 
-    # find email
-    for user in data.return_users():
-        if user['email'] == email:
-            focus_user = user
-            break
+    # remove the session secret in data structure
+    data.update_user(user['u_id'], 'session_secret', None)
 
-    # Returns accordingly if token is found.
-    if focus_user is None:
-        return {'is_success': False}
+    # if user has been found while decoding the token, 
+    # the process worked 100%
     return {'is_success': True}

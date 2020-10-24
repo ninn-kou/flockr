@@ -62,19 +62,23 @@ def test_admin_userpermission_change_permission_id():
     #create the first user
     user1 = auth.auth_register('12345@test.com', 'password', 'FirstN', 'LastN')
     user1 = auth.auth_login('12345@test.com', 'password')
+    u1_token = user1['token']
     
     #create another 2 users
-    user2 = auth.auth_register('23456@test.com', 'password', 'FirstN2', 'LastN2')
-    user2 = auth.auth_login('23456@test.com', 'password')
-    user3 = auth.auth_register('34567@test.com', 'password', 'FirstN3', 'LastN3')
-    user3 = auth.auth_login('34567@test.com', 'password')
+    auth.auth_register('23456@test.com', 'password', 'FirstN2', 'LastN2')
+    auth.auth_login('23456@test.com', 'password')
+    auth.auth_register('34567@test.com', 'password', 'FirstN3', 'LastN3')
+    auth.auth_login('34567@test.com', 'password')
     
     #check the default value
-    assert user1['permission_id'] == 1
-    assert user2['permission_id'] == 2
-    assert user3['permission_id'] == 2
+    i = other.users_all(u1_token)
+    i_user1 = i[0]
+    i_user2 = i[1]
+    i_user3 = i[2]
+    assert i_user1['permission_id'] == 1
+    assert i_user2['permission_id'] == 2
+    assert i_user3['permission_id'] == 2
     
-        
 def test_admin_ERROR_not_owner():
     '''check the AccessError when the admin is not a owner'''
     other.clear()
@@ -117,13 +121,10 @@ def test_admin_incalid_userid():
     user1 = auth.auth_register('12345@test.com', 'password', 'FirstN', 'LastN')
     user1 = auth.auth_login('12345@test.com', 'password')
     u1_token = user1['token']
-    u1_id = user1['u_id']
     
     #create another user
-    user2 = auth.auth_register('2345@test.com', 'password', 'FirstN2', 'LastN2')
-    user2 = auth.auth_login('2345@test.com', 'password')
-    u2_id = user2['u_id']
-    u2_token = user2['token']
+    auth.auth_register('2345@test.com', 'password', 'FirstN2', 'LastN2')
+    auth.auth_login('2345@test.com', 'password')
     
     #create a u_id which is not exit in data
     uid_temp = random.randint(0, 0xFFFFFFFF)
@@ -139,19 +140,20 @@ def test_admin_userpermission_change():
     user1 = auth.auth_register('12345@test.com', 'password', 'FirstN', 'LastN')
     user1 = auth.auth_login('12345@test.com', 'password')
     u1_token = user1['token']
-    u1_id = user1['u_id']
     
     #create another user
     user2 = auth.auth_register('2345@test.com', 'password', 'FirstN2', 'LastN2')
     user2 = auth.auth_login('2345@test.com', 'password')
     u2_id = user2['u_id']
-    u2_token = user2['token']
         
     #run the function and test
     other.admin_userpermission_change(u1_token, u2_id, 1)
     
-    assert user1['permission_id'] == 1
-    assert user2['permission_id'] == 1
+    i = other.users_all(u1_token)
+    i_user1 = i[0]
+    i_user2 = i[1]
+    assert i_user1['permission_id'] == 1
+    assert i_user2['permission_id'] == 1
 
 
 def test_search_basic():
@@ -186,12 +188,14 @@ def test_search_in_several_channel():
     user1 = auth.auth_register('12345@test.com', 'password', 'FirstN', 'LastN')
     user1 = auth.auth_login('12345@test.com', 'password')
     u1_token = user1['token']
+    u1_id = user1['u_id']
     user2 = auth.auth_register('2345@test.com', 'password', 'FirstN2', 'LastN2')
     user2 = auth.auth_login('2345@test.com', 'password')
     u2_token = user2['token']
     # create 2 channels for testing
     channel_test_id1 = channels.channels_create(u1_token,"channel_test1",True).get('channel_id')
     channel_test_id2 = channels.channels_create(u2_token,"channel_test2",True).get('channel_id')
+    channel.channel_invite(u2_token, channel_test_id2, u1_id)
     #add some message to one channel
     message.message_send(u1_token, channel_test_id1, 'Today, I am the winner.')         #true
     message.message_send(u1_token, channel_test_id1, 'What about you?')                 #false(no query_str)
@@ -212,5 +216,4 @@ def test_search_in_several_channel():
     assert i[1]['message'] == 'the winner.'
     assert i[2]['message'] == 'Tomorrow, I will be the winner.'
     assert i[3]['message'] == 'Yesterday, I was the winner.'
-    assert i[4]['message'] == 'Today, I am the winner.'
-    
+    assert i[4]['message'] == 'Today, I am the winner.'''''''    

@@ -3,7 +3,9 @@
 '''
 from datetime import timezone, datetime
 import jwt
+from jwt import decode
 import data.data as data
+from base.auth import decode_token
 from base.error import InputError, AccessError
 
 ################################################################################
@@ -25,6 +27,28 @@ from base.error import InputError, AccessError
 ############################################################
 #      Helper Functions
 ############################################################
+def edit_msg_in_list(msg, text):
+    """Interate the messages list by its id, return the message after edit."""
+    # get the channels
+    channels = data.return_channels()
+    messages = data.return_messages()
+
+    # deleting message from memory
+    for i in channels:
+        if i['channel_id'] == msg['channel_id']:
+            for temp in i['message']:
+                if temp['message_id'] == msg['message_id']:
+                    temp['message'] = text
+                    break
+        break
+    for temp in messages:
+        if temp['message_id'] == msg['message_id']:
+            temp['message'] = text
+            break
+    # add it to memory
+    data.replace_channels(channels)
+    data.replace_messages(messages)
+
 def if_auth_channel_owner(u_id, channel_id):
     """check if the u_id is the owner of the channel"""
     test = False
@@ -51,8 +75,6 @@ def delete_msg_in_list(msg):
     # add it to memory
     data.replace_channels(channels)
     data.replace_messages(messages)
-
-
 
 def adding_message(return_message, channel_id):
     # get the channels
@@ -94,19 +116,12 @@ def add_one_in_channel(channel_id, user):
 def token_into_user_id(token):
     """Transfer the token into the user id."""
 
-    # Adding in a little bit here to improve token handling
-    with open('src/data/JWT_SECRET.txt', 'r') as file:
-        jwt_secret = file.read()
+    user = decode_token(token)
+    if user is None:
+        raise InputError("Couldn't Decode Token")
 
-    try:
-        email = jwt.decode(token, jwt_secret, algorithms=['HS256']).get('email')
-    except jwt.DecodeError:
-        return -1
+    au_id = user.get('u_id')
 
-    au_id = -1
-    for i in data.return_users():
-        if i['email'] == email:
-            au_id = i['u_id']
     return au_id
 
 def find_channel(channel_id):
@@ -249,8 +264,48 @@ def message_remove(token, message_id):
     # Case 4: no error, delete the message
     delete_msg_in_list(message_using)
     return {}
-
+############################################################
+#       message_edit(token, message_id, message)
+############################################################
 def message_edit(token, message_id, message):
-    return {
-    }
+    '''
+    message_edit()
+    Given a message, update it's text with new text.
+    If the new message is an empty string, the message is deleted.
 
+    Args:
+        token: the token of the people who edit it.
+        channel_id: the channel which is the target of message.
+        message: the new message.
+    RETURNS:
+    { }
+
+
+    THEREFORE, TEST EVERYTHING BELOW:
+    1. inputError
+    - None
+
+    2. accessError
+    - the authorised user is the message sender
+    - the authorised user is the owener of flocker or channel
+
+    3. if the new message is empty
+    - delete the message
+
+    '''
+    # AccessError 1: excluding message sender and channel_owner
+    auth_id = token_into_user_id(token)
+    message_using = find_message(message_id)
+    test_owener = if_auth_channel_owner(auth_id, message_using['channel_id'])
+    # if it is neither channel owner nor messager sender
+    # raise for access error
+    if test_owener == False and message_using['u_id'] != auth_id:
+        raise AccessError(description='neither message sender nor channel_owner.')
+    # case 2: if empty msg, delete it
+    if len(message) == 0:
+        delete_msg_in_list(message_using)
+
+    # Case 3: no error, edit the message
+    else:
+        edit_msg_in_list(message_using, message)
+    return {}

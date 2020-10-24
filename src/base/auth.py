@@ -5,30 +5,39 @@ import re
 import random
 import string
 import hashlib
+import os.path
 import jwt
 from jwt import DecodeError
 
 import data.data as data
 from base.error import InputError
 
-def create_token_secret():
+def create_secret():
     """Create a 50 character long ascii string for token."""
-
     # Create list of random characters and length of token.
     valid_characters = string.ascii_letters + string.digits + string.punctuation
     token_length = 50
 
     # create token of that length and with specified characters
-    token_secret = "".join(random.choices(valid_characters, k = token_length))
+    return "".join(random.choices(valid_characters, k = token_length))
 
-    with open('src/data/JWT_SECRET.txt', 'w') as file:
-        file.write(token_secret)
+def read_token_secret():
+    ''' read token_secret from file '''
+
+    # check if token file exists
+    if os.path.isfile('src/data/JWT_SECRET.txt') is False:
+        with open('src/data/JWT_SECRET.txt', 'w') as file:
+            new_token = create_secret() * 50
+            file.write(new_token)
+
+    # read token_secret from file
+    with open('src/data/JWT_SECRET.txt', 'r') as file:
+        token_secret = file.read()
 
     return token_secret
 
-# a new JWT_SECRET every time the server restarts
-# may not be the most practical, but it is secure :)
-JWT_SECRET = create_token_secret()
+# reads token from file
+JWT_SECRET = read_token_secret()
 
 def regex_email_check(email):
     """Check that the email is validly formatted email."""
@@ -128,23 +137,67 @@ def auth_register_error_check(email, password, name_first, name_last):
         raise InputError('1')
 
 def hash_(_input):
-    ''' create a has with input'''
+    ''' create a hash with input'''
 
     # create the hash
     _hash = hashlib.sha256(_input.encode()).hexdigest()
 
     return _hash
 
-def create_token(email):
+def create_token(u_id, session_secret):
     ''' encode email in jwt object'''
     # payload includes email
-    payload = {'email': email}
+    headers = {'u_id': u_id}
+    payload = {'session_secret': session_secret}
 
     # encode u_id in jwt object
-    encoded = jwt.encode(payload, JWT_SECRET, algorithm='HS256').decode('utf-8')
+    encoded = jwt.encode(payload, JWT_SECRET, 
+        algorithm='HS256', headers=headers).decode('utf-8')
 
     return encoded
 
+def decode_token(token):
+    ''' 
+    Return user dict from given token
+    If incorrect token or user is inputted, it returns None
+    '''
+
+    # firstly get public u_id from header
+    try:
+        u_id = jwt.get_unverified_header(token).get('u_id')
+    except DecodeError:
+        return None
+
+    # next, get the hidden session_secret
+    try:
+        stored_secret = jwt.decode(token, JWT_SECRET, algorithms=['HS256']).get('session_secret')
+    except DecodeError:
+        # if it fails to decode token, return none
+        return None
+    # find user with session secret
+    focus_user = None
+    for user in data.return_users():
+        if user.get('session_secret') is None:
+            continue
+        elif (user.get('u_id') == u_id and user.get('session_secret') == stored_secret):
+            # if user is correct and matches the session
+            focus_user = user
+            break
+    
+    # if u_id and session_secret match, return user
+    # if no user is found, it also returns None
+    return focus_user
+
+def determine_permission_id():
+    ''' check first user to add permission id '''
+
+    # check if user list is empty
+    if not data.return_users():
+        id = 1
+    else:
+        id = 2
+
+    return id
 
 def auth_register(email, password, name_first, name_last):
     """ Function to register a new user to the program."""
@@ -152,17 +205,13 @@ def auth_register(email, password, name_first, name_last):
     # check for errors in input
     auth_register_error_check(email, password, name_first, name_last)
 
-    # Create a unique u_id.
+    # Create variables for new user
     u_id = create_u_id(data.return_users())
-
-    # creates a random and unique token.
-    token = create_token(email)
-
-    # create a unique handle
+    session_secret = create_secret()
+    token = create_token(u_id, session_secret)
     handle = handle_generator(name_first, name_last, data.return_users())
-
-    # hash password
     password = hash_(password)
+    permission_id = determine_permission_id()
 
     # Create and store a user object.
     user = {
@@ -171,7 +220,9 @@ def auth_register(email, password, name_first, name_last):
         'name_first': name_first,
         'name_last': name_last,
         'handle_str': handle,
-        'password': password
+        'password': password,
+        'permission_id': permission_id,
+        'session_secret': session_secret
     }
     data.append_users(user)
 
@@ -201,7 +252,11 @@ def auth_login(email, password):
 
     # Creates a token
     u_id = focus_user['u_id']
-    token = create_token(email)
+    session_secret = create_secret()
+    token = create_token(u_id, session_secret)
+
+    # update the session_secret in stored users
+    data.update_user(u_id, 'session_secret', session_secret)
 
     token_object = {
         'u_id': u_id,
@@ -215,15 +270,14 @@ def auth_logout(token):
 
     focus_user = None
 
-    # decode email from jwt token
-    try:
-        email = jwt.decode(token, JWT_SECRET, algorithms=['HS256']).get('email')
-    except DecodeError:
+    # decode the email from the token
+    decode = decode_token(token)
+    if decode is None:
         return {'is_success': False}
+    email = decode.get('email')
 
     # find email
     for user in data.return_users():
-        print(user)
         if user['email'] == email:
             focus_user = user
             break

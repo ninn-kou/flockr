@@ -3,30 +3,17 @@
 '''
 import jwt
 import data.data as data
+from base.auth import decode_token, check_in_users
 from base.error import InputError, AccessError
 
 
 def owner_from_token(token):
     ''' find owner from token'''
-    # Adding in a little bit here to improve token handling
-    with open('src/data/JWT_SECRET.txt', 'r') as file:
-        jwt_secret = file.read()
+    user = decode_token(token)
+    if user is None:
+        raise InputError("Couldn't Decode Token")
 
-    try:
-        email = jwt.decode(token, jwt_secret, algorithms=['HS256']).get('email')
-    except jwt.DecodeError as error:
-        raise InputError("Couldn't Decode Token") from error
-
-    au_id = None
-    for i in data.return_users():
-        if i['email'] == email:
-            au_id = i
-
-    # make sure user is actually returned
-    if au_id is None:
-        raise InputError
-
-    return au_id
+    return user
 
 def clear():
     ''' clear the backend state '''
@@ -55,15 +42,13 @@ def admin_userpermission_change(token, u_id, permission_id):
     if found != 1:
         raise InputError
 
-    if permission_id != 1 or permission_id != 2:
+    if permission_id != 1 and permission_id != 2:
         raise InputError                        # Check the permission_id.
 
     if i['permission_id'] != 1:                 # The admin is not a owner_num
         raise AccessError
 
-    for user in users:                          # Find the user.
-        if user['u_id'] == u_id:
-            user['permission_id'] = permission_id
+    data.update_user(u_id, 'permission_id', permission_id)
 
     return {}
 
@@ -71,10 +56,14 @@ def search(token, query_str):
     '''search the message with the specific query_str'''
     # check that token exists
     user = owner_from_token(token)
+    id_from = user.get('u_id')
     mes_list = []
     messages = data.return_messages()
     for i in messages:
-        if user['u_id'] == messages['u_id']:    # focus on the messages which is joinned by the user
+        if id_from == i['u_id']:    # focus on the messages which is joinned by the user
             if query_str in i['message']:
                 mes_list.append(i)
     return mes_list
+    
+i = data.return_users()
+print(i)

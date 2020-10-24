@@ -2,6 +2,9 @@
 A collection of data structures used between programs
 
 accessed from root/src
+
+The approach taken in this file is terrible memory inefficient
+However, it allows for basic persistent storage
 '''
 
 import json
@@ -19,9 +22,16 @@ def users_notes():
             'name_first':'',
             'name_last':'',
             'handle_str': '',
-            'password': ''
+            'password': '',
+            'session_secret': '',
+            'permission_id': ''
         }
     ]
+
+    - session_secret needs to be implemented
+    - auth_register needs to be changed, so that the very first user has p_id = 1
+    everyone else is created p_id = 2
+    - need to make token thing
     '''
 
 def return_users():
@@ -36,6 +46,25 @@ def return_users():
 
     # return the json information
     return users
+
+def update_user(u_id, index, value):
+    ''' update index of a user'''
+
+    # declare users outside
+    users = None
+
+    # open current json file
+    with open('src/data/users.json', 'r') as file:
+        users = json.load(file)
+    
+    for user in users:
+        if user.get('u_id') == u_id:
+            user[index] = value
+            break
+
+    # write json to file
+    with open('src/data/users.json', 'w') as file:
+        json.dump(users, file)
 
 def append_users(user):
     ''' append user to list '''

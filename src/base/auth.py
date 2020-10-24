@@ -82,11 +82,14 @@ def handle_generator(name_first, name_last, u_id):
     Much simpler than the thing I had before
     """
 
-    u_id_len = len(str(u_id))
-
     # Create base concatenation.
     raw_concatenation = name_first + name_last
-    # 20 is maximum lenth of handle
+    raw_concatenation = raw_concatenation[:20]
+    if check_in_users('handle_str', data.return_users(), raw_concatenation) is None:
+        return raw_concatenation
+
+    # add u_id if handle is not already unique
+    u_id_len = len(str(u_id))
     cut_concatenation = raw_concatenation[0:20-u_id_len]
     # u_id is already verified to be unique
     u_id_concatenation = cut_concatenation + str(u_id)

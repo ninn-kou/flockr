@@ -2,6 +2,7 @@
 Joseph Jeong made auth_test.py
 '''
 import pytest
+import os
 
 import data.data as data
 import base.auth as auth
@@ -60,6 +61,7 @@ def auth_register_notes():
         - len(name_first) < 1 || len(name_first) > 50
         - len(name_last) < 1 || len(name_last) > 50
     """
+
 def test_auth_register_correct_return():
     """
     check that correct data structure is returned

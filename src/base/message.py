@@ -3,7 +3,9 @@
 '''
 from datetime import timezone, datetime
 import jwt
+from jwt import decode
 import data.data as data
+from base.auth import decode_token
 from base.error import InputError, AccessError
 
 ################################################################################
@@ -74,8 +76,6 @@ def delete_msg_in_list(msg):
     data.replace_channels(channels)
     data.replace_messages(messages)
 
-
-
 def adding_message(return_message, channel_id):
     # get the channels
     channels = data.return_channels()
@@ -116,19 +116,12 @@ def add_one_in_channel(channel_id, user):
 def token_into_user_id(token):
     """Transfer the token into the user id."""
 
-    # Adding in a little bit here to improve token handling
-    with open('src/data/JWT_SECRET.txt', 'r') as file:
-        jwt_secret = file.read()
+    user = decode_token(token)
+    if user is None:
+        raise InputError("Couldn't Decode Token")
 
-    try:
-        email = jwt.decode(token, jwt_secret, algorithms=['HS256']).get('email')
-    except jwt.DecodeError:
-        return -1
+    au_id = user.get('u_id')
 
-    au_id = -1
-    for i in data.return_users():
-        if i['email'] == email:
-            au_id = i['u_id']
     return au_id
 
 def find_channel(channel_id):

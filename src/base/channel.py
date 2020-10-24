@@ -5,6 +5,7 @@ import jwt
 
 import data.data as data
 from base.error import InputError, AccessError
+from base.auth import decode_token, JWT_SECRET
 
 ################################################################################
 ################################################################################
@@ -44,19 +45,11 @@ def add_one_in_channel(channel_id, user):
 def token_into_user_id(token):
     """Transfer the token into the user id."""
 
-    # Adding in a little bit here to improve token handling
-    with open('src/data/JWT_SECRET.txt', 'r') as file:
-        jwt_secret = file.read()
-
-    try:
-        email = jwt.decode(token, jwt_secret, algorithms=['HS256']).get('email')
-    except jwt.DecodeError:
+    user = decode_token(token)
+    if user is None:
         return -1
+    au_id = user.get('u_id')
 
-    au_id = -1
-    for i in data.return_users():
-        if i['email'] == email:
-            au_id = i['u_id']
     return au_id
 
 def find_channel(channel_id):

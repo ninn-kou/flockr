@@ -9,6 +9,7 @@ src/data/JWT_SECRET.p
 
 # legacy secret storage
 src/data/JWT_SECRET.txt
+temp.py
 
 # C extensions
 *.so

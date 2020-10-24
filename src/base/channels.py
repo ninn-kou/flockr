@@ -60,7 +60,7 @@ def create_channel_id(channels):
 def channels_create(token, name, is_public):
     """Create a new empty channel."""
     if len(name) > 20:                      # The length of channel name should <= 20.
-        raise InputError
+        raise InputError('The length of channel name should <= 20')
 
     i = owner_from_token(token)
     owner_id = i['u_id']

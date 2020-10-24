@@ -44,19 +44,13 @@ def read_jwt_secret():
 # reads token from file
 JWT_SECRET = read_jwt_secret()
 
-def to_string(list_):
-    string_ = ''
-    for char in list_:
-        string_ += char
-    return string_
-
 def regex_email_check(email):
     """Check that the email is validly formatted email."""
 
     regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 
     if re.search(regex, email) is None:
-        raise InputError('terrible email')
+        raise InputError('Invalid Email')
 
 def check_in_users(data_type, users, item):
     """Check for a particular data type in users list."""
@@ -107,19 +101,19 @@ def auth_register_error_check(email, password, name_first, name_last):
 
     # Check if email is already used.
     if check_in_users('email', data.return_users(), email) is not None:
-        raise InputError('1')
+        raise InputError('Invalid Email')
 
     # check len(password) >= 6.
     if len(password) < 6:
-        raise InputError('1')
+        raise InputError('Password Too Short')
 
     # Check first name matches requirements.
     if len(name_first) < 1 or len(name_first) > 50:
-        raise InputError('1')
+        raise InputError('First Name Incorrect Length')
 
     # Check Last Name matches requirements.
     if len(name_last) < 1 or len(name_last) > 50:
-        raise InputError('1')
+        raise InputError('Last Name Incorrect Length')
 
 def hash_(_input):
     ''' create a hash with input'''
@@ -241,11 +235,11 @@ def auth_login(email, password):
 
     # If not stored, raise an error.
     if focus_user is None:
-        raise InputError
+        raise InputError('Email Is Used By Another User')
 
     # Check password is correct
     if focus_user['password'] != hash_(password):
-        raise InputError
+        raise InputError('Incorrect Password')
 
     # Creates a token
     u_id = focus_user['u_id']

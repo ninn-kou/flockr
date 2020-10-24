@@ -161,8 +161,6 @@ def check_in_index(url, user1, user2, channel, index):
     check = False
     for member in details.get(index):
         if member.get('u_id') == user2.get('u_id'):
-            print(member)
-            print(user2)
             check = True
             break
     return check

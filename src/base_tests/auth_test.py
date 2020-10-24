@@ -75,8 +75,32 @@ def test_auth_register_correct_return():
     # - u_id is an integer
     assert isinstance(auth_dict_test['u_id'], int)
 
-    # - token is a string
-    # assert isinstance(auth_dict_test['token'], str)
+    # token is a string
+    assert isinstance(auth_dict_test['token'], str)
+
+def user_from_u_id(u_id):
+    ''' return user from given u_id'''
+
+    focus_user = None
+    for user in data.return_users():
+        if user['u_id'] == u_id:
+            focus_user = user
+            break
+    return focus_user
+
+def test_auth_register_permission_id():
+    ''' checks that the correct permission_id's are given '''
+    clear()
+
+    u_id1 = auth.auth_register('test@example.com', 'emilyisshort', 'Emily', 'Luo?').get('u_id')
+    u_id2 = auth.auth_register('test2@example.com', 'emilyisshor2t', 'Emil2y', 'Luo2?').get('u_id')
+    u_id3 = auth.auth_register('test32@example.com', 'emilyissh3or2t', 'Emi3l2y', 'Lu3o2?').get('u_id')
+
+    # test permission_id's are correct
+    assert user_from_u_id(u_id1).get('permission_id') == 1
+    assert user_from_u_id(u_id2).get('permission_id') == 2
+    assert user_from_u_id(u_id3).get('permission_id') == 2
+
 
 def test_auth_register_multiple_users():
     """
@@ -87,14 +111,13 @@ def test_auth_register_multiple_users():
 
     clear()
 
-    array_size = 10
+    array_size = 100
     array = [0] * array_size
 
     i = 0
     while i < array_size:
         array[i] = (auth.auth_register('test' + str(i)
-        + '@example.com', 'password', 'Test', 'Person')['u_id'])
-
+        + '@example.com', 'password', 'Test', 'Pee')['u_id'])
         i += 1
 
     assert len(array) == len(set(array))
@@ -254,7 +277,6 @@ def test_auth_logout():
     ''' tests whether user is actually logged out'''
     clear()
     registration = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old')
-    # registration = auth.auth_login('valid@example.com', 'password')
     token = registration['token']
 
     # # - returns false when invalid token
@@ -268,3 +290,27 @@ def test_auth_logout():
     # - returns true when valid token
     is_success = auth.auth_logout(token)
     assert is_success['is_success']
+
+def test_auth_logout_wrong_session():
+    ''' tests logout for user with invalid token '''
+    clear()
+
+    # register the first time
+    registration1 = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old')
+    token1 = registration1['token']
+
+    # log them out
+    assert auth.auth_logout(token1)['is_success']
+
+    # try logging them out again (doesn't work)
+    assert auth.auth_logout(token1)['is_success'] is False
+
+    # log the same user back in
+    registration2 = auth.auth_login('valid@example.com', 'password')
+    token2 = registration2['token']
+
+    # try logging out with the first token
+    assert auth.auth_logout(token1)['is_success'] is False
+
+    # try logging out with the second token
+    assert auth.auth_logout(token2)['is_success']

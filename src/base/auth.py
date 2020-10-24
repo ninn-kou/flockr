@@ -6,6 +6,7 @@ import random
 import string
 import hashlib
 import os.path
+import pickle
 import jwt
 from jwt import DecodeError
 
@@ -15,29 +16,33 @@ from base.error import InputError
 def create_secret():
     """Create a 50 character long ascii string for token."""
     # Create list of random characters and length of token.
-    valid_characters = string.ascii_letters + string.digits + string.punctuation
+    valid_characters = string.ascii_letters + string.digits + string.punctuation + string.whitespace
     token_length = 50
-
+    
     # create token of that length and with specified characters
     return "".join(random.choices(valid_characters, k = token_length))
 
-def read_token_secret():
+def read_jwt_secret():
     ''' read token_secret from file '''
 
     # check if token file exists
-    if os.path.isfile('src/data/JWT_SECRET.txt') is False:
-        with open('src/data/JWT_SECRET.txt', 'w') as file:
-            new_token = create_secret() * 50
-            file.write(new_token)
+    # create a new one if it doesn't
+    if os.path.isfile('src/data/JWT_SECRET.p') is False:
+        with open('src/data/JWT_SECRET.p', 'wb') as file:
+            new_token = ''
+            for _ in range(50):
+                new_token += create_secret()
+            pickle.dump(new_token, file)
 
     # read token_secret from file
-    with open('src/data/JWT_SECRET.txt', 'r') as file:
-        token_secret = file.read()
-
+    # stored in pickle so user can't read it *dab*
+    with open('src/data/JWT_SECRET.p', 'rb') as file:
+        token_secret = pickle.load(file)
+        
     return token_secret
 
 # reads token from file
-JWT_SECRET = read_token_secret()
+JWT_SECRET = read_jwt_secret()
 
 def regex_email_check(email):
     """Check that the email is validly formatted email."""
@@ -45,7 +50,7 @@ def regex_email_check(email):
     regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 
     if re.search(regex, email) is None:
-        raise InputError('terrible email')
+        raise InputError('Invalid Email')
 
 def check_in_users(data_type, users, item):
     """Check for a particular data type in users list."""
@@ -71,48 +76,22 @@ def create_u_id(users):
 
     return u_id
 
-def handle_variabliser(handle, variabliser_num, variabliser, users):
+def handle_generator(name_first, name_last, u_id):
     """
-    Creates variable numbers at the end of the string, flawed because it isn't
-    optimal randomisation. BUT it does the job -> every handle will ALWAYS be unique,
-    even 10,000 of the same name...
+    Generates a unique handle.
+    Much simpler than the thing I had before
     """
-    # Check if the handle is unique, if not modify it further.
-    check = check_in_users('handle_str', users, handle)
 
-    if check is not None:
-        # Check if there are any variabliser characters to iterate through,
-        # if not, variabilise more characters.
-        if not variabliser:
-            variabliser = string.ascii_letters + string.digits
-            # need to modify it further
-            variabliser_num += 1
-
-        # If true, try other variable characters.
-        else:
-            # Variabilise the string accordingly.
-            handle = handle[0:(-1 * variabliser_num)]
-
-            for _ in range(variabliser_num):
-                character = random.choice(variabliser)
-                variabliser = variabliser.replace(character, '')
-                handle = handle + character
-
-        handle = handle_variabliser(handle, variabliser_num, variabliser, users)
-    return handle
-
-def handle_generator(name_first, name_last, users):
-    """Generates a unique handle."""
+    u_id_len = len(str(u_id))
 
     # Create base concatenation.
     raw_concatenation = name_first + name_last
+    # 20 is maximum lenth of handle
+    cut_concatenation = raw_concatenation[0:20-u_id_len]
+    # u_id is already verified to be unique
+    u_id_concatenation = cut_concatenation + str(u_id)
 
-    if len(raw_concatenation) > 20:
-        raw_concatenation = raw_concatenation[:20]
-    # make sure handle is unique
-    handle = handle_variabliser(raw_concatenation, 0, '', users)
-
-    return handle
+    return u_id_concatenation
 
 def auth_register_error_check(email, password, name_first, name_last):
     """Handles error checking for auth_register."""
@@ -122,19 +101,19 @@ def auth_register_error_check(email, password, name_first, name_last):
 
     # Check if email is already used.
     if check_in_users('email', data.return_users(), email) is not None:
-        raise InputError('1')
+        raise InputError('Invalid Email')
 
     # check len(password) >= 6.
     if len(password) < 6:
-        raise InputError('1')
+        raise InputError('Password Too Short')
 
     # Check first name matches requirements.
     if len(name_first) < 1 or len(name_first) > 50:
-        raise InputError('1')
+        raise InputError('First Name Incorrect Length')
 
     # Check Last Name matches requirements.
     if len(name_last) < 1 or len(name_last) > 50:
-        raise InputError('1')
+        raise InputError('Last Name Incorrect Length')
 
 def hash_(_input):
     ''' create a hash with input'''
@@ -145,7 +124,22 @@ def hash_(_input):
     return _hash
 
 def create_token(u_id, session_secret):
-    ''' encode email in jwt object'''
+    ''' 
+    encode email in jwt object
+
+    The u_id is is in the public header
+    This is used to identify the user's session_secret
+
+    the session_secret is only valid once per login
+    it is in an encrypted dict
+    when logged out, the stored session_session is replaced with None
+
+    There is also a JWT_SECRET that is used to decrypt the object
+
+    Therefore, the user needs both the JWT_SECRET and session_secret
+    to validate their login
+    '''
+
     # payload includes email
     headers = {'u_id': u_id}
     payload = {'session_secret': session_secret}
@@ -177,9 +171,7 @@ def decode_token(token):
     # find user with session secret
     focus_user = None
     for user in data.return_users():
-        if user.get('session_secret') is None:
-            continue
-        elif (user.get('u_id') == u_id and user.get('session_secret') == stored_secret):
+        if (user.get('session_secret') == stored_secret and user.get('u_id') == u_id):
             # if user is correct and matches the session
             focus_user = user
             break
@@ -209,10 +201,9 @@ def auth_register(email, password, name_first, name_last):
     u_id = create_u_id(data.return_users())
     session_secret = create_secret()
     token = create_token(u_id, session_secret)
-    handle = handle_generator(name_first, name_last, data.return_users())
+    handle = handle_generator(name_first, name_last, u_id)
     password = hash_(password)
     permission_id = determine_permission_id()
-
     # Create and store a user object.
     user = {
         'u_id': u_id,
@@ -244,11 +235,11 @@ def auth_login(email, password):
 
     # If not stored, raise an error.
     if focus_user is None:
-        raise InputError
+        raise InputError('Email Is Used By Another User')
 
     # Check password is correct
     if focus_user['password'] != hash_(password):
-        raise InputError
+        raise InputError('Incorrect Password')
 
     # Creates a token
     u_id = focus_user['u_id']
@@ -268,21 +259,14 @@ def auth_login(email, password):
 def auth_logout(token):
     """Used to log user out of program."""
 
-    focus_user = None
-
-    # decode the email from the token
-    decode = decode_token(token)
-    if decode is None:
+    # decode the user from the token
+    user = decode_token(token)
+    if user is None:
         return {'is_success': False}
-    email = decode.get('email')
 
-    # find email
-    for user in data.return_users():
-        if user['email'] == email:
-            focus_user = user
-            break
+    # remove the session secret in data structure
+    data.update_user(user['u_id'], 'session_secret', None)
 
-    # Returns accordingly if token is found.
-    if focus_user is None:
-        return {'is_success': False}
+    # if user has been found while decoding the token, 
+    # the process worked 100%
     return {'is_success': True}

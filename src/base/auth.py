@@ -6,7 +6,7 @@ import random
 import string
 import hashlib
 import jwt
-from jwt import DecodeError, decode
+from jwt import DecodeError
 
 import data.data as data
 from base.error import InputError
@@ -35,9 +35,7 @@ def create_token_secret():
 # a new JWT_SECRET every time the server restarts
 # may not be the most practical, but it is secure :)
 # double the length of every other secret to be even more secure
-# JWT_SECRET = create_secret() + create_secret()
-JWT_SECRET = 'hehe poopooo'
-
+JWT_SECRET = create_secret() + create_secret()
 
 def regex_email_check(email):
     """Check that the email is validly formatted email."""

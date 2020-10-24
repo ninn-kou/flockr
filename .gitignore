@@ -126,3 +126,6 @@ dmypy.json
 
 # Other
 *.py~
+
+# persistent data storage
+*.json

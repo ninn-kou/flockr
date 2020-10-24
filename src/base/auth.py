@@ -188,10 +188,16 @@ def decode_token(token):
     # if no user is found, it also returns None
     return focus_user
 
-def check_first_user():
+def determine_permission_id():
     ''' check first user to add permission id '''
 
-    
+    # check if user list is empty
+    if not data.return_users():
+        id = 1
+    else:
+        id = 2
+
+    return id
 
 def auth_register(email, password, name_first, name_last):
     """ Function to register a new user to the program."""
@@ -199,18 +205,13 @@ def auth_register(email, password, name_first, name_last):
     # check for errors in input
     auth_register_error_check(email, password, name_first, name_last)
 
-    # Create a unique u_id.
+    # Create variables for new user
     u_id = create_u_id(data.return_users())
-
-    # creates a random and unique token.
     session_secret = create_secret()
     token = create_token(u_id, session_secret)
-
-    # create a unique handle
     handle = handle_generator(name_first, name_last, data.return_users())
-
-    # hash password
     password = hash_(password)
+    permission_id = determine_permission_id()
 
     # Create and store a user object.
     user = {
@@ -220,6 +221,7 @@ def auth_register(email, password, name_first, name_last):
         'name_last': name_last,
         'handle_str': handle,
         'password': password,
+        'permission_id': permission_id,
         'session_secret': session_secret
     }
     data.append_users(user)

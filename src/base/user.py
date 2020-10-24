@@ -41,8 +41,6 @@ def user_profile_setname(token, name_first, name_last):
     data.updateByEmail(user,email)
     return {}
 
-
-
 def user_profile_setemail(token, email):
     try:
         email_now = jwt.decode(token, JWT_SECRET, algorithms=['HS256']).get('email')
@@ -60,7 +58,6 @@ def user_profile_setemail(token, email):
     user['email']=email
     data.updateByEmail(user,email_now)
     return {}
-
 
 
 def user_profile_sethandle(token, handle_str):

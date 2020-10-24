@@ -46,21 +46,10 @@ def token_into_user_id(token):
     """Transfer the token into the user id."""
 
     user = decode_token(token)
+    if user is None:
+        return -1
     au_id = user.get('u_id')
 
-    # # Adding in a little bit here to improve token handling
-    # with open('src/data/JWT_SECRET.txt', 'r') as file:
-    #     jwt_secret = file.read()
-
-    # try:
-    #     email = jwt.decode(token, jwt_secret, algorithms=['HS256']).get('email')
-    # except jwt.DecodeError:
-    #     return -1
-
-    # au_id = -1
-    # for i in data.return_users():
-    #     if i['email'] == email:
-    #         au_id = i['u_id']
     return au_id
 
 def find_channel(channel_id):

@@ -2,9 +2,9 @@
 functions of create a new channel and return the specific channel
 '''
 import random
-import jwt
 import data.data as data
 from base.error import InputError
+from base.auth import decode_token
 
 ################################################################################
 ################################################################################
@@ -16,25 +16,11 @@ from base.error import InputError
 
 def owner_from_token(token):
     ''' find owner from token'''
-    # Adding in a little bit here to improve token handling
-    with open('src/data/JWT_SECRET.txt', 'r') as file:
-        jwt_secret = file.read()
+    user = decode_token(token)
+    if user is None:
+        raise InputError("Couldn't Decode Token")
 
-    try:
-        email = jwt.decode(token, jwt_secret, algorithms=['HS256']).get('email')
-    except jwt.DecodeError as error :
-        raise InputError("Couldn't Decode Token") from error
-
-    au_id = None
-    for i in data.return_users():
-        if i['email'] == email:
-            au_id = i
-
-    # make sure user is actually returned
-    if au_id is None:
-        raise InputError
-
-    return au_id
+    return user
 
 def channels_list(token):
     """Need to fix implementation """
@@ -55,7 +41,7 @@ def channels_listall(token):
     """just return all channels? sure about that?"""
 
     # check that token exists
-    # owner_from_token(token)
+    owner_from_token(token)
 
     return {'channels': data.return_channels()}
 

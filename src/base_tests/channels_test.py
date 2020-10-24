@@ -41,7 +41,7 @@ def test_channels_listall():
     user2 = auth.auth_login('2345@test.com', 'password')
     u2_id = user2['u_id']
     u2_token = user2['token']
-
+    print(u1_token)
     #create a channel by user1 in channels and return its channel id
     channel_1_id = channels.channels_create(u1_token,'team',True).get('channel_id')
 

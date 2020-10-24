@@ -35,7 +35,9 @@ def create_token_secret():
 # a new JWT_SECRET every time the server restarts
 # may not be the most practical, but it is secure :)
 # double the length of every other secret to be even more secure
-JWT_SECRET = create_secret() + create_secret()
+# JWT_SECRET = create_secret() + create_secret()
+JWT_SECRET = 'hehe poopooo'
+
 
 def regex_email_check(email):
     """Check that the email is validly formatted email."""
@@ -158,7 +160,7 @@ def decode_token(token):
     ''' 
     Return user dict from given token
     If incorrect token or user is inputted, it returns None
-     '''
+    '''
 
     # firstly get public u_id from header
     try:
@@ -172,7 +174,6 @@ def decode_token(token):
     except DecodeError:
         # if it fails to decode token, return none
         return None
-
     # find user with session secret
     focus_user = None
     for user in data.return_users():
@@ -186,6 +187,11 @@ def decode_token(token):
     # if u_id and session_secret match, return user
     # if no user is found, it also returns None
     return focus_user
+
+def check_first_user():
+    ''' check first user to add permission id '''
+
+    
 
 def auth_register(email, password, name_first, name_last):
     """ Function to register a new user to the program."""
@@ -270,7 +276,6 @@ def auth_logout(token):
 
     # find email
     for user in data.return_users():
-        print(user)
         if user['email'] == email:
             focus_user = user
             break

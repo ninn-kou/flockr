@@ -63,8 +63,8 @@ def update_user(u_id, index, value):
             break
 
     # write json to file
-        with open('src/data/users.json', 'w') as file:
-            json.dump(users, file)
+    with open('src/data/users.json', 'w') as file:
+        json.dump(users, file)
 
 def append_users(user):
     ''' append user to list '''

@@ -45,7 +45,7 @@ def admin_userpermission_change(token, u_id, permission_id):
     if permission_id != 1 and permission_id != 2:
         raise InputError                        # Check the permission_id.
 
-    if i['permission_id'] != 1:                 # The admin is not a owner_num
+    if i['permission_id'] != 1:                 # The admin is not a owner_num.
         raise AccessError
 
     data.update_user(u_id, 'permission_id', permission_id)

@@ -1,9 +1,8 @@
 '''
     Other functions to help testing
 '''
-import jwt
 import data.data as data
-from base.auth import decode_token, check_in_users
+from base.auth import decode_token
 from base.error import InputError, AccessError
 
 
@@ -42,7 +41,7 @@ def admin_userpermission_change(token, u_id, permission_id):
     if found != 1:
         raise InputError
 
-    if permission_id != 1 and permission_id != 2:
+    if permission_id not in range(1, 3):
         raise InputError                        # Check the permission_id.
 
     if i['permission_id'] != 1:                 # The admin is not a owner_num.
@@ -64,4 +63,3 @@ def search(token, query_str):
             if query_str in i['message']:
                 mes_list.append(i)
     return mes_list
-    

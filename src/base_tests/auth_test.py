@@ -75,8 +75,8 @@ def test_auth_register_correct_return():
     # - u_id is an integer
     assert isinstance(auth_dict_test['u_id'], int)
 
-    # - token is a string
-    # assert isinstance(auth_dict_test['token'], str)
+    # token is a string
+    assert isinstance(auth_dict_test['token'], str)
 
 def test_auth_register_multiple_users():
     """

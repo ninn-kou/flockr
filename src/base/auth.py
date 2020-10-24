@@ -16,9 +16,9 @@ from base.error import InputError
 def create_secret():
     """Create a 50 character long ascii string for token."""
     # Create list of random characters and length of token.
-    valid_characters = string.ascii_letters + string.digits + string.punctuation
+    valid_characters = string.ascii_letters + string.digits + string.punctuation + string.whitespace
     token_length = 50
-
+    
     # create token of that length and with specified characters
     return "".join(random.choices(valid_characters, k = token_length))
 
@@ -26,16 +26,19 @@ def read_token_secret():
     ''' read token_secret from file '''
 
     # check if token file exists
+    # create a new one if it doesn't
     if os.path.isfile('src/data/JWT_SECRET.p') is False:
         with open('src/data/JWT_SECRET.p', 'wb') as file:
-            new_token = create_secret() * 50
+            new_token = ''
+            for _ in range(50):
+                new_token += create_secret()
             pickle.dump(new_token, file)
 
     # read token_secret from file
     # stored in pickle so user can't read it *dab*
     with open('src/data/JWT_SECRET.p', 'rb') as file:
         token_secret = pickle.load(file)
-
+        
     return token_secret
 
 # reads token from file

@@ -36,6 +36,7 @@ def admin_userpermission_change(token, u_id, permission_id):
         if user['u_id'] == u_id:
             found = 1
             break
+
     if found != 1:
         raise InputError(description='The u_id is invalid.')
 

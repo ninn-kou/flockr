@@ -1,6 +1,4 @@
-'''
-    Other functions to help testing
-'''
+'''Other functions to help testing'''
 import data.data as data
 from base.auth import decode_token
 from base.error import InputError, AccessError

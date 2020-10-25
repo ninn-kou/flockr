@@ -364,13 +364,13 @@ def test_removeowner(url):
         'u_id': user2.get('u_id')
     })
 
-    # remove user1 as owner
+    # remove user2 as owner
     send_request('POST', url, 'channel/removeowner', {
-        'token': user2.get('token'),
+        'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
-        'u_id': user1.get('u_id')
+        'u_id': user2.get('u_id')
     })
 
     # check that user1 is gone as an owner
-    check = check_in_index(url, user2, user1, channels[0], 'owner_members')
+    check = check_in_index(url, user1, user2, channels[0], 'owner_members')
     assert check is False

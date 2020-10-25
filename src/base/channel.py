@@ -255,7 +255,7 @@ def remove_a_member_in_channel(u_id, channel_id):
     """Remove the member by user if from the channel."""
 
     channels = data.return_channels()
-    
+
     for users in channels:
         if users['channel_id'] == channel_id:
             for member in users['all_members']:

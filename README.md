@@ -337,7 +337,42 @@ The descriptions will not be assessed, they are just there for the frontend to h
 
 The types in error.py have been modified appropriately for you.
 
-### 6.8. Other Points
+### 6.8. Reacts
+
+The only React ID currently associated with the frontend is React ID 1, which is a thumbs up. You are welcome to add more (this will require some frontend work)
+
+### 6.9. Standups
+
+Once standups are finished, all of the messages sent to standup/send are packaged together in *one single message* posted by *the user who started the standup* and sent as a message to the channel the standup was started in, timestamped at the moment the standup finished.
+
+The structure of the packaged message is like this:
+
+[message_sender1_handle]: [message1]
+
+[message_sender2_handle]: [message2]
+
+[message_sender3_handle]: [message3]
+
+[message_sender4_handle]: [message4]
+
+For example:
+
+```txt
+hayden: I ate a catfish
+rob: I went to kmart
+michelle: I ate a toaster
+isaac: my catfish ate a toaster
+```
+
+Standups can be started on the frontend by typing "/standup X", where X is the number of seconds that the standup lasts for, into the message input and clicking send.
+
+### 6.10. profile_img_url & image uploads
+
+For outputs with data pertaining to a user, a profile_img_url is present. When images are uploaded for a user profile, after processing them you should store them on the server such that your server now locally has a copy of the cropped image of the original file linked. Then, the profile_img_url should be a URL to the server, such as http://localhost:5001/imgurl/adfnajnerkn23k4234.jpg (a unique url you generate).
+
+Note: This is most likely the most challenging part of the project. Don't get lost in this, we would strongly recommend most teams complete this capability *last*.
+
+### 6.11. Other Points
 
 * Each message should have it's own unique ID. I.E. No messages should share an ID with another message, even if that other message is in a different channel.
 

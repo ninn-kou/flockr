@@ -6,15 +6,15 @@ All URL appends are prepended with "message/"
 '''
 
 from flask import Blueprint, request, jsonify
-import base.message as meg
+import base.message as message
 
-MESSAGEHTTP = Blueprint('meg', __name__)
+MESSAGEHTTP = Blueprint('message', __name__)
 
 @MESSAGEHTTP.route("/send", methods=['POST'])
 def send():
     input_obj = request.json
 
-    output = meg.message_send(
+    output = message.message_send(
         input_obj.get('token'),
         input_obj.get('channel_id'),
         input_obj.get('message')
@@ -26,7 +26,7 @@ def send():
 def remove():
     input_obj = request.json
 
-    meg.message_remove(
+    message.message_remove(
         input_obj.get('token'),
         input_obj.get('message_id')
     )
@@ -36,7 +36,7 @@ def remove():
 def edit():
     input_obj = request.json
 
-    meg.message_edit(
+    message.message_edit(
         input_obj.get('token'),
         input_obj.get('message_id'),
         input_obj.get('message')

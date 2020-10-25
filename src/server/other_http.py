@@ -8,7 +8,7 @@ All URL appends are prepended with "other/"
 from flask import Blueprint, request, jsonify
 import base.other as other
 
-OTHERHTTP = Blueprint('message', __name__)
+OTHERHTTP = Blueprint('other', __name__)
 
 @OTHERHTTP.route("/clear", methods=['DELETE'])
 def clear():

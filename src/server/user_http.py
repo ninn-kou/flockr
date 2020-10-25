@@ -1,45 +1,67 @@
-'''
-Hao Ren
-25 October, 2020
-
-All URL appends are prepended with "/user/profile"
-'''
-
+""" Yuhan Yan created this on 2020.10.25"""
 from flask import Blueprint, request, jsonify
-import base.user as user
+
+import base.user as userB
 
 USERHTTP = Blueprint('user', __name__)
 
-@USERHTTP.route("/profile", methods=['GET'])
+@USERHTTP.route('/', methods = ['GET'])
 def profile():
-    input_obj = request.json
-    output = user.user_profile(
-        input_obj.get('token'),
-        input_obj.get('u_id')
-    )
-    return jsonify(output)
+    ''' registers a new user'''
 
-@USERHTTP.route("/setname", methods=['PUT'])
+    # get the user from json
+    token = request.args.get("token")
+    u_id = request.args.get("u_id")
+
+    success = userB.user_profile(
+        token,
+        u_id
+    )
+
+    return jsonify(success)
+
+@USERHTTP.route('/setname', methods = ['PUT'])
 def setname():
-    input_obj = request.json
-    user.user_profile_setname(
-        input_obj.get('token'),
-        input_obj.get('name_first'),
-        input_obj.get('name_last')
+    ''' logs the user in'''
+
+    # get the user from json
+    user = request.json
+
+    success = userB.user_profile_setname(
+        user.get('token'),
+        user.get('name_first'),
+        user.get('name_last'),
     )
 
-@USERHTTP.route("/setemail", methods=['PUT'])
+    return jsonify(success)
+
+@USERHTTP.route('/setemail', methods = ['PUT'])
 def setemail():
-    input_obj = request.json
-    user.user_profile_setemail(
-        input_obj.get('token'),
-        input_obj.get('email')
+    ''' logs the user out'''
+
+    # get the user from json
+    user = request.json
+
+    success = userB.user_profile_setemail(
+        user.get('token'),
+        user.get('email')
     )
 
-@USERHTTP.route("/setthandle", methods=['PUT'])
+    return jsonify(success)
+
+
+@USERHTTP.route('/sethandle', methods = ['PUT'])
 def sethandle():
-    input_obj = request.json
-    user.user_profile_sethandle(
-        input_obj.get('token'),
-        input_obj.get('handle_str')
+    ''' logs the user out'''
+
+    # get the user from json
+    user = request.json
+
+    success = userB.user_profile_sethandle(
+        user.get('token'),
+        user.get('handle_str')
     )
+
+    # return token object as json
+    return jsonify(success)
+

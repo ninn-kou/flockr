@@ -39,7 +39,6 @@ def add_one_in_channel(channel_id, user):
             i['all_members'].append(user)
             if check_permission(user['u_id']) == 1:
                 i['owner_members'].append(user)
-            break
 
     # add it to memory
     data.replace_channels(channels)
@@ -65,11 +64,11 @@ def find_channel(channel_id):
 
 def check_permission(user_id):
     '''check if given u_id person is permission one'''
-    permission_check = 2
+    permission_check = 1
     for i in data.return_users():
         if i['u_id'] == user_id:
             permission_check = i['permission_id']
-            break
+
     return permission_check
 
 def find_user(user_id):
@@ -272,18 +271,20 @@ def remove_a_member_in_channel(u_id, channel_id):
             for member in users['all_members']:
                 if member['u_id'] == u_id:
                     users['all_members'].remove(member)
-            break
+
 
     data.replace_channels(channels)
 
 def number_of_owners(channel_id):
     """Return the total number of owners."""
-    num = 0
+
+    test = None
     for chan in data.return_channels():
         if chan['channel_id'] == channel_id:
-            num = len(chan['owner_members'])
-            break
-    return num
+            test = chan
+
+
+    return len(test['owner_members'])
 
 def remove_whole_channel(channel_id):
     """If no owner exist, remove the whole channel."""
@@ -292,8 +293,7 @@ def remove_whole_channel(channel_id):
 
     for chan in channels:
         if chan['channel_id'] == channel_id:
-            chan.remove('chan')
-        break
+            channels.remove(chan)
 
     data.replace_channels(channels)
 
@@ -303,7 +303,7 @@ def is_channel_public(channel_id):
     for channel in data.return_channels():
         if channel['channel_id'] == channel_id:
             is_public = channel['is_public']
-            break
+
     return is_public
 
 
@@ -340,7 +340,7 @@ def channel_leave(token, channel_id):
 
                                             # Case 4: the user is one of the owners.
     if find_current_owner(target_channel, auth_id) is True:
-        if number_of_owners(channel_id) >= 1:
+        if number_of_owners(channel_id) > 1:
             rm_owner_in_channel(channel_id, auth_id)
             remove_a_member_in_channel(auth_id, channel_id)
         else:                               # Case 5: close the non-owner channel.
@@ -423,7 +423,6 @@ def add_owner_in_channel(channel_id, owners):
     for users in channels:
         if users['channel_id'] == channel_id:
             users['owner_members'].append(owners)
-            break
 
     data.replace_channels(channels)
 
@@ -437,7 +436,6 @@ def rm_owner_in_channel(channel_id, owners):
             for onrs in users['owner_members']:
                 if onrs['u_id'] == owners:
                     users['owner_members'].remove(onrs)
-                    break
 
     data.replace_channels(channels)
 

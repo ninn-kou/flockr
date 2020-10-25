@@ -289,12 +289,12 @@ def test_leave(url):
 
     # leave as user1
     send_request('POST', url, 'channel/leave', {
-        'token': user1.get('token'),
+        'token': user2.get('token'),
         'channel_id': channels[0].get('channel_id')
     })
 
     # check whether user is in channel
-    check = check_in_index(url, user2, user1, channels[0], 'all_members')
+    check = check_in_index(url, user1, user2, channels[0], 'all_members')
     assert check is False
 
 def test_join(url):
@@ -341,7 +341,7 @@ def test_addowner(url):
     })
 
     # check if both members are in channel
-    assert check_in_index(url, user2, user2, channels[0], 'owner_members')
+    assert check_in_index(url, user1, user2, channels[0], 'owner_members')
 
 def test_removeowner(url):
     ''' testing channel_removeowner requests '''

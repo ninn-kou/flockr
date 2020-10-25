@@ -92,13 +92,11 @@ In this iteration, you are expected to:
 
     Part of this section may be automarked.
 
-    Pylint has been added to your continuous integration file, meaning that code that isn't pylint compliant will now fail the pipeline. The provided `.pylintrc` file is *very* lenient, so there is no reason you should have to disable any additional checks.
+    Pylint is assessed identical to that of iteration 2.
 
-    Additionally, CI pipelines will measure *branch* coverage for all `.py` files that aren't tests. The coverage percentage for master is visible in a badge at the top of this repo and changes in coverage will appear in Merge Requests. Do note that coverage of `server.py` is not measured, nor will what is executed by your HTTP tests. This is because, when running HTTP tests, the server is run in a separate process.
+    *Branch* coverage for all .py files that aren't tests is assessed identical to that of iteration 2.
 
-    Your implementation should build upon your work in iteration 2. For your tests, you only need to maintain integration or system level HTTP tests. You are required to implement appropriate authentication and authorisation methods as described in lectures (if you haven't already).
-
-    You can structure your tests however you choose, as long as they are appended with `_test.py`. It's important you consider how to separate (or combine) your integration tests from iteration 1 with the extra integration tests (HTTP with requests library) in iteration 2. You will be marked on both tests being present/used in this iteration. **An example of a HTTP test has been provided for you in `src/echo_http_test.py`**.
+    You can structure your tests however you choose, as long as they are appended with `_test.py`.
 
     A frontend has been built by Sally & Bob that you can use in this iteration, and use your backend to power it (note: an incomplete backend will mean the frontend cannot work). **You can, if you wish, make changes to the frontend code, but it is not required for this iteration.** As part of this iteration it's required that your backend code can correctly power the frontend.
 

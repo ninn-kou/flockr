@@ -2,10 +2,8 @@
 
 ## Changelog
 
- * 08/10: Added section 6.8
- * 08/10: Removed any reference to "admin", clarity about implementing entire interface
- * 12/10: Clarified that even if you modify the handle it must remain less than 20 characters
- * 20/10: Replaced instances of "Slackr" permissions with "Flockr"
+N/A
+
 ## Contents
 
   1. Aims
@@ -69,15 +67,28 @@ Complete. Please see commit history to view old iteration info.
 
 ## 4. Iteration 2
 
-### 4.1. Task
+Complete. Please see commit history to view old iteration info.
 
-**NOTE:** In merging the instructions for this iteration into your repo, you may get a failed pipeline. This is most likely because your code is not pylint compliant. If this is the case, that is the *first* thing you should address for this iteration. It is important you have a *stable* master branch before proceeding to add additional features.
+## 5. Iteration 3
 
-In this iteration, more features were added to the specification, and the focus has been changed to HTTP endpoints. Many of the theory surrounding iteration 2 will be covered in week 4-6 lectures. Note that there will still be 1 or 2 features of the frontend that will not work because the routes will not appear until iteration 3.
+Iteration 3 builds off all of the work you've completed in iteration 2.
+
+### 5.1. Task
 
 In this iteration, you are expected to:
 
-1. Implement and test the HTTP Flask server according to the entire interface provided in the specification.
+1. Implement and test the HTTP Flask server according to the entire interface provided in the specification, including features that were added in iteration 3, including:
+    * `message/sendlater`
+    * `message/react`
+    * `message/unreact`
+    * `message/pin`
+    * `message/unpin`
+    * `/user/profile/uploadphoto`
+    * `standup/start`
+    * `standup/active`
+    * `standup/send`
+    * `auth/passwordreset/request`
+    * `auth/passwordreset/reset`
 
     Part of this section may be automarked.
 
@@ -85,9 +96,13 @@ In this iteration, you are expected to:
 
     Additionally, CI pipelines will measure *branch* coverage for all `.py` files that aren't tests. The coverage percentage for master is visible in a badge at the top of this repo and changes in coverage will appear in Merge Requests. Do note that coverage of `server.py` is not measured, nor will what is executed by your HTTP tests. This is because, when running HTTP tests, the server is run in a separate process.
 
-    Your implementation should build upon your work in iteration 1, and ideally your HTTP layer is just a wrapper for underlying functions you've written that handle the logic. Your implementation will rely on topics taught in week 4 (HTTP servers and testing) as well as week 5 (authentication and authorisation).
+    Your implementation should build upon your work in iteration 2. For your tests, you only need to maintain integration or system level HTTP tests. You are required to implement appropriate authentication and authorisation methods as described in lectures (if you haven't already).
 
     You can structure your tests however you choose, as long as they are appended with `_test.py`. It's important you consider how to separate (or combine) your integration tests from iteration 1 with the extra integration tests (HTTP with requests library) in iteration 2. You will be marked on both tests being present/used in this iteration. **An example of a HTTP test has been provided for you in `src/echo_http_test.py`**.
+
+    A frontend has been built by Sally & Bob that you can use in this iteration, and use your backend to power it (note: an incomplete backend will mean the frontend cannot work). **You can, if you wish, make changes to the frontend code, but it is not required for this iteration.** As part of this iteration it's required that your backend code can correctly power the frontend.
+
+    You must comply with instructions laid out in `4.2`
 
 2. Continue demonstrating effective project management and effective git usage
 
@@ -95,23 +110,15 @@ In this iteration, you are expected to:
 
     You will be heavily marked for your use of thoughtful project management and use of git effectively. The degree to which your team works effectively will also be assessed.
 
-To run the server you should always use the command
+3. Document the planning of new features.
 
-```bash
-python3 src/server.py
-```
+    You are required to scope out 2-3 problems to solve for future iterations of flockr. You aren't required to build/code them, but you are required to go through SDLC steps of requirements analysis, conceptual modelling, and design.
 
-This will start the server on the next available port. If you get any errors relating to `flask_cors`, ensure you have installed all the necessary Python libraries for this course (the list of libraries was updated for this iteration). You can do this with:
+    Full detail of this can be found in `5.3`.
 
-```bash
-pip3 install $(curl https://www.cse.unsw.edu.au/~cs1531/20T3/requirements.txt)
-```
+### 5.2. How to implement and test features
 
-A frontend has been built by Sally & Bob that you can use in this iteration, and use your backend to power it (note: an incomplete backend will mean the frontend cannot work). **You can, if you wish, make changes to the frontend code, but it is not required for this iteration.** The source code for the frontend is only provided for your own fun or curiosity.
-
-### 4.2. Implementing and testing features
-
-You should first approach this project by considering its distinct "features". Each feature should add some meaningful functionality to the project, but still be as small as possible. You should aim to size features as the smallest amount of functionality that adds value without making the project more unstable. For each feature you should:
+Continue working this project by making distinct "features". Each feature should add some meaningful functionality to the project, but still be as small as possible. You should aim to size features as the smallest amount of functionality that adds value without making the project more unstable. For each feature you should:
 
 1. Create a new branch.
 2. Write tests for that feature and commit them to the branch.
@@ -135,43 +142,65 @@ Your tests, keep in mind the following:
 * Similarly, merging in branches with untested features is also **very bad practice**. We will assume, and you should too, that any code without tests does not work.
 * Pushing directly to `master` is not possible for this repo. The only way to get code into master is via a merge request. If you discover you have a bug in `master` that got through testing, create a bugfix branch and merge that in via a merge request.
 
-### 4.3. Recommended approach
+### 5.3. Planning for the next problems to solve
 
-Our recommendation with this iteration is that you:
+Software development is an iterative process - we're never truly finished. As we complete the development and testing of one feature, we're often then trying to understand the requirements and needs of our users to design the next set of features in our product.
 
-1. Start out trying to implement the new functions the same way you did in iteration 1 (a series of implemented functions, categorised in files, with black-box pytests testing them).
-2. Write another layer of HTTP tests that test the inputs/outputs on routes according to the specific, and while writing tests for each component/feature, write the Flask route/endpoint for that feature too.
+For iteration 3 you are going to produce a short report in `planning.pdf` and place it in the repository. The contents of this report will be a simplified approach to understanding user problems, developing requirements, and doing some early designs.
 
-This approach means that you can essentially finish the project/testing logic without worrying about HTTP, and then simply wrap the HTTP/Flask layer on top of it at the end.
+N.B. If you don't know how to produce a PDF, you can easily make one in google docs and then export to PDF.
 
-### 4.4. Storing data
+#### [Requirements] Elicitation
 
-You are not required to store data persistently in this iteration. However, basic persistence will be covered in lectures and you are welcome to implement this if you find it convenient.
+Find 2-3 people to interview as target users. Target users are people who currently use a tool like flockr, or intend to. Collect their name and email address.
 
-### 4.5. Submission
+Develop a series of questions to ask these target users to understand what *problems* they might have with teamwork-driven communication tools that are currently unsolved by flockr. Give these questions to your target users and record their answers. 
 
-This iteration is due to be submitted at 8pm Monday 26th October (**week 7**). You will then be demonstrating this in your week 7 lab. All team members **must** attend this lab session, or they will not receive a mark.
+#### [Requirements] Analysis & Specification - Use Cases
 
-At the due date provided, we will automatically collect and submit the code that is on the `master` branch of your repository. If the deadline is approaching and you have features that are either untested or failing their tests, **DO NOT MERGE IN THOSE MERGE REQUESTS**. Your tutor will look at unmerged branches and may allocate some reduced marks for incomplete functionality, but `master` should only contain working code.
+Once you've elicited this information, it's time to consolidate it.
 
-### 4.6. Marking Criteria
+Take the responses from the elicitation and express these requirements as **User Stories**. Document these user stories. 
+
+Once documented, generate at least one use case that attempts to tell a story of a solution that satifies the requirements elicited. You can generate a visual diagram or a more written-recipe style, as per lectures.
+
+#### [Requirements] Validation
+
+With your completed use case work, reach out to the 2-3 people you interviewed originally and inquire as to the extent to which these use cases would adequately describe the problem they're trying to solve. Ask them for a comment on this, and record their comments in the PDF.
+
+#### [Design] Interface Design
+
+Now that we've established our _problem_ (described as requirements), it's time to think about our _solution_ in terms of what capabilities would be necessary. You will specify these capabilities as HTTP endpoints, similar to what is described in `6.2`. There is no minimum or maximum of what is needed - it will depend on what problem you're solving.
+
+#### [Design] Conceptual Modelling (State)
+
+Now that you have a sense of the problem to solve, and what capabilities you will need to provide to solve it, add at least one state diagram to your PDF to show how the state of the application would change based on user actions. The aim of this diagram is how to a developer understand the different states the user or application.
+
+### 5.4. Marking Criteria
 
 |Section|Weighting|Criteria|
 |---|---|---|
-|Testing|30%|<ul><li>Distinct use of unit tests for any helper functions you write, integration tests on the functions used in iteration 1, and integration/system tests on the HTTP endpoints</li><li>Tests provide excellent test **coverage** with the coverage tool</li><li>Demonstrated an understanding of the importance of **clarity** on the communication of test purposes</li><li>Demonstrated an understanding of thoughtful test **design**</li><li>Performance against an automatic marking syste<m/li><li>Compliance with standard pylint requirements</li></ul>|
-|Implementation|40%|<ul><li>Correctly implemented entire backend server interface that satisfies requirements</li><li>Pythonic programming approach (where possible)</li><li>Thought out code design</li><li>Compliance with standard pylint requirements</li></ul>|
+|Testing|25%|<ul><li>Tests provide excellent test **coverage** with the coverage tool</li><li>Demonstrated an understanding of the importance of **clarity** on the communication of test purposes</li><li>Demonstrated an understanding of thoughtful test **design**</li><li>Performance against an automatic marking syste<m/li><li>Compliance with standard pylint requirements</li></ul>|
+|Implementation|25%|<ul><li>Correctly implemented entire backend server interface that satisfies requirements</li><li>Pythonic programming approach (where possible)</li><li>Thought out code design inline with principles discussed in lectures</li><li>Compliance with standard pylint requirements</li></ul>|
+|Next Stage: Requirements & Design|20%|<ul><li>Requirements elicited from potential users, recorded as user stories</li><li>User journey justified and expressed as use case(s)</li><li>Interface proposed as a potential solution to provide capabilities</li><li>State diagram drawn to demonstrate how application responds to actions</li></ul>|
 |Git practices & Project Management|20%|<ul><li>Meaningful and informative git commit names being used</li><li>Effective use of merge requests (from branches being made) across the team</li><li>Effective use of course-provided flockr, demonstrating an ability to communicate and manage effectivelly digitally</li><li>Use of task board on Gitlab to track and manage tasks</li><li>Effective use of agile methods such as standups</li></ul>|
 |Teamwork|10%|<ul><li>A generally equal contribution between team members</li><li>Clear evidence of reflection on group's performance and state of the team, with initiative to improve in future iterations</li></ul>|
 
 For this and for all future milestones, you should consider the other expectations as outlined in section 8 below.
 
-### 4.7. Demonstration
+### 5.5. Storing data
 
-When you demonstrate this iteration in your week 7 lab, it will consist of a 15 minute Q&A in front of your tutorial class via zoom. Webcams are required to be on during this Q&A (your phone is a good alternative if your laptop/desktop doesn't have a webcam).
+You are not required to store data persistently in this iteration. However, you are welcome to implement basic persistence if you find it convenient.
 
-## 5. Iteration 3
+### 5.6. Submission
 
-Not yet released
+This iteration is due to be submitted at 8pm Sunday 15th November (**week 9**). You will then be demonstrating this in your week 10 lab. All team members **must** attend this lab session, or they will not receive a mark.
+
+At the due date provided, we will automatically collect and submit the code that is on the `master` branch of your repository. If the deadline is approaching and you have features that are either untested or failing their tests, **DO NOT MERGE IN THOSE MERGE REQUESTS**. Your tutor will look at unmerged branches and may allocate some reduced marks for incomplete functionality, but `master` should only contain working code.
+
+### 5.7. Demonstration
+
+When you demonstrate this iteration in your week 10 lab, it will consist of a 15 minute Q&A in front of your tutorial class via zoom. Webcams are required to be on during this Q&A (your phone is a good alternative if your laptop/desktop doesn't have a webcam).
 
 ## 6. Interface specifications
 
@@ -209,6 +238,8 @@ These interface specifications come from Sally and Bob, who are building the fro
 |auth/login|POST|(email, password)|{ u_id, token }|**InputError** when any of:<ul><li>Email entered is not a valid email using the method provided [here](https://www.geeksforgeeks.org/check-if-email-address-valid-or-not-in-python/) (unless you feel you have a better method)</li><li>Email entered does not belong to a user</li><li>Password is not correct</li></ul> | Given a registered users' email and password and generates a valid token for the user to remain authenticated |
 |auth/logout|POST|(token)|{ is_success }|N/A|Given an active token, invalidates the token to log the user out. If a valid token is given, and the user is successfully logged out, it returns true, otherwise false. |
 |auth/register|POST|(email, password, name_first, name_last)|{ u_id, token }|**InputError** when any of:<ul><li>Email entered is not a valid email using the method provided [here](https://www.geeksforgeeks.org/check-if-email-address-valid-or-not-in-python/) (unless you feel you have a better method).</li><li>Email address is already being used by another user</li><li>Password entered is less than 6 characters long</li><li>name_first not is between 1 and 50 characters inclusively in length</li><li>name_last is not between 1 and 50 characters inclusively in length</ul>|Given a user's first and last name, email address, and password, create a new account for them and return a new token for authentication in their session. A handle is generated that is the concatentation of a lowercase-only first name and last name. If the concatenation is longer than 20 characters, it is cutoff at 20 characters. If the handle is already taken, you may modify the handle in any way you see fit (maintaining the 20 character limit) to make it unique. |
+|auth/passwordreset/request|POST|(email)|{}|N/A|Given an email address, if the user is a registered user, send's them a an email containing a specific secret code, that when entered in auth_passwordreset_reset, shows that the user trying to reset the password is the one who got sent this email.|
+|auth/passwordreset/reset|POST|(reset_code, new_password)|{}|**InputError** when any of:<ul><li>reset_code is not a valid reset code</li><li>Password entered is not a valid password</li>|Given a reset code for a user, set that user's new password to the password provided|
 |channel/invite|POST|(token, channel_id, u_id)|{}|**InputError** when any of:<ul><li>channel_id does not refer to a valid channel.</li><li>u_id does not refer to a valid user</li></ul>**AccessError** when<ul><li>the authorised user is not already a member of the channel</li>|Invites a user (with user id u_id) to join a channel with ID channel_id. Once invited the user is added to the channel immediately|
 |channel/details|GET|(token, channel_id)|{ name, owner_members, all_members }|**InputError** when any of:<ul><li>Channel ID is not a valid channel</li></ul>**AccessError** when<ul><li>Authorised user is not a member of channel with channel_id</li></ul>|Given a Channel with ID channel_id that the authorised user is part of, provide basic details about the channel|
 |channel/messages|GET|(token, channel_id, start)|{ messages, start, end }|**InputError** when any of:<ul><li>Channel ID is not a valid channel</li><li>start is greater than the total number of messages in the channel</li></ul>**AccessError** when<ul><li>Authorised user is not a member of channel with channel_id</li></ul>|Given a Channel with ID channel_id that the authorised user is part of, return up to 50 messages between index "start" and "start + 50". Message with index 0 is the most recent message in the channel. This function returns a new index "end" which is the value of "start + 50", or, if this function has returned the least recent messages in the channel, returns -1 in "end" to indicate there are no more messages to load after this return.|
@@ -222,14 +253,23 @@ These interface specifications come from Sally and Bob, who are building the fro
 |message/send|POST|(token, channel_id, message)|{ message_id }|**InputError** when any of:<ul><li>Message is more than 1000 characters</li></ul>**AccessError** when: <li> the authorised user has not joined the channel they are trying to post to</li></ul>|Send a message from authorised_user to the channel specified by channel_id|
 |message/remove|DELETE|(token, message_id)|{}|**InputError** when any of:<ul><li>Message (based on ID) no longer exists</li></ul>**AccessError** when none of the following are true:<ul><li>Message with message_id was sent by the authorised user making this request</li><li>The authorised user is an owner of this channel or the flockr</li></ul>|Given a message_id for a message, this message is removed from the channel|
 |message/edit|PUT|(token, message_id, message)|{}|**AccessError** when none of the following are true:<ul><li>Message with message_id was sent by the authorised user making this request</li><li>The authorised user is an owner of this channel or the flockr</li></ul>|Given a message, update it's text with new text. If the new message is an empty string, the message is deleted.|
+|message/sendlater|POST|(token, channel_id, message, time_sent)|{ message_id }|**InputError** when any of:<ul><li>Channel ID is not a valid channel</li><li>Message is more than 1000 characters</li><li>Time sent is a time in the past</li></ul>**AccessError** when: <li> the authorised user has not joined the channel they are trying to post to</li></ul>|Send a message from authorised_user to the channel specified by channel_id automatically at a specified time in the future|
+|message/react|POST|(token, message_id, react_id)|{}|**InputError** when any of:<ul><li>message_id is not a valid message within a channel that the authorised user has joined</li><li>react_id is not a valid React ID. The only valid react ID the frontend has is 1</li><li>Message with ID message_id already contains an active React with ID react_id from the authorised user</li></ul>|Given a message within a channel the authorised user is part of, add a "react" to that particular message|
+|message/unreact|POST|(token, message_id, react_id)|{}|**InputError**   <ul><li>message_id is not a valid message within a channel that the authorised user has joined</li><li>react_id is not a valid React ID</li><li>Message with ID message_id does not contain an active React with ID react_id</li></ul>|Given a message within a channel the authorised user is part of, remove a "react" to that particular message|
+|message/pin|POST|(token, message_id)|{}|**InputError** when any of:<ul><li>message_id is not a valid message</li><li>Message with ID message_id is already pinned</li></ul>**AccessError** when any of:<ul><li>The authorised user is not a member of the channel that the message is within</li><li>The authorised user is not an owner</li></ul>|Given a message within a channel, mark it as "pinned" to be given special display treatment by the frontend|
+|message/unpin|POST|(token, message_id)|{}|**InputError** when any of:<ul><li>message_id is not a valid message</li><li>Message with ID message_id is already unpinned</li></ul>**AccessError** when any of:<ul><li>The authorised user is not a member of the channel that the message is within</li><li>The authorised user is not an owner</li></ul>|Given a message within a channel, remove it's mark as unpinned|
 |user/profile|GET|(token, u_id)|{ user }|**InputError** when any of:<ul><li>User with u_id is not a valid user</li></ul>|For a valid user, returns information about their user_id, email, first name, last name, and handle|
 |user/profile/setname|PUT|(token, name_first, name_last)|{}|**InputError** when any of:<ul><li>name_first is not between 1 and 50 characters inclusively in length</li><li>name_last is not between 1 and 50 characters inclusively in length</ul></ul>|Update the authorised user's first and last name|
 |user/profile/setemail|PUT|(token, email)|{}|**InputError** when any of:<ul><li>Email entered is not a valid email using the method provided [here](https://www.geeksforgeeks.org/check-if-email-address-valid-or-not-in-python/) (unless you feel you have a better method).</li><li>Email address is already being used by another user</li>|Update the authorised user's email address|
 |user/profile/sethandle|PUT|(token, handle_str)|{}|**InputError** when any of:<ul><li>handle_str must be between 3 and 20 characters</li><li>handle is already used by another user</li></ul>|Update the authorised user's handle (i.e. display name)|
+|/user/profile/uploadphoto|POST|(token, img_url, x_start, y_start, x_end, y_end)|{}|**InputError** when any of:<ul><li>img_url returns an HTTP status other than 200.</li><li>any of x_start, y_start, x_end, y_end are not within the dimensions of the image at the URL.</li><li>Image uploaded is not a JPG</li></ul>|Given a URL of an image on the internet, crops the image within bounds (x_start, y_start) and (x_end, y_end). Position (0,0) is the top left.|
 |users/all|GET|(token)|{ users}|N/A|Returns a list of all users and their associated details|
 |admin/userpermission/change|POST|(token, u_id, permission_id)|{}|**InputError** when any of:<ul><li>u_id does not refer to a valid user<li>permission_id does not refer to a value permission</li></ul>**AccessError** when<ul><li>The authorised user is not an owner</li></ul>|Given a User by their user ID, set their permissions to new permissions described by permission_id|Given a User by their user ID, set their permissions to new permissions described by permission_id|
 |search|GET|(token, query_str)|{ messages }|N/A|Given a query string, return a collection of messages in all of the channels that the user has joined that match the query|
 |clear|DELETE|()|{}|N/A|Resets the internal data of the application to it's initial state|
+|standup/start|POST|(token, channel_id, length)|{ time_finish }|**InputError** when any of:<ul><li>Channel ID is not a valid channel</li><li>An active standup is currently running in this channel</li></ul>|For a given channel, start the standup period whereby for the next "length" seconds if someone calls "standup_send" with a message, it is buffered during the X second window then at the end of the X second window a message will be added to the message queue in the channel from the user who started the standup. X is an integer that denotes the number of seconds that the standup occurs for|
+|standup/active|GET|(token, channel_id)|{ is_active, time_finish }|**InputError** when any of:<ul><li>Channel ID is not a valid channel</li></ul>|For a given channel, return whether a standup is active in it, and what time the standup finishes. If no standup is active, then time_finish returns None|
+|standup/send|POST|(token, channel_id, message)|{}|**InputError** when any of:<ul><li>Channel ID is not a valid channel</li><li>Message is more than 1000 characters</li><li>An active standup is not currently running in this channel</li></ul>**AccessError** when<ul><li>The authorised user is not a member of the channel that the message is within</li></ul>|Sending a message to get buffered in the standup queue, assuming a standup is currently active|
 
 ### 6.3. Errors for all functions
 
@@ -250,7 +290,8 @@ To solve this when a user logs in or registers the backend should return a "toke
 Passwords must be stored in an encrypted form, and tokens must use JWTs (or similar).
 
 ### 6.5. Pagination
-The behaviour in which channel_messages returns data is called **pagination**. It's a commonly used method when it comes to getting theoretially unbounded amounts of data from a server to display on a page in chunks. Most of the timelines you know and love - Facebook, Instagram, LinkedIn - do this.
+
+The behaviour in which channel_messages returns data is called **pagination**. It's a commonly used method when it comes to getting theoretially unbounded amounts of data from a server to display on a page in chunks. M0ost of the timelines you know and love - Facebook, Instagram, LinkedIn - do this.
 
 For example, if we imagine a user with token "12345" is trying to read messages from channel with ID 6, and this channel has 124 messages in it, 3 calls from the client to the server would be made. These calls, and their corresponding return values would be:
  * channel_messages("12345", 6, 0) => { [messages], 0, 50 }

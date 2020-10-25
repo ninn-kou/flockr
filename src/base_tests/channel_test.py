@@ -782,21 +782,18 @@ def test_channel_leave_normal():
     # Create the user1.
     auth_register('user1@test.com', 'Iampassword', 'Zhiyuan', 'Liu')
     login_user1 = auth_login('user1@test.com', 'Iampassword')
-    u_id_user1 = login_user1['u_id']
     token_user1 = login_user1['token']
 
 
     # Create the user2.
     auth_register('user2@test.com', 'Iampassword', 'Jiaqi', 'Lu')
     login_user2 = auth_login('user2@test.com', 'Iampassword')
-    u_id_user2 = login_user2['u_id']
     token_user2 = login_user2['token']
 
 
     # Create the user3.
     auth_register('user3@test.com', 'Iampassword', 'Tingyu', 'Jiang')
     login_user3 = auth_login('user3@test.com', 'Iampassword')
-    u_id_user3 = login_user3['u_id']
     token_user3 = login_user3['token']
 
 
@@ -838,7 +835,6 @@ def test_channel_leave_normal_two_oweners():
     # Create the user1.
     auth_register('user1@test.com', 'Iampassword', 'Zhiyuan', 'Liu')
     login_user1 = auth_login('user1@test.com', 'Iampassword')
-    u_id_user1 = login_user1['u_id']
     token_user1 = login_user1['token']
 
 
@@ -852,7 +848,6 @@ def test_channel_leave_normal_two_oweners():
     # Create the user3.
     auth_register('user3@test.com', 'Iampassword', 'Tingyu', 'Jiang')
     login_user3 = auth_login('user3@test.com', 'Iampassword')
-    u_id_user3 = login_user3['u_id']
     token_user3 = login_user3['token']
 
 
@@ -893,21 +888,18 @@ def test_channel_leave_normal_no_owner():
     # Create the user1.
     auth_register('user1@test.com', 'Iampassword', 'Zhiyuan', 'Liu')
     login_user1 = auth_login('user1@test.com', 'Iampassword')
-    u_id_user1 = login_user1['u_id']
     token_user1 = login_user1['token']
 
 
     # Create the user2.
     auth_register('user2@test.com', 'Iampassword', 'Jiaqi', 'Lu')
     login_user2 = auth_login('user2@test.com', 'Iampassword')
-    u_id_user2 = login_user2['u_id']
     token_user2 = login_user2['token']
 
 
     # Create the user3.
     auth_register('user3@test.com', 'Iampassword', 'Tingyu', 'Jiang')
     login_user3 = auth_login('user3@test.com', 'Iampassword')
-    u_id_user3 = login_user3['u_id']
     token_user3 = login_user3['token']
 
 

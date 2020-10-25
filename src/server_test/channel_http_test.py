@@ -268,7 +268,7 @@ def test_messages(url):
         'channel_id': channels[0].get('channel_id'),
         'start': start_index
     })
-    
+
     # make sure the messages are the same
     assert (set(resp['messages'][start_index: start_index + interval]) 
         == set(messages[max_index - start_index: max_index - (start_index + interval)]))

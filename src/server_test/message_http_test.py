@@ -1,5 +1,6 @@
 '''
 this is fucntion writeng for message.py to test all the normall cases
+Writen by Xingyu Tan 26/10/2020
 '''
 import re
 from subprocess import Popen, PIPE
@@ -44,13 +45,13 @@ def send_request(method, url, url_extension, json_obj):
     resp = None
     url_time = url + url_extension
     if method == 'GET':
-        resp = requests.get(url_time, json = json_obj)
+        resp = requests.get(url_time, json=json_obj)
     elif method == 'POST':
-        resp = requests.post(url_time, json = json_obj)
+        resp = requests.post(url_time, json=json_obj)
     elif method == 'DELETE':
-        resp = requests.delete(url_time, json = json_obj)
+        resp = requests.delete(url_time, json=json_obj)
     elif method == 'PUT':
-        resp = requests.put(url_time, json = json_obj)
+        resp = requests.put(url_time, json=json_obj)
     return json.loads(resp.text)
 
 def register_user(url, email, password, name_first, name_last):

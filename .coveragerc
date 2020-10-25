@@ -8,3 +8,4 @@ omit =
     test_*.py
     *_test.py
     src/server.py
+    src/server/*

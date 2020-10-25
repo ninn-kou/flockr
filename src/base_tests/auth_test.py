@@ -2,6 +2,7 @@
 Joseph Jeong made auth_test.py
 '''
 import pytest
+import os
 
 import data.data as data
 import base.auth as auth
@@ -60,6 +61,7 @@ def auth_register_notes():
         - len(name_first) < 1 || len(name_first) > 50
         - len(name_last) < 1 || len(name_last) > 50
     """
+
 def test_auth_register_correct_return():
     """
     check that correct data structure is returned
@@ -117,7 +119,7 @@ def test_auth_register_multiple_users():
     i = 0
     while i < array_size:
         array[i] = (auth.auth_register('test' + str(i)
-        + '@example.com', 'password', 'Test', 'Pee')['u_id'])
+        + '@example.com', 'password', 'Test', 'Personmanperson')['u_id'])
         i += 1
 
     assert len(array) == len(set(array))

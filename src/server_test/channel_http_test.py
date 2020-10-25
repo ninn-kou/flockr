@@ -187,7 +187,7 @@ def test_invite(url):
     ''' testing channel_invite requests '''
 
     # clear out the databases
-    clear()
+    requests.delete(url + 'other/clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -212,7 +212,7 @@ def test_details(url):
     ''' testing channel_details requests '''
 
     # clear out the databases
-    clear()
+    requests.delete(url + 'other/clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -244,7 +244,7 @@ def test_messages(url):
     ''' testing channel_messages requests '''
 
     # clear out the databases
-    clear()
+    requests.delete(url + 'other/clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -268,7 +268,7 @@ def test_messages(url):
         'channel_id': channels[0].get('channel_id'),
         'start': start_index
     })
-    
+
     # make sure the messages are the same
     assert (set(resp['messages'][start_index: start_index + interval]) 
         == set(messages[max_index - start_index: max_index - (start_index + interval)]))
@@ -277,7 +277,7 @@ def test_leave(url):
     ''' testing channel_leave requests '''
 
     # clear out the databases
-    clear()
+    requests.delete(url + 'other/clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -289,19 +289,19 @@ def test_leave(url):
 
     # leave as user1
     send_request('POST', url, 'channel/leave', {
-        'token': user1.get('token'),
+        'token': user2.get('token'),
         'channel_id': channels[0].get('channel_id')
     })
 
     # check whether user is in channel
-    check = check_in_index(url, user2, user1, channels[0], 'all_members')
+    check = check_in_index(url, user1, user2, channels[0], 'all_members')
     assert check is False
 
 def test_join(url):
     ''' testing channel_join requests '''
 
     # clear out the databases
-    clear()
+    requests.delete(url + 'other/clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -323,7 +323,7 @@ def test_addowner(url):
     ''' testing channel_join requests '''
 
     # clear out the databases
-    clear()
+    requests.delete(url + 'other/clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -341,13 +341,13 @@ def test_addowner(url):
     })
 
     # check if both members are in channel
-    assert check_in_index(url, user2, user2, channels[0], 'owner_members')
+    assert check_in_index(url, user1, user2, channels[0], 'owner_members')
 
 def test_removeowner(url):
     ''' testing channel_removeowner requests '''
 
     # clear out the databases
-    clear()
+    requests.delete(url + 'other/clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -364,13 +364,13 @@ def test_removeowner(url):
         'u_id': user2.get('u_id')
     })
 
-    # remove user1 as owner
+    # remove user2 as owner
     send_request('POST', url, 'channel/removeowner', {
-        'token': user2.get('token'),
+        'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
-        'u_id': user1.get('u_id')
+        'u_id': user2.get('u_id')
     })
 
     # check that user1 is gone as an owner
-    check = check_in_index(url, user2, user1, channels[0], 'owner_members')
+    check = check_in_index(url, user1, user2, channels[0], 'owner_members')
     assert check is False

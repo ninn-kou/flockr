@@ -2,8 +2,6 @@
     messages.py written by Xingyu Tan.
 '''
 from datetime import timezone, datetime
-import jwt
-from jwt import decode
 import data.data as data
 from base.auth import decode_token
 from base.error import InputError, AccessError
@@ -49,9 +47,17 @@ def edit_msg_in_list(msg, text):
     data.replace_channels(channels)
     data.replace_messages(messages)
 
-def if_auth_channel_owner(u_id, channel_id):
-    """check if the u_id is the owner of the channel"""
+def if_auth_owner(u_id, channel_id):
+    """
+    check if the u_id is the owner of the channel
+    or the owner of flocker
+    """
     test = False
+    # check if it is the owener of flocker
+    if check_permission(u_id) == 1:
+        test = True
+        return test
+    # check if it is the owener of channel
     channel_got = find_channel(channel_id)
     for i in channel_got['owner_members']:
         if i['u_id'] == u_id:
@@ -109,6 +115,15 @@ def token_into_user_id(token):
     au_id = user.get('u_id')
 
     return au_id
+
+def check_permission(user_id):
+    '''check if given u_id person is permission one'''
+    permission_check = 2
+    for i in data.return_users():
+        if i['u_id'] == user_id:
+            permission_check = i['permission_id']
+            break
+    return permission_check
 
 def find_channel(channel_id):
     """Interate the channels list by its id, return the channel we need."""
@@ -232,7 +247,7 @@ def message_remove(token, message_id):
         raise InputError(description='invalid message id.')
 
     # AccessError 3: excluding message sender and channel_owner
-    test_owener = if_auth_channel_owner(auth_id, message_using['channel_id'])
+    test_owener = if_auth_owner(auth_id, message_using['channel_id'])
     # if it is neither channel owner nor messager sender
     # raise for access error
     if test_owener == False and message_using['u_id'] != auth_id:
@@ -273,7 +288,7 @@ def message_edit(token, message_id, message):
     # AccessError 1: excluding message sender and channel_owner
     auth_id = token_into_user_id(token)
     message_using = find_message(message_id)
-    test_owener = if_auth_channel_owner(auth_id, message_using['channel_id'])
+    test_owener = if_auth_owner(auth_id, message_using['channel_id'])
     # if it is neither channel owner nor messager sender
     # raise for access error
     if test_owener == False and message_using['u_id'] != auth_id:

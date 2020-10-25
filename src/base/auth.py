@@ -185,7 +185,7 @@ def decode_token(token):
 
 def determine_permission_id():
     ''' check first user to add permission id '''
-
+    id = 2
     # check if user list is empty
     if not data.return_users():
         id = 1

@@ -1,9 +1,6 @@
-'''
-    Other functions to help testing
-'''
-import jwt
+'''Some other useful functions'''
 import data.data as data
-from base.auth import decode_token, check_in_users
+from base.auth import decode_token
 from base.error import InputError, AccessError
 
 
@@ -39,14 +36,15 @@ def admin_userpermission_change(token, u_id, permission_id):
         if user['u_id'] == u_id:
             found = 1
             break
-    if found != 1:
-        raise InputError
 
-    if permission_id != 1 and permission_id != 2:
-        raise InputError                        # Check the permission_id.
+    if found != 1:
+        raise InputError(description='The u_id is invalid.')
+
+    if permission_id not in range(1, 3):        # Check the permission_id.
+        raise InputError(description='The permission_id is invalid.')
 
     if i['permission_id'] != 1:                 # The admin is not a owner_num.
-        raise AccessError
+        raise AccessError(description='The admin is not a owner.')
 
     data.update_user(u_id, 'permission_id', permission_id)
 
@@ -64,6 +62,3 @@ def search(token, query_str):
             if query_str in i['message']:
                 mes_list.append(i)
     return mes_list
-
-i = data.return_users()
-print(i)

@@ -105,18 +105,18 @@ def channel_invite(token, channel_id, u_id):
     """
     auth_id = token_into_user_id(token)     # InputError 1: invalid token.
     if auth_id == -1:
-        raise InputError
+        raise InputError('invalid token')
 
     channel_got = find_channel(channel_id)  # InputError 2: invalid channel_id.
     if channel_got is None:
-        raise InputError
+        raise InputError('invalid channel_id')
 
     user = find_user(u_id)                  # InputError 3: invalid user_id.
     if user == -1:
-        raise InputError
+        raise InputError('invalid user_id')
 
     if not find_one_in_channel(channel_got, auth_id):
-        raise AccessError                   # AccessError 4: if the auth not in channel.
+        raise AccessError('the auth not in channel')                   # AccessError 4: if the auth not in channel.
 
     if find_one_in_channel(channel_got, u_id):
         return                              # Case 5: if the member already in, skip it.
@@ -156,14 +156,14 @@ def channel_details(token, channel_id):
     """
     auth_id = token_into_user_id(token)     # InputError 1: invalid token.
     if auth_id == -1:
-        raise InputError
+        raise InputError('invalid token')
 
     channel_got = find_channel(channel_id)  # InputError 2: invalid channel_id.
     if channel_got is None:
-        raise InputError
+        raise InputError('invalid channel_id')
 
     if not find_one_in_channel(channel_got, auth_id):
-        raise AccessError                   # AccessError 3: if the auth not in channel.
+        raise AccessError('the auth is not in channel')                   # AccessError 3: if the auth not in channel.
 
     return {                                # Case 4: all passed, return channel.
         'name': channel_got['name'],
@@ -202,18 +202,18 @@ def channel_messages(token, channel_id, start):
 
     auth_id = token_into_user_id(token)     # InputError 1: invalid token.
     if auth_id == -1:
-        raise InputError
+        raise InputError('invalid token')
 
     channel_got = find_channel(channel_id)  # InputError 2: invalid channel_id.
     if channel_got is None:
-        raise InputError
+        raise InputError('onvalid channel_id')
 
     if not find_one_in_channel(channel_got, auth_id):
-        raise AccessError                   # AccessError 3: if the auth not in channel.
+        raise AccessError('the auth is not in channel')                   # AccessError 3: if the auth not in channel.
 
     num_msgs = len(channel_got['message'])
     if num_msgs < start:                    # InputError 4: the start >= total messages.
-        raise InputError
+        raise InputError(' the start >= total messages')
 
     if num_msgs == start:                   # Case 5: no message from start.
         end = -1
@@ -318,14 +318,14 @@ def channel_leave(token, channel_id):
     """
     target_channel = find_channel(channel_id)
     if target_channel is None:              # InputError 1: invalid channel_id.
-        raise InputError
+        raise InputError('invalid channel_id')
 
     auth_id = token_into_user_id(token)
     if auth_id == -1:                       # InputError 2: invalid token.
-        raise InputError
+        raise InputError('invalid token')
 
     if find_one_in_channel(target_channel, auth_id) is False:
-        raise AccessError                  # AccessError 3: if the auth not in channel.
+        raise AccessError('the auth not in channel')                  # AccessError 3: if the auth not in channel.
 
                                             # Case 4: the user is one of the owners.
     if find_current_owner(target_channel, auth_id) is True:
@@ -360,14 +360,14 @@ def channel_join(token, channel_id):
     """
     target_channel = find_channel(channel_id)
     if target_channel is None:              # InputError 1: invalid channel_id.
-        raise InputError
+        raise InputError('invalid channel_id')
 
     if not is_channel_public(channel_id):
-        raise AccessError                   # AccessError 2: channel is PRIVATE.
+        raise AccessError('channel is PRIVATE')                   # AccessError 2: channel is PRIVATE.
 
     auth_id = token_into_user_id(token)
     if auth_id == -1:
-        raise InputError                    # InputError 3: invalid token.
+        raise InputError('invalid token')                    # InputError 3: invalid token.
 
     new_member_struct = find_user(auth_id)
     user = {                                # Case 4: add this user into member list.
@@ -456,18 +456,18 @@ def channel_addowner(token, channel_id, u_id):
     """
     this_channel = find_channel(channel_id)
     if this_channel is None:                # InputError 1: invalid channel_id.
-        raise InputError
+        raise InputError('invalid channel_id')
 
     auth_id = token_into_user_id(token)
     if auth_id == -1:                       # InputError 2: invalid token.
-        raise InputError
+        raise InputError('invalid token')
 
     # check whether the user is already an owner
     if find_current_owner(this_channel, u_id):
-        raise InputError                   # InputError 3: check whether user is owner.
+        raise InputError('user is not owner')                   # InputError 3: check whether user is owner.
 
     if not find_current_owner(this_channel, auth_id):
-        raise AccessError                  # AccessError 4: if the auth not in channel.
+        raise AccessError('the auth not in channel')                  # AccessError 4: if the auth not in channel.
 
     owner_detail = find_user(u_id)
     owners = {                              # Case 5: if all passed, add user into owner.
@@ -502,20 +502,20 @@ def channel_removeowner(token, channel_id, u_id):
     """
     this_channel = find_channel(channel_id)
     if this_channel is None:                # InputError 1: invalid channel_id.
-        raise InputError
+        raise InputError('invalid channel_id')
 
     auth_id = token_into_user_id(token)
     if auth_id == -1:                       # InputError 2: invalid token.
-        raise InputError
+        raise InputError('invalid token')
 
     if find_current_owner(this_channel, u_id) is False:
-        raise InputError                   # InputError 3: check whether user is owner.
+        raise InputError('user is not owner')                   # InputError 3: check whether user is owner.
 
     user = find_user(u_id)
     if user == -1:                          # InputError 4: check if the user_id valid.
-        raise InputError
+        raise InputError('u_id is not valid')
 
     if find_current_owner(this_channel, auth_id) is False:
-        raise AccessError                  # AccessError 5: if the auth not in channel.
+        raise AccessError('auth is not in the channel')                  # AccessError 5: if the auth not in channel.
 
     rm_owner_in_channel(channel_id, u_id)   # Case 6: if all passed, pop the user off.

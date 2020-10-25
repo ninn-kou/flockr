@@ -147,3 +147,54 @@ def test_message_send_works(url):
     # make sure the messages are the same
     assert resp['messages'][0]['message'] == "test_msg_02"
     assert resp['messages'][1]['message'] == "test_msg_01"
+
+def test_message_remove(url):
+    '''
+    test for messsage_remove
+    Test whether the msg can be sent normally
+    '''
+    # clear out the databases
+    clear()
+
+    # register a new user and create a new channel
+    user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
+    channels = create_channels(url, user1.get('token'), True, 1)
+
+    # invite second user to invite
+    user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
+    invite_user(url, user1, channels[0].get('channel_id'), user2)
+
+
+    # get the sent messages in channel
+    send_request('POST', url, 'meg/send', {
+        'token': user1.get('token'),
+        'channel_id': channels[0].get('channel_id'),
+        'message': "test_msg_01"
+    })
+    send_request('POST', url, 'meg/send', {
+        'token': user1.get('token'),
+        'channel_id': channels[0].get('channel_id'),
+        'message': "test_msg_02"
+    })
+    message_test_id = send_request('POST', url, 'meg/send', {
+        'token': user1.get('token'),
+        'channel_id': channels[0].get('channel_id'),
+        'message': "test_msg_03"
+    })['message_id']
+
+    # 1. remove the message we need
+    send_request('DELETE', url, 'meg/remove', {
+        'token': user1.get('token'),
+        'message_id': message_test_id,
+    })
+
+    # get the sent messages in channel
+    resp = send_request('GET', url, 'channel/messages', {
+        'token': user1.get('token'),
+        'channel_id': channels[0].get('channel_id'),
+        'start': 0
+    })
+
+    # make sure the messages are the same
+    assert resp['messages'][0]['message'] == "test_msg_02"
+    assert resp['messages'][1]['message'] == "test_msg_01"

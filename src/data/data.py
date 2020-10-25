@@ -56,7 +56,7 @@ def update_user(u_id, index, value):
     # open current json file
     with open('src/data/users.json', 'r') as file:
         users = json.load(file)
-    
+
     for user in users:
         if user.get('u_id') == u_id:
             user[index] = value
@@ -93,10 +93,10 @@ def clear_users():
 def updateByEmail(user,email):
     with open('src/data/users.json', 'r') as file:
         users = json.load(file)
-    newusers=[]
+    newusers = []
     for i in users:
-        if i['email']==email:
-            i=user
+        if i['email'] == email:
+            i = user
         newusers.append(i)
     with open('src/data/users.json', 'w') as file:
         json.dump(newusers, file)

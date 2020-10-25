@@ -19,7 +19,7 @@ def create_secret():
     # Create list of random characters and length of token.
     valid_characters = string.ascii_letters + string.digits + string.punctuation + string.whitespace
     token_length = 50
-    
+
     # create token of that length and with specified characters
     return "".join(random.choices(valid_characters, k = token_length))
 
@@ -39,7 +39,7 @@ def read_jwt_secret():
     # stored in pickle so user can't read it *dab*
     with open('src/data/JWT_SECRET.p', 'rb') as file:
         token_secret = pickle.load(file)
-        
+
     return token_secret
 
 # reads token from file
@@ -134,7 +134,7 @@ def hash_(_input):
     return _hash
 
 def create_token(u_id, session_secret):
-    ''' 
+    '''
     encode email in jwt object
 
     The u_id is is in the public header
@@ -155,13 +155,13 @@ def create_token(u_id, session_secret):
     payload = {'session_secret': session_secret}
 
     # encode u_id in jwt object
-    encoded = jwt.encode(payload, JWT_SECRET, 
+    encoded = jwt.encode(payload, JWT_SECRET,
         algorithm='HS256', headers=headers).decode('utf-8')
 
     return encoded
 
 def decode_token(token):
-    ''' 
+    '''
     Return user dict from given token
     If incorrect token or user is inputted, it returns None
     '''
@@ -185,14 +185,14 @@ def decode_token(token):
             # if user is correct and matches the session
             focus_user = user
             break
-    
+
     # if u_id and session_secret match, return user
     # if no user is found, it also returns None
     return focus_user
 
 def determine_permission_id():
     ''' check first user to add permission id '''
-
+    id = 2
     # check if user list is empty
     if not data.return_users():
         id = 1
@@ -277,6 +277,6 @@ def auth_logout(token):
     # remove the session secret in data structure
     data.update_user(user['u_id'], 'session_secret', None)
 
-    # if user has been found while decoding the token, 
+    # if user has been found while decoding the token,
     # the process worked 100%
     return {'is_success': True}

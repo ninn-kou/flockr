@@ -50,10 +50,6 @@ def create_channel_id(channels):
                                             # Randomly generated a 32 bit unsigned int.
                                             # Check if this int is unique.
     channel_id = random.randint(0, 0xFFFFFFFF)
-    for channel in channels:
-        if channel['channel_id'] == channel_id:
-            channel_id = create_channel_id(channels)
-            break
     return channel_id
 
 

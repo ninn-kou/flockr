@@ -2,8 +2,6 @@
     messages.py written by Xingyu Tan.
 '''
 from datetime import timezone, datetime
-import jwt
-from jwt import decode
 import data.data as data
 from base.auth import decode_token
 from base.error import InputError, AccessError
@@ -39,24 +37,31 @@ def edit_msg_in_list(msg, text):
             for temp in i['message']:
                 if temp['message_id'] == msg['message_id']:
                     temp['message'] = text
-                    break
-        break
+
     for temp in messages:
         if temp['message_id'] == msg['message_id']:
             temp['message'] = text
-            break
+
     # add it to memory
     data.replace_channels(channels)
     data.replace_messages(messages)
 
-def if_auth_channel_owner(u_id, channel_id):
-    """check if the u_id is the owner of the channel"""
+def if_auth_owner(u_id, channel_id):
+    """
+    check if the u_id is the owner of the channel
+    or the owner of flocker
+    """
     test = False
+    # check if it is the owener of flocker
+    if check_permission(u_id) == 1:
+        test = True
+        return test
+    # check if it is the owener of channel
     channel_got = find_channel(channel_id)
     for i in channel_got['owner_members']:
         if i['u_id'] == u_id:
             test = True
-            break
+
     return test
 
 def delete_msg_in_list(msg):
@@ -70,7 +75,7 @@ def delete_msg_in_list(msg):
     for i in channels:
         if i['channel_id'] == msg['channel_id']:
             i['message'].remove(msg)
-            break
+
     messages.remove(msg)
     # add it to memory
     data.replace_channels(channels)
@@ -84,7 +89,6 @@ def adding_message(return_message, channel_id):
     for i in channels:
         if i['channel_id'] == channel_id:
             i['message'].insert(0, return_message)
-            break
 
     # add it to memory
     data.replace_channels(channels)
@@ -110,13 +114,22 @@ def token_into_user_id(token):
 
     return au_id
 
+def check_permission(user_id):
+    '''check if given u_id person is permission one'''
+    permission_check = 2
+    for i in data.return_users():
+        if i['u_id'] == user_id:
+            permission_check = i['permission_id']
+
+    return permission_check
+
 def find_channel(channel_id):
     """Interate the channels list by its id, return the channel we need."""
     answer = None
     for i in data.return_channels():
         if i['channel_id'] == channel_id:
             answer = i
-            break
+
     return answer
 
 def find_one_in_channel(channel, u_id):
@@ -232,10 +245,10 @@ def message_remove(token, message_id):
         raise InputError(description='invalid message id.')
 
     # AccessError 3: excluding message sender and channel_owner
-    test_owener = if_auth_channel_owner(auth_id, message_using['channel_id'])
+    test_owener = if_auth_owner(auth_id, message_using['channel_id'])
     # if it is neither channel owner nor messager sender
     # raise for access error
-    if test_owener == False and message_using['u_id'] != auth_id:
+    if test_owener is False and message_using['u_id'] != auth_id:
         raise AccessError(description='neither message sender nor channel_owner.')
 
     # Case 4: no error, delete the message
@@ -273,7 +286,7 @@ def message_edit(token, message_id, message):
     # AccessError 1: excluding message sender and channel_owner
     auth_id = token_into_user_id(token)
     message_using = find_message(message_id)
-    test_owener = if_auth_channel_owner(auth_id, message_using['channel_id'])
+    test_owener = if_auth_owner(auth_id, message_using['channel_id'])
     # if it is neither channel owner nor messager sender
     # raise for access error
     if test_owener == False and message_using['u_id'] != auth_id:

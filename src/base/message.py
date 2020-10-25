@@ -248,7 +248,7 @@ def message_remove(token, message_id):
     test_owener = if_auth_owner(auth_id, message_using['channel_id'])
     # if it is neither channel owner nor messager sender
     # raise for access error
-    if test_owener == False and message_using['u_id'] != auth_id:
+    if test_owener is False and message_using['u_id'] != auth_id:
         raise AccessError(description='neither message sender nor channel_owner.')
 
     # Case 4: no error, delete the message

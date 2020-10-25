@@ -77,6 +77,7 @@ def delete_msg_in_list(msg):
     data.replace_messages(messages)
 
 def adding_message(return_message, channel_id):
+    '''adding given return_message in the whole list'''
     # get the channels
     channels = data.return_channels()
     # add user into memory
@@ -98,27 +99,12 @@ def find_message(msg_id):
             break
     return return_message
 
-def add_one_in_channel(channel_id, user):
-    """Adding a member into the channel."""
-
-    # get the channels
-    channels = data.return_channels()
-
-    # add user into memory
-    for i in channels:
-        if i['channel_id'] == channel_id:
-            i['all_members'].append(user)
-            break
-
-    # add it to memory
-    data.replace_channels(channels)
-
 def token_into_user_id(token):
     """Transfer the token into the user id."""
 
     user = decode_token(token)
     if user is None:
-        raise InputError("Couldn't Decode Token")
+        return -1
 
     au_id = user.get('u_id')
 
@@ -132,15 +118,6 @@ def find_channel(channel_id):
             answer = i
             break
     return answer
-
-def find_user(user_id):
-    """Find user's info by search one's id."""
-    u_id = -1
-    for i in data.return_users():
-        if i['u_id'] == user_id:
-            u_id = i
-            break
-    return u_id
 
 def find_one_in_channel(channel, u_id):
     """Return a boolean variable to indicate if someone we want in the channel."""

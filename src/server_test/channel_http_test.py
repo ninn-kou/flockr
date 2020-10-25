@@ -300,11 +300,11 @@ def test_leave(url):
     # invite second user to invite
     user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
     invite_user(url, user1, channels[0].get('channel_id'), user2)
-
+    print(channels)
     # leave as user1
     send_request_json('POST', url, 'channel/leave', {
         'token': user1.get('token'),
-        'channel_id': channels[0].get('channel_id')
+        'channel_id': str(channels[0].get('channel_id'))
     })
 
     # check whether user is in channel

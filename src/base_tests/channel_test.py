@@ -1018,29 +1018,16 @@ def test_channel_addowner_standard_situation():
     # user1 login
     auth_register('test1@example.com', 'Amyisthebest', 'Yuhan', 'Yan')
     flock_auth1 = auth_login('test1@example.com', 'Amyisthebest')
-    assert type(flock_auth1) is dict
     u_id1 = flock_auth1['u_id']
     token1 = flock_auth1['token']
-    assert u_id1
-    assert type(u_id1) is int
-    assert token1
-    assert type(token1) is str
 
     # user2 login
     auth_register('test2@example.com', 'Amyisthebestever', 'Vic', 'Yan')
     flock_auth2 = auth_login('test2@example.com', 'Amyisthebestever')
-    assert type(flock_auth2) is dict
     u_id2 = flock_auth2['u_id']
-    token2 = flock_auth2['token']
-    assert u_id2
-    assert type(u_id2) is int
-    assert token2
-    assert type(token2) is str
 
     # user1 create a channel
     cid = channels_create(token1, "Vicmnss", True).get('channel_id')
-    assert cid
-    assert type(cid) is int
 
     # user2 join in
     channel_invite(token1, cid, u_id2)
@@ -1067,29 +1054,16 @@ def test_channel_addowner_valid_channel():
     # user1 login
     auth_register('test1@example.com', 'Amyisthebest', 'Yuhan', 'Yan')
     flock_auth1 = auth_login('test1@example.com', 'Amyisthebest')
-    assert type(flock_auth1) is dict
     u_id1 = flock_auth1['u_id']
     token1 = flock_auth1['token']
-    assert u_id1
-    assert type(u_id1) is int
-    assert token1
-    assert type(token1) is str
 
     # user2 login
     auth_register('test2@example.com', 'Amyisthebestever', 'Vic', 'Yan')
     flock_auth2 = auth_login('test2@example.com', 'Amyisthebestever')
-    assert type(flock_auth2) is dict
     u_id2 = flock_auth2['u_id']
-    token2 = flock_auth2['token']
-    assert u_id2
-    assert type(u_id2) is int
-    assert token2
-    assert type(token2) is str
 
     # user1 create a channel
     cid = channels_create(token1, "Vicmnss", True).get('channel_id')
-    assert cid
-    assert type(cid) is int
     assert cid != 1234567
 
     #user2 join in
@@ -1110,37 +1084,23 @@ def test_channel_addowner_valid_channel():
     assert u_id1 == cnl['owner_members'][0]['u_id']
 ###########################################################################################
 """
-    Channel ID is not a valid token
+    Token not valid.
 """
 def test_channel_addowner_valid_token():
     other.clear()
     # user1 login
     auth_register('test1@example.com', 'Amyisthebest', 'Yuhan', 'Yan')
     flock_auth1 = auth_login('test1@example.com', 'Amyisthebest')
-    assert type(flock_auth1) is dict
     u_id1 = flock_auth1['u_id']
     token1 = flock_auth1['token']
-    assert u_id1
-    assert type(u_id1) is int
-    assert token1
-    assert type(token1) is str
 
     # user2 login
     auth_register('test2@example.com', 'Amyisthebestever', 'Vic', 'Yan')
     flock_auth2 = auth_login('test2@example.com', 'Amyisthebestever')
-    assert type(flock_auth2) is dict
     u_id2 = flock_auth2['u_id']
-    token2 = flock_auth2['token']
-    assert u_id2
-    assert type(u_id2) is int
-    assert token2
-    assert type(token2) is str
 
     # user1 create a channel
     cid = channels_create(token1, "Vicmnss", True).get('channel_id')
-    assert cid
-    assert type(cid) is int
-
 
     #user2 join in
     channel_invite(token1, cid, u_id2)
@@ -1167,29 +1127,16 @@ def test_channel_addowner_already_owner():
     # user1 login
     auth_register('test1@example.com', 'Amyisthebest', 'Yuhan', 'Yan')
     flock_auth1 = auth_login('test1@example.com', 'Amyisthebest')
-    assert type(flock_auth1) is dict
     u_id1 = flock_auth1['u_id']
     token1 = flock_auth1['token']
-    assert u_id1
-    assert type(u_id1) is int
-    assert token1
-    assert type(token1) is str
 
     # user2 login
     auth_register('test2@example.com', 'Amyisthebestever', 'Vic', 'Yan')
     flock_auth2 = auth_login('test2@example.com', 'Amyisthebestever')
-    assert type(flock_auth2) is dict
     u_id2 = flock_auth2['u_id']
-    token2 = flock_auth2['token']
-    assert u_id2
-    assert type(u_id2) is int
-    assert token2
-    assert type(token2) is str
 
     # user1 create a channel
     cid = channels_create(token1, "Vicmnss", True).get('channel_id')
-    assert cid
-    assert type(cid) is int
 
     #user2 join in and become an owner
     channel_invite(token1, cid, u_id2)
@@ -1219,47 +1166,27 @@ def test_channel_addowner_not_owner():
     # user1 login
     auth_register('test1@example.com', 'Amyisthebest', 'Yuhan', 'Yan')
     flock_auth1 = auth_login('test1@example.com', 'Amyisthebest')
-    assert type(flock_auth1) is dict
     u_id1 = flock_auth1['u_id']
     token1 = flock_auth1['token']
-    assert u_id1
-    assert type(u_id1) is int
-    assert token1
-    assert type(token1) is str
 
     # user2 login
     auth_register('test2@example.com', 'Amyisthebestever', 'Vic', 'Yan')
     flock_auth2 = auth_login('test2@example.com', 'Amyisthebestever')
-    assert type(flock_auth2) is dict
     u_id2 = flock_auth2['u_id']
     token2 = flock_auth2['token']
-    assert u_id2
-    assert type(u_id2) is int
-    assert token2
-    assert type(token2) is str
 
     # user3 login
     auth_register('test3@example.com', 'Amyisallthebest', 'Victor', 'Yan')
     flock_auth_3 = auth_login('test3@example.com', 'Amyisallthebest')
-    assert type(flock_auth_3) is dict
     u_id3 = flock_auth_3['u_id']
-    token3 = flock_auth_3['token']
-    assert u_id3
-    assert type(u_id3) is int
-    assert token3
-    assert type(token3) is str
 
     # user1 create a channel and user2 join
     cid1 = channels_create(token1, "Vicmnss", True).get('channel_id')
-    assert cid1
-    assert type(cid1) is int
     channel_invite(token1, cid1, u_id2)
     channel_invite(token1, cid1, u_id3)
 
     # user2 create a channel and user1 join
     cid2 = channels_create(token2, "Team4", True).get('channel_id')
-    assert cid2
-    assert type(cid2) is int
     channel_invite(token2, cid2, u_id1)
     # Check the owners
     owner_num = 0
@@ -1283,6 +1210,75 @@ def test_channel_addowner_not_owner():
     with pytest.raises(AccessError):
         channel_addowner(token2, cid1, u_id3)
 
+###########################################################################################
+"""
+    authorized user(u_id) is not an owner of the flocker
+"""
+def test_channel_addowner_not_flockrowner():
+    other.clear()
+    # user1 login
+    auth_register('test1@example.com', 'Amyisthebest', 'Yuhan', 'Yan')
+    flock_auth1 = auth_login('test1@example.com', 'Amyisthebest')
+    token1 = flock_auth1['token']
+
+    # user2 login
+    auth_register('test2@example.com', 'Amyisthebestever', 'Vic', 'Yan')
+    flock_auth2 = auth_login('test2@example.com', 'Amyisthebestever')
+    u_id2 = flock_auth2['u_id']
+    token2 = flock_auth2['token']
+
+    # user3 login
+    auth_register('test3@example.com', 'Amyisallthebest', 'Victor', 'Yan')
+    flock_auth_3 = auth_login('test3@example.com', 'Amyisallthebest')
+    u_id3 = flock_auth_3['u_id']
+
+    # user1 create a channel and user2 join
+    cid1 = channels_create(token1, "Vicmnss", True).get('channel_id')
+    channel_invite(token1, cid1, u_id2)
+    channel_invite(token1, cid1, u_id3)
+
+    # user2 is neither flockr owner nor this channel's owner
+    with pytest.raises(AccessError):
+        channel_addowner(token2, cid1, u_id3)
+
+###########################################################################################
+"""
+    authorized user(u_id) is an owner of the flocker, but not owner of this channel
+"""
+def test_channel_addowner_is_flockr_owner():
+    other.clear()
+    # user1 login
+    auth_register('test1@example.com', 'Amyisthebest', 'Yuhan', 'Yan')
+    flock_auth1 = auth_login('test1@example.com', 'Amyisthebest')
+    token1 = flock_auth1['token']
+
+    # user2 login
+    auth_register('test2@example.com', 'Amyisthebestever', 'Vic', 'Yan')
+    flock_auth2 = auth_login('test2@example.com', 'Amyisthebestever')
+    u_id2 = flock_auth2['u_id']
+    token2 = flock_auth2['token']
+
+    # user3 login
+    auth_register('test3@example.com', 'Amyisallthebest', 'Victor', 'Yan')
+    flock_auth_3 = auth_login('test3@example.com', 'Amyisallthebest')
+    u_id3 = flock_auth_3['u_id']
+
+    # user2 create a channel and user3 join
+    cid = channels_create(token2, "Team4", True).get('channel_id')
+    channel_invite(token2, cid, u_id3)
+
+    channel_addowner(token1, cid, u_id3)
+
+    # Check if success
+    owner_num = 0
+
+    for cnl in data.return_channels():
+        if cnl['channel_id'] == cid:
+            owner_num = len(cnl['owner_members'])
+            break
+    assert owner_num == 2
+    assert u_id2 == cnl['owner_members'][0]['u_id']
+    assert u_id3 == cnl['owner_members'][1]['u_id']
 ###########################################################################################
 # test of channel_removeowner
 ###########################################################################################
@@ -1414,29 +1410,16 @@ def test_channel_removeowner_valid_token():
     # user1 login
     auth_register('test1@example.com', 'Amyisthebest', 'Yuhan', 'Yan')
     flock_auth1 = auth_login('test1@example.com', 'Amyisthebest')
-    assert type(flock_auth1) is dict
     u_id1 = flock_auth1['u_id']
     token1 = flock_auth1['token']
-    assert u_id1
-    assert type(u_id1) is int
-    assert token1
-    assert type(token1) is str
 
     # user2 login
     auth_register('test2@example.com', 'Amyisthebestever', 'Vic', 'Yan')
     flock_auth2 = auth_login('test2@example.com', 'Amyisthebestever')
-    assert type(flock_auth2) is dict
     u_id2 = flock_auth2['u_id']
-    token2 = flock_auth2['token']
-    assert u_id2
-    assert type(u_id2) is int
-    assert token2
-    assert type(token2) is str
 
     # user1 create a channel
     cid = channels_create(token1, "Vicmnss", True).get('channel_id')
-    assert cid
-    assert type(cid) is int
 
 
     owner_num = 0
@@ -1476,29 +1459,16 @@ def test_channel_removeowner_not_owner():
     # user1 login
     auth_register('test1@example.com', 'Amyisthebest', 'Yuhan', 'Yan')
     flock_auth1 = auth_login('test1@example.com', 'Amyisthebest')
-    assert type(flock_auth1) is dict
     u_id1 = flock_auth1['u_id']
     token1 = flock_auth1['token']
-    assert u_id1
-    assert type(u_id1) is int
-    assert token1
-    assert type(token1) is str
 
     # user2 login
     auth_register('test2@example.com', 'Amyisthebestever', 'Vic', 'Yan')
     flock_auth2 = auth_login('test2@example.com', 'Amyisthebestever')
-    assert type(flock_auth2) is dict
     u_id2 = flock_auth2['u_id']
-    token2 = flock_auth2['token']
-    assert u_id2
-    assert type(u_id2) is int
-    assert token2
-    assert type(token2) is str
 
     # user1 create a channel and invite user2
     cid = channels_create(token1, "Vicmnss", True).get('channel_id')
-    assert cid
-    assert type(cid) is int
     channel_invite(token1, cid, u_id2)
 
     owner_num = 0
@@ -1523,29 +1493,17 @@ def test_channel_removeowner_nonchannel_owner():
     # user1 login
     auth_register('test1@example.com', 'Amyisthebest', 'Yuhan', 'Yan')
     flock_auth1 = auth_login('test1@example.com', 'Amyisthebest')
-    assert type(flock_auth1) is dict
     u_id1 = flock_auth1['u_id']
     token1 = flock_auth1['token']
-    assert u_id1
-    assert type(u_id1) is int
-    assert token1
-    assert type(token1) is str
 
     # user2 login
     auth_register('test2@example.com', 'Amyisthebestever', 'Vic', 'Yan')
     flock_auth2 = auth_login('test2@example.com', 'Amyisthebestever')
-    assert type(flock_auth2) is dict
     u_id2 = flock_auth2['u_id']
     token2 = flock_auth2['token']
-    assert u_id2
-    assert type(u_id2) is int
-    assert token2
-    assert type(token2) is str
 
     # user1 create a channel and user2 join
     cid1 = channels_create(token1, "Vicmnss", True).get('channel_id')
-    assert cid1
-    assert type(cid1) is int
     channel_invite(token1, cid1, u_id2)
 
     owner_num = 0
@@ -1576,3 +1534,71 @@ def test_channel_removeowner_nonchannel_owner():
         channel_removeowner(token2, cid1, u_id1)
 
 ################################################################################
+"""
+    authorized user(u_id) is not an owner of the flocker
+"""
+def test_channel_rmowner_not_flockrowner():
+    other.clear()
+    # user1 login
+    auth_register('test1@example.com', 'Amyisthebest', 'Yuhan', 'Yan')
+    flock_auth1 = auth_login('test1@example.com', 'Amyisthebest')
+    token1 = flock_auth1['token']
+
+    # user2 login
+    auth_register('test2@example.com', 'Amyisthebestever', 'Vic', 'Yan')
+    flock_auth2 = auth_login('test2@example.com', 'Amyisthebestever')
+    u_id2 = flock_auth2['u_id']
+    token2 = flock_auth2['token']
+
+    # user3 login
+    auth_register('test3@example.com', 'Amyisallthebest', 'Victor', 'Yan')
+    flock_auth_3 = auth_login('test3@example.com', 'Amyisallthebest')
+    u_id3 = flock_auth_3['u_id']
+
+    # user1 create a channel and user2 join
+    cid1 = channels_create(token1, "Vicmnss", True).get('channel_id')
+    channel_invite(token1, cid1, u_id2)
+    channel_invite(token1, cid1, u_id3)
+    channel_addowner(token1, cid1, u_id3)
+
+    # user2 is neither flockr owner nor this channel's owner
+    with pytest.raises(AccessError):
+        channel_removeowner(token2, cid1, u_id3)
+
+################################################################################
+"""
+    authorized user(u_id) is an owner of the flocker, but not owner of this channel
+"""
+def test_channel_rmowner_is_flockr_owner():
+    other.clear()
+    # user1 login
+    auth_register('test1@example.com', 'Amyisthebest', 'Yuhan', 'Yan')
+    flock_auth1 = auth_login('test1@example.com', 'Amyisthebest')
+    token1 = flock_auth1['token']
+
+    # user2 login
+    auth_register('test2@example.com', 'Amyisthebestever', 'Vic', 'Yan')
+    flock_auth2 = auth_login('test2@example.com', 'Amyisthebestever')
+    u_id2 = flock_auth2['u_id']
+    token2 = flock_auth2['token']
+
+    # user3 login
+    auth_register('test3@example.com', 'Amyisallthebest', 'Victor', 'Yan')
+    flock_auth_3 = auth_login('test3@example.com', 'Amyisallthebest')
+    u_id3 = flock_auth_3['u_id']
+
+    # user2 create a channel and user3 join
+    cid = channels_create(token2, "Team4", True).get('channel_id')
+    channel_invite(token2, cid, u_id3)
+    channel_addowner(token2, cid, u_id3)
+    channel_removeowner(token1, cid, u_id3)
+
+    # Check if success
+    owner_num = 0
+
+    for cnl in data.return_channels():
+        if cnl['channel_id'] == cid:
+            owner_num = len(cnl['owner_members'])
+            break
+    assert owner_num == 1
+    assert u_id2 == cnl['owner_members'][0]['u_id']

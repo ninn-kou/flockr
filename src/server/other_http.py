@@ -21,9 +21,10 @@ def users_all():
     output = other.users_all(
         input_obj.get('token')
     )
+
     return jsonify(output)
 
-@OTHERHTTP.route("/permission_change", methods=['POST'])
+@OTHERHTTP.route("/admin/userpermission/change", methods=['POST'])
 def userpermission_change():
     input_obj = request.json
 

@@ -161,7 +161,7 @@ def test_userpermission_change(url):
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
     user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
 
-    send_request('POST', url, 'permission_change', {
+    send_request('POST', url, 'admin/permission/change', {
         'token': user1.get('token'),
         'u_id': user2.get('u_id'),
         'permission_id': 1
@@ -173,7 +173,7 @@ def test_userpermission_change(url):
     i_user1 = i[0]
     i_user2 = i[1]
     assert i_user1['permission_id'] == 1
-    assert i_user2['permission_id'] == 1
+    assert i_user2['permission_id'] == 2
 
 ################################################################################
 

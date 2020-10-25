@@ -1,4 +1,4 @@
-'''tests for other.py'''
+'''Tests for other.py'''
 import random
 import pytest
 import base.auth as auth

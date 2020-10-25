@@ -58,7 +58,7 @@ def send_request_json(method, url, url_extension, json_obj):
         resp = requests.get(url_time, json = json_obj)
     elif method == 'POST':
         resp = requests.post(url_time, json = json_obj)
-    print(resp.text)
+
     return json.loads(resp.text)
 
 def send_request(method, url, url_extension, json_obj):
@@ -69,7 +69,7 @@ def send_request(method, url, url_extension, json_obj):
         resp = requests.get(url_time, params = json_obj)
     elif method == 'POST':
         resp = requests.post(url_time, params = json_obj)
-    print(resp.text)
+
     return json.loads(resp.text)
 
 def register_user(url, email, password, name_first, name_last):
@@ -300,10 +300,10 @@ def test_leave(url):
     # invite second user to invite
     user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
     invite_user(url, user1, channels[0].get('channel_id'), user2)
-    print(channels)
-    # leave as user1
+
+    # leave as user2
     send_request_json('POST', url, 'channel/leave', {
-        'token': user1.get('token'),
+        'token': user2.get('token'),
         'channel_id': str(channels[0].get('channel_id'))
     })
 

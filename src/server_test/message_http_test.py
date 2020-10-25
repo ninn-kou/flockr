@@ -54,6 +54,20 @@ def send_request(method, url, url_extension, json_obj):
         resp = requests.put(url_time, json=json_obj)
     return json.loads(resp.text)
 
+def send_request_params(method, url, url_extension, json_obj):
+    ''' function to help send requests more easily'''
+    resp = None
+    url_time = url + url_extension
+    if method == 'GET':
+        resp = requests.get(url_time, params=json_obj)
+    elif method == 'POST':
+        resp = requests.post(url_time, params=json_obj)
+    elif method == 'DELETE':
+        resp = requests.delete(url_time, params=json_obj)
+    elif method == 'PUT':
+        resp = requests.put(url_time, params=json_obj)
+    return json.loads(resp.text)
+
 def register_user(url, email, password, name_first, name_last):
     ''' register a new user '''
     return send_request('POST', url, 'auth/register', {
@@ -139,7 +153,7 @@ def test_message_send_works(url):
     })
     # get the sent messages in channel
 
-    resp = send_request('GET', url, 'channel/messages', {
+    resp = send_request_params('GET', url, 'channel/messages', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'start': 0
@@ -191,7 +205,7 @@ def test_message_remove(url):
     })
 
     # get the sent messages in channel
-    resp = send_request('GET', url, 'channel/messages', {
+    resp = send_request_params('GET', url, 'channel/messages', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'start': 0
@@ -244,7 +258,7 @@ def test_message_edit(url):
     })
 
     # get the sent messages in channel
-    resp = send_request('GET', url, 'channel/messages', {
+    resp = send_request_params('GET', url, 'channel/messages', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'start': 0

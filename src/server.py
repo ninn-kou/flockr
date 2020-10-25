@@ -44,4 +44,4 @@ APP.register_blueprint(other_http.OTHERHTTP, url_prefix='/other')
 APP.register_blueprint(user_http.USERHTTP, url_prefix='/user/profile')
 
 if __name__ == "__main__":
-    APP.run(port=45411) # Do not edit this port
+    APP.run(port=0) # Do not edit this port

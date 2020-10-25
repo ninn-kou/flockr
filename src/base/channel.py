@@ -37,6 +37,8 @@ def add_one_in_channel(channel_id, user):
     for i in channels:
         if i['channel_id'] == channel_id:
             i['all_members'].append(user)
+            if check_permission(user['u_id']) == 1:
+                i['owner_members'].append(user)
             break
 
     # add it to memory
@@ -60,6 +62,15 @@ def find_channel(channel_id):
             answer = i
             break
     return answer
+
+def check_permission(user_id):
+    '''check if given u_id person is permission one'''
+    permission_check = 2
+    for i in data.return_users():
+        if i['u_id'] == user_id:
+            permission_check = i['permission_id']
+            break
+    return permission_check
 
 def find_user(user_id):
     """Find user's info by search one's id."""
@@ -413,7 +424,7 @@ def add_owner_in_channel(channel_id, owners):
         if users['channel_id'] == channel_id:
             users['owner_members'].append(owners)
             break
-    
+
     data.replace_channels(channels)
 
 def rm_owner_in_channel(channel_id, owners):
@@ -427,7 +438,7 @@ def rm_owner_in_channel(channel_id, owners):
                 if onrs['u_id'] == owners:
                     users['owner_members'].remove(onrs)
                     break
-    
+
     data.replace_channels(channels)
 
 

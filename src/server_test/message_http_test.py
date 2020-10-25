@@ -1,0 +1,109 @@
+'''
+this is fucntion writeng for message.py to test all the normall cases
+'''
+import re
+from subprocess import Popen, PIPE
+import signal
+from time import sleep
+import json
+import requests
+
+import pytest
+
+import data.data as data
+from base.other import clear
+
+
+
+# copy-pasted this straight out of echo_http_test.py
+# Use this fixture to get the URL of the server. It starts the server for you,
+# so you don't need to.
+@pytest.fixture
+def url():
+    ''' start server and create url'''
+    url_re = re.compile(r' \* Running on ([^ ]*)')
+    server = Popen(["python3", "src/server.py"], stderr=PIPE, stdout=PIPE)
+    line = server.stderr.readline()
+    local_url = url_re.match(line.decode())
+    if local_url:
+        yield local_url.group(1)
+        # Terminate the server
+        server.send_signal(signal.SIGINT)
+        waited = 0
+        while server.poll() is None and waited < 5:
+            sleep(0.1)
+            waited += 0.1
+        if server.poll() is None:
+            server.kill()
+    else:
+        server.kill()
+        raise Exception("Couldn't get URL from local server")
+
+def send_request(method, url, url_extension, json_obj):
+    ''' function to help send requests more easily'''
+    resp = None
+    url_time = url + url_extension
+    if method == 'GET':
+        resp = requests.get(url_time, json = json_obj)
+    elif method == 'POST':
+        resp = requests.post(url_time, json = json_obj)
+    elif method == 'DELETE':
+        resp = requests.delete(url_time, json = json_obj)
+    elif method == 'PUT':
+        resp = requests.put(url_time, json = json_obj)
+    return json.loads(resp.text)
+
+def register_user(url, email, password, name_first, name_last):
+    ''' register a new user '''
+    return send_request('POST', url, 'auth/register', {
+        'email': email,
+        'password': password,
+        'name_first': name_first,
+        'name_last': name_last
+    })
+
+def create_channels(url, token, is_public, num):
+    ''' create a specified number of channels '''
+
+    channel_list = []
+
+    for i in range(num):
+        # add a channel
+        channel_name = 'channel' + str(i)
+        channel_id = send_request('POST', url, 'channels/create', {
+            'token': token,
+            'name': channel_name,
+            'is_public': is_public
+        }).get('channel_id')
+
+        # add the channel object, not just the channel itself
+        for channel in data.return_channels():
+            if channel['channel_id'] == channel_id:
+                # add it to the channel list
+                channel_list.append(channel)
+
+    return channel_list
+
+def invite_user(url, user1, channel_id, user2):
+    ''' user1 invites user2 to channel '''
+    send_request('POST', url, 'channel/invite', {
+        'token': user1.get('token'),
+        'channel_id': channel_id,
+        'u_id': user2.get('u_id')
+    })
+
+def check_in_index(url, user1, user2, channel, index):
+    ''' checks if user2 is in index from user1's perspective '''
+    # find out channel from user1's perspective
+    details = send_request('GET', url, 'channel/details', {
+        'token': user1['token'],
+        'channel_id': channel['channel_id']
+    })
+
+    # check if user2 is in channel
+    check = False
+    for member in details.get(index):
+        if member.get('u_id') == user2.get('u_id'):
+            check = True
+            break
+    return check

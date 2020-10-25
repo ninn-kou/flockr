@@ -475,10 +475,10 @@ def channel_addowner(token, channel_id, u_id):
 
     # check whether the user is already an owner
     if find_current_owner(this_channel, u_id):
-        raise InputError('user is not owner')                   # InputError 3: check whether user is owner.
+        raise InputError('user is already owner')                   # InputError 3: check whether user is owner.
 
-    if not find_current_owner(this_channel, auth_id) or check_permission(auth_id) != 1:
-        raise AccessError('auth is not flockr owner or this channel owner')                  # AccessError 4: if the auth not in channel.
+    if not find_current_owner(this_channel, auth_id) and check_permission(auth_id) != 1:
+        raise AccessError('auth is not flockr owner or this channel owner') # AccessError 4: if the auth not in channel.
 
     owner_detail = find_user(u_id)
     owners = {                              # Case 5: if all passed, add user into owner.
@@ -526,7 +526,7 @@ def channel_removeowner(token, channel_id, u_id):
     if user == -1:                          # InputError 4: check if the user_id valid.
         raise InputError('u_id is not valid')
 
-    if find_current_owner(this_channel, auth_id) is False or check_permission(auth_id) != 1:
+    if find_current_owner(this_channel, auth_id) is False and check_permission(auth_id) != 1:
         raise AccessError('auth is not flockr owner or this channel owner')                 # AccessError 5: if the auth not in channel.
 
     rm_owner_in_channel(channel_id, u_id)   # Case 6: if all passed, pop the user off.

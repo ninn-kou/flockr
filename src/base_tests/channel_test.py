@@ -1025,7 +1025,6 @@ def test_channel_addowner_standard_situation():
     auth_register('test2@example.com', 'Amyisthebestever', 'Vic', 'Yan')
     flock_auth2 = auth_login('test2@example.com', 'Amyisthebestever')
     u_id2 = flock_auth2['u_id']
-    token2 = flock_auth2['token']
 
     # user1 create a channel
     cid = channels_create(token1, "Vicmnss", True).get('channel_id')
@@ -1062,7 +1061,6 @@ def test_channel_addowner_valid_channel():
     auth_register('test2@example.com', 'Amyisthebestever', 'Vic', 'Yan')
     flock_auth2 = auth_login('test2@example.com', 'Amyisthebestever')
     u_id2 = flock_auth2['u_id']
-    token2 = flock_auth2['token']
 
     # user1 create a channel
     cid = channels_create(token1, "Vicmnss", True).get('channel_id')
@@ -1100,7 +1098,6 @@ def test_channel_addowner_valid_token():
     auth_register('test2@example.com', 'Amyisthebestever', 'Vic', 'Yan')
     flock_auth2 = auth_login('test2@example.com', 'Amyisthebestever')
     u_id2 = flock_auth2['u_id']
-    token2 = flock_auth2['token']
 
     # user1 create a channel
     cid = channels_create(token1, "Vicmnss", True).get('channel_id')
@@ -1137,7 +1134,6 @@ def test_channel_addowner_already_owner():
     auth_register('test2@example.com', 'Amyisthebestever', 'Vic', 'Yan')
     flock_auth2 = auth_login('test2@example.com', 'Amyisthebestever')
     u_id2 = flock_auth2['u_id']
-    token2 = flock_auth2['token']
 
     # user1 create a channel
     cid = channels_create(token1, "Vicmnss", True).get('channel_id')
@@ -1183,7 +1179,6 @@ def test_channel_addowner_not_owner():
     auth_register('test3@example.com', 'Amyisallthebest', 'Victor', 'Yan')
     flock_auth_3 = auth_login('test3@example.com', 'Amyisallthebest')
     u_id3 = flock_auth_3['u_id']
-    token3 = flock_auth_3['token']
 
     # user1 create a channel and user2 join
     cid1 = channels_create(token1, "Vicmnss", True).get('channel_id')
@@ -1224,7 +1219,6 @@ def test_channel_addowner_not_flockrowner():
     # user1 login
     auth_register('test1@example.com', 'Amyisthebest', 'Yuhan', 'Yan')
     flock_auth1 = auth_login('test1@example.com', 'Amyisthebest')
-    u_id1 = flock_auth1['u_id']
     token1 = flock_auth1['token']
 
     # user2 login
@@ -1237,7 +1231,6 @@ def test_channel_addowner_not_flockrowner():
     auth_register('test3@example.com', 'Amyisallthebest', 'Victor', 'Yan')
     flock_auth_3 = auth_login('test3@example.com', 'Amyisallthebest')
     u_id3 = flock_auth_3['u_id']
-    token3 = flock_auth_3['token']
 
     # user1 create a channel and user2 join
     cid1 = channels_create(token1, "Vicmnss", True).get('channel_id')
@@ -1257,7 +1250,6 @@ def test_channel_addowner_is_flockr_owner():
     # user1 login
     auth_register('test1@example.com', 'Amyisthebest', 'Yuhan', 'Yan')
     flock_auth1 = auth_login('test1@example.com', 'Amyisthebest')
-    u_id1 = flock_auth1['u_id']
     token1 = flock_auth1['token']
 
     # user2 login
@@ -1270,7 +1262,6 @@ def test_channel_addowner_is_flockr_owner():
     auth_register('test3@example.com', 'Amyisallthebest', 'Victor', 'Yan')
     flock_auth_3 = auth_login('test3@example.com', 'Amyisallthebest')
     u_id3 = flock_auth_3['u_id']
-    token3 = flock_auth_3['token']
 
     # user2 create a channel and user3 join
     cid = channels_create(token2, "Team4", True).get('channel_id')
@@ -1426,7 +1417,6 @@ def test_channel_removeowner_valid_token():
     auth_register('test2@example.com', 'Amyisthebestever', 'Vic', 'Yan')
     flock_auth2 = auth_login('test2@example.com', 'Amyisthebestever')
     u_id2 = flock_auth2['u_id']
-    token2 = flock_auth2['token']
 
     # user1 create a channel
     cid = channels_create(token1, "Vicmnss", True).get('channel_id')
@@ -1476,7 +1466,6 @@ def test_channel_removeowner_not_owner():
     auth_register('test2@example.com', 'Amyisthebestever', 'Vic', 'Yan')
     flock_auth2 = auth_login('test2@example.com', 'Amyisthebestever')
     u_id2 = flock_auth2['u_id']
-    token2 = flock_auth2['token']
 
     # user1 create a channel and invite user2
     cid = channels_create(token1, "Vicmnss", True).get('channel_id')
@@ -1553,7 +1542,6 @@ def test_channel_rmowner_not_flockrowner():
     # user1 login
     auth_register('test1@example.com', 'Amyisthebest', 'Yuhan', 'Yan')
     flock_auth1 = auth_login('test1@example.com', 'Amyisthebest')
-    u_id1 = flock_auth1['u_id']
     token1 = flock_auth1['token']
 
     # user2 login
@@ -1566,7 +1554,6 @@ def test_channel_rmowner_not_flockrowner():
     auth_register('test3@example.com', 'Amyisallthebest', 'Victor', 'Yan')
     flock_auth_3 = auth_login('test3@example.com', 'Amyisallthebest')
     u_id3 = flock_auth_3['u_id']
-    token3 = flock_auth_3['token']
 
     # user1 create a channel and user2 join
     cid1 = channels_create(token1, "Vicmnss", True).get('channel_id')
@@ -1587,7 +1574,6 @@ def test_channel_rmowner_is_flockr_owner():
     # user1 login
     auth_register('test1@example.com', 'Amyisthebest', 'Yuhan', 'Yan')
     flock_auth1 = auth_login('test1@example.com', 'Amyisthebest')
-    u_id1 = flock_auth1['u_id']
     token1 = flock_auth1['token']
 
     # user2 login
@@ -1600,7 +1586,6 @@ def test_channel_rmowner_is_flockr_owner():
     auth_register('test3@example.com', 'Amyisallthebest', 'Victor', 'Yan')
     flock_auth_3 = auth_login('test3@example.com', 'Amyisallthebest')
     u_id3 = flock_auth_3['u_id']
-    token3 = flock_auth_3['token']
 
     # user2 create a channel and user3 join
     cid = channels_create(token2, "Team4", True).get('channel_id')

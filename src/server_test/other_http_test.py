@@ -54,6 +54,20 @@ def send_request(method, url, url_extension, json_obj):
         resp = requests.put(url_time, json=json_obj)
     return json.loads(resp.text)
 
+def send_request_params(method, url, url_extension, json_obj):
+    ''' function to help send requests more easily'''
+    resp = None
+    url_time = url + url_extension
+    if method == 'GET':
+        resp = requests.get(url_time, params=json_obj)
+    elif method == 'POST':
+        resp = requests.post(url_time, params=json_obj)
+    elif method == 'DELETE':
+        resp = requests.delete(url_time, params=json_obj)
+    elif method == 'PUT':
+        resp = requests.put(url_time, params=json_obj)
+    return json.loads(resp.text)
+
 def register_user(url, email, password, name_first, name_last):
     ''' register a new user '''
     return send_request('POST', url, 'auth/register', {
@@ -74,7 +88,7 @@ def create_channels(url, token, is_public, num):
         channel_id = send_request('POST', url, 'channels/create', {
             'token': token,
             'name': channel_name,
-            'is_public': is_public
+            'is_public': str(is_public)
         }).get('channel_id')
 
         # add the channel object, not just the channel itself
@@ -89,7 +103,7 @@ def invite_user(url, user1, channel_id, user2):
     ''' user1 invites user2 to channel '''
     send_request('POST', url, 'channel/invite', {
         'token': user1.get('token'),
-        'channel_id': channel_id,
+        'channel_id': str(channel_id),
         'u_id': user2.get('u_id')
     })
 
@@ -112,13 +126,12 @@ def check_in_index(url, user1, user2, channel, index):
 ################################################################################
 
 def test_clear(url):
-    send_request('DELETE', url, 'other/clear', {})
+    send_request('DELETE', url, 'clear', {})
 ################################################################################
 
 def test_user_all(url):
 
-    send_request('DELETE', url, 'other/clear', {})
-
+    send_request('DELETE', url, 'clear', {})
 
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
     user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
@@ -129,8 +142,8 @@ def test_user_all(url):
     u2_token = user2['token']
     u3_token = user3['token']
     u4_token = user4['token']
-    #i = other.users_all(u1_token)
-    i = send_request('GET', url, 'other/users_all', {
+    #i = other.users/all(u1_token)
+    i = send_request_params('GET', url, 'users/all', {
         'token': user1.get('token'),
     })
 
@@ -143,18 +156,18 @@ def test_user_all(url):
 ################################################################################
 
 def test_userpermission_change(url):
-    send_request('DELETE', url, 'other/clear', {})
+    send_request('DELETE', url, 'clear', {})
 
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
     user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
 
-    send_request('POST', url, 'other/permission_change', {
+    send_request('POST', url, 'permission_change', {
         'token': user1.get('token'),
         'u_id': user2.get('u_id'),
         'permission_id': 1
     })
-    #i = other.users_all(u1_token)
-    i = send_request('GET', url, 'other/users_all', {
+    #i = other.users/all(u1_token)
+    i = send_request_params('GET', url, 'users/all', {
         'token': user1.get('token'),
     })
     i_user1 = i[0]
@@ -167,8 +180,7 @@ def test_userpermission_change(url):
 
 def test_search(url):
 
-    send_request('DELETE', url, 'other/clear', {})
-
+    send_request('DELETE', url, 'clear', {})
 
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
     user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
@@ -176,28 +188,28 @@ def test_search(url):
     invite_user(url, user1, channels[0].get('channel_id'), user2)
 
     # get the sent messages in channel
-    send_request('POST', url, 'meg/send', {
+    send_request('POST', url, 'message/send', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'message': "I am tired."
     })
-    send_request('POST', url, 'meg/send', {
+    send_request('POST', url, 'message/send', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'message': "Great day."
     })
-    send_request('POST', url, 'meg/send', {
+    send_request('POST', url, 'message/send', {
         'token': user2.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'message': "It sounds bad."
     })
-    send_request('POST', url, 'meg/send', {
+    send_request('POST', url, 'message/send', {
         'token': user2.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'message': "If you are tired, you need go sleep."
     })
 
-    resp = send_request('GET', url, 'other/search', {
+    resp = send_request('GET', url, 'search', {
         'token': user1.get('token'),
         'query_str': 'tired'
     })

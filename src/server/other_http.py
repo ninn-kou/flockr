@@ -14,9 +14,9 @@ OTHERHTTP = Blueprint('other', __name__)
 def clear():
     other.clear()
 
-@OTHERHTTP.route("/users_all", methods=['GET'])
+@OTHERHTTP.route("/users/all", methods=['GET'])
 def users_all():
-    input_obj = request.json
+    input_obj = request.args
 
     output = other.users_all(
         input_obj.get('token')

@@ -107,7 +107,7 @@ def invite_user(url, user1, channel_id, user2):
     ''' user1 invites user2 to channel '''
     send_request_json('POST', url, 'channel/invite', {
         'token': user1.get('token'),
-        'channel_id': channel_id,
+        'channel_id': str(channel_id),
         'u_id': user2.get('u_id')
     })
 
@@ -201,7 +201,7 @@ def test_invite(url):
     ''' testing channel_invite requests '''
 
     # clear out the databases
-    requests.delete(url + 'other/clear', json={})
+    requests.delete(url + 'clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -226,7 +226,7 @@ def test_details(url):
     ''' testing channel_details requests '''
 
     # clear out the databases
-    requests.delete(url + 'other/clear', json={})
+    requests.delete(url + 'clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -258,7 +258,7 @@ def test_messages(url):
     ''' testing channel_messages requests '''
 
     # clear out the databases
-    requests.delete(url + 'other/clear', json={})
+    requests.delete(url + 'clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -291,7 +291,7 @@ def test_leave(url):
     ''' testing channel_leave requests '''
 
     # clear out the databases
-    requests.delete(url + 'other/clear', json={})
+    requests.delete(url + 'clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -315,7 +315,7 @@ def test_join(url):
     ''' testing channel_join requests '''
 
     # clear out the databases
-    requests.delete(url + 'other/clear', json={})
+    requests.delete(url + 'clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -337,7 +337,7 @@ def test_addowner(url):
     ''' testing channel_join requests '''
 
     # clear out the databases
-    requests.delete(url + 'other/clear', json={})
+    requests.delete(url + 'clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -361,7 +361,7 @@ def test_removeowner(url):
     ''' testing channel_removeowner requests '''
 
     # clear out the databases
-    requests.delete(url + 'other/clear', json={})
+    requests.delete(url + 'clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')

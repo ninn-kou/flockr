@@ -68,7 +68,7 @@ def create_channels(url, token, is_public, num):
         json = {
             'token': token,
             'name': channel_name,
-            'is_public': is_public
+            'is_public': str(is_public)
         }).text).get('channel_id')
 
         # find the channel data structure
@@ -85,7 +85,7 @@ def create_channels(url, token, is_public, num):
 def test_create(url):
     ''' testing creation of channels '''
     # clear out the databases
-    requests.delete(url + 'other/clear', json={})
+    requests.delete(url + 'clear', json={})
 
     # register a new user
     token = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo').get('token')
@@ -113,7 +113,7 @@ def test_create(url):
 def test_listall(url):
     ''' testing channels_listall '''
     # clear out the databases
-    requests.delete(url + 'other/clear', json={})
+    requests.delete(url + 'clear', json={})
 
     # register a new user
     token = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo').get('token')
@@ -143,7 +143,7 @@ def test_listall(url):
 def test_listall_two_users(url):
     ''' testing channels_listall with multiple users '''
     # clear out the databases
-    requests.delete(url + 'other/clear', json={})
+    requests.delete(url + 'clear', json={})
     # register new tokens
     token1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo').get('token')
     token2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2').get('token')
@@ -169,7 +169,7 @@ def test_listall_two_users(url):
 def test_list(url):
     ''' testing channels_list'''
     # clear out the databases
-    requests.delete(url + 'other/clear', json={})
+    requests.delete(url + 'clear', json={})
 
     # register new tokens
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')

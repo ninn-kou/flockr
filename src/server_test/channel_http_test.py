@@ -50,7 +50,7 @@ def url():
         server.kill()
         raise Exception("Couldn't get URL from local server")
 
-def send_request(method, url, url_extension, json_obj):
+def send_request_json(method, url, url_extension, json_obj):
     ''' function to help send requests more easily'''
     resp = None
     url_time = url + url_extension
@@ -58,12 +58,23 @@ def send_request(method, url, url_extension, json_obj):
         resp = requests.get(url_time, json = json_obj)
     elif method == 'POST':
         resp = requests.post(url_time, json = json_obj)
+    print(resp.text)
+    return json.loads(resp.text)
 
+def send_request(method, url, url_extension, json_obj):
+    ''' function to help send requests more easily'''
+    resp = None
+    url_time = url + url_extension
+    if method == 'GET':
+        resp = requests.get(url_time, params = json_obj)
+    elif method == 'POST':
+        resp = requests.post(url_time, params = json_obj)
+    print(resp.text)
     return json.loads(resp.text)
 
 def register_user(url, email, password, name_first, name_last):
     ''' register a new user '''
-    return send_request('POST', url, 'auth/register', {
+    return send_request_json('POST', url, 'auth/register', {
         'email': email,
         'password': password,
         'name_first': name_first,
@@ -78,10 +89,10 @@ def create_channels(url, token, is_public, num):
     for i in range(num):
         # add a channel
         channel_name = 'channel' + str(i)
-        channel_id = send_request('POST', url, 'channels/create', {
+        channel_id = send_request_json('POST', url, 'channels/create', {
             'token': token,
             'name': channel_name,
-            'is_public': is_public
+            'is_public': str(is_public)
         }).get('channel_id')
 
         # add the channel object, not just the channel itself
@@ -94,10 +105,10 @@ def create_channels(url, token, is_public, num):
 
 def invite_user(url, user1, channel_id, user2):
     ''' user1 invites user2 to channel '''
-    send_request('POST', url, 'channel/invite', {
+    send_request_json('POST', url, 'channel/invite', {
         'token': user1.get('token'),
-        'channel_id': str(channel_id),
-        'u_id': str(user2.get('u_id'))
+        'channel_id': channel_id,
+        'u_id': user2.get('u_id')
     })
 
 def create_random_message(characters, i):
@@ -291,7 +302,7 @@ def test_leave(url):
     invite_user(url, user1, channels[0].get('channel_id'), user2)
 
     # leave as user1
-    send_request('POST', url, 'channel/leave', {
+    send_request_json('POST', url, 'channel/leave', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id')
     })
@@ -314,7 +325,7 @@ def test_join(url):
     user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
 
     # get user2 to join
-    send_request('POST', url, 'channel/join', {
+    send_request_json('POST', url, 'channel/join', {
         'token': user2.get('token'),
         'channel_id': channels[0].get('channel_id')
     })
@@ -337,7 +348,7 @@ def test_addowner(url):
     invite_user(url, user1, channels[0]['channel_id'], user2)
 
     # add user2 to chnnel
-    send_request('POST', url, 'channel/addowner', {
+    send_request_json('POST', url, 'channel/addowner', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'u_id': user2.get('u_id')
@@ -361,14 +372,14 @@ def test_removeowner(url):
     invite_user(url, user1, channels[0]['channel_id'], user2)
 
     # invite user2
-    send_request('POST', url, 'channel/addowner', {
+    send_request_json('POST', url, 'channel/addowner', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'u_id': user2.get('u_id')
     })
 
     # remove user1 as owner
-    send_request('POST', url, 'channel/removeowner', {
+    send_request_json('POST', url, 'channel/removeowner', {
         'token': user2.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'u_id': user1.get('u_id')

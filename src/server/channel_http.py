@@ -16,7 +16,6 @@ def invite():
     ''' invites user to new channel'''
 
     input_obj = request.json
-    print(input_obj)
 
     channel.channel_invite(
         input_obj.get('token'),

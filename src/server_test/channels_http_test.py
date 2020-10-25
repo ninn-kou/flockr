@@ -123,7 +123,7 @@ def test_listall(url):
 
     # list all channels
     list_all_obj = json.loads(requests.get(url + 'channels/listall',
-    json = {
+    params = {
         'token': token
     }).text).get('channels')
 
@@ -157,7 +157,7 @@ def test_listall_two_users(url):
 
     # list all channels
     list_all_obj = json.loads(requests.get(url + 'channels/listall',
-    json = {
+    params = {
         'token': token1
     }).text).get('channels')
 
@@ -190,7 +190,7 @@ def test_list(url):
 
     # authorised channels for user1
     auth_channels1 = json.loads(requests.get(url + 'channels/list', 
-    json = {
+    params = {
         'token': token1
     }).text).get('channels')
 
@@ -199,7 +199,7 @@ def test_list(url):
 
     # authorised channels for user2
     auth_channels2 = json.loads(requests.get(url + 'channels/list', 
-    json = {
+    params = {
         'token': token2
     }).text).get('channels')
 
@@ -208,7 +208,7 @@ def test_list(url):
     
     # authorised channels for user3
     auth_channels3 = json.loads(requests.get(url + 'channels/list', 
-    json = {
+    params = {
         'token': token3
     }).text).get('channels')
 

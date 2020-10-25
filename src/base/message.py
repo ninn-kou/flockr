@@ -37,12 +37,11 @@ def edit_msg_in_list(msg, text):
             for temp in i['message']:
                 if temp['message_id'] == msg['message_id']:
                     temp['message'] = text
-                    break
-        break
+
     for temp in messages:
         if temp['message_id'] == msg['message_id']:
             temp['message'] = text
-            break
+
     # add it to memory
     data.replace_channels(channels)
     data.replace_messages(messages)
@@ -62,7 +61,7 @@ def if_auth_owner(u_id, channel_id):
     for i in channel_got['owner_members']:
         if i['u_id'] == u_id:
             test = True
-            break
+
     return test
 
 def delete_msg_in_list(msg):
@@ -76,7 +75,7 @@ def delete_msg_in_list(msg):
     for i in channels:
         if i['channel_id'] == msg['channel_id']:
             i['message'].remove(msg)
-            break
+
     messages.remove(msg)
     # add it to memory
     data.replace_channels(channels)
@@ -90,7 +89,6 @@ def adding_message(return_message, channel_id):
     for i in channels:
         if i['channel_id'] == channel_id:
             i['message'].insert(0, return_message)
-            break
 
     # add it to memory
     data.replace_channels(channels)
@@ -122,7 +120,7 @@ def check_permission(user_id):
     for i in data.return_users():
         if i['u_id'] == user_id:
             permission_check = i['permission_id']
-            break
+
     return permission_check
 
 def find_channel(channel_id):
@@ -131,7 +129,7 @@ def find_channel(channel_id):
     for i in data.return_channels():
         if i['channel_id'] == channel_id:
             answer = i
-            break
+
     return answer
 
 def find_one_in_channel(channel, u_id):

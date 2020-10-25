@@ -293,7 +293,7 @@ def remove_whole_channel(channel_id):
 
     for chan in channels:
         if chan['channel_id'] == channel_id:
-            chan.remove('chan')
+            channels.remove(chan)
 
     data.replace_channels(channels)
 
@@ -340,7 +340,7 @@ def channel_leave(token, channel_id):
 
                                             # Case 4: the user is one of the owners.
     if find_current_owner(target_channel, auth_id) is True:
-        if number_of_owners(channel_id) >= 1:
+        if number_of_owners(channel_id) > 1:
             rm_owner_in_channel(channel_id, auth_id)
             remove_a_member_in_channel(auth_id, channel_id)
         else:                               # Case 5: close the non-owner channel.

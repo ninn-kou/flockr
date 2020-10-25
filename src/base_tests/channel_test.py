@@ -784,27 +784,21 @@ def test_channel_leave_normal():
     login_user1 = auth_login('user1@test.com', 'Iampassword')
     u_id_user1 = login_user1['u_id']
     token_user1 = login_user1['token']
-    assert login_user1
-    assert u_id_user1
-    assert token_user1
+
 
     # Create the user2.
     auth_register('user2@test.com', 'Iampassword', 'Jiaqi', 'Lu')
     login_user2 = auth_login('user2@test.com', 'Iampassword')
     u_id_user2 = login_user2['u_id']
     token_user2 = login_user2['token']
-    assert login_user2
-    assert u_id_user2
-    assert token_user2
+
 
     # Create the user3.
     auth_register('user3@test.com', 'Iampassword', 'Tingyu', 'Jiang')
     login_user3 = auth_login('user3@test.com', 'Iampassword')
     u_id_user3 = login_user3['u_id']
     token_user3 = login_user3['token']
-    assert login_user3
-    assert u_id_user3
-    assert token_user3
+
 
     # Owner creates a test channel.
     chan_id = channels_create(token_owner, "Test_Channel", True).get('channel_id')
@@ -819,15 +813,68 @@ def test_channel_leave_normal():
     channel_leave(token_user1, chan_id)
     channel_leave(token_user2, chan_id)
 
+
     # We removed user2 and user3, so the owner and user should be remaining here.
     # The total number of members in the channel should be 2.
-    user_num = 0
 
-    for chan in data.return_channels():
-        if chan['channel_id'] == chan_id:
-            user_num = len(chan['all_members'])
-            break
-    assert user_num == 2
+    channel_test_details = channel_details(token_owner,chan_id)
+    assert len(channel_test_details['all_members']) == 2
+def test_channel_leave_normal_no_owner():
+    """
+    InputError: when any of:Channel ID is not a valid channel
+    AccessError: when Authorised user is not a member of channel with channel_id
+
+    After above tests, we could trust our initialize conditions are correct, so
+    we just try to make them clearly with simple test for users.
+    """
+    other.clear()
+
+    # Create the owner account to access channel.
+    auth_register('owner@test.com', 'Iampassword', 'Hao', 'Ren')
+    login_owner = auth_login('owner@test.com', 'Iampassword')
+    token_owner = login_owner['token']
+
+    # Create the user1.
+    auth_register('user1@test.com', 'Iampassword', 'Zhiyuan', 'Liu')
+    login_user1 = auth_login('user1@test.com', 'Iampassword')
+    u_id_user1 = login_user1['u_id']
+    token_user1 = login_user1['token']
+
+
+    # Create the user2.
+    auth_register('user2@test.com', 'Iampassword', 'Jiaqi', 'Lu')
+    login_user2 = auth_login('user2@test.com', 'Iampassword')
+    u_id_user2 = login_user2['u_id']
+    token_user2 = login_user2['token']
+
+
+    # Create the user3.
+    auth_register('user3@test.com', 'Iampassword', 'Tingyu', 'Jiang')
+    login_user3 = auth_login('user3@test.com', 'Iampassword')
+    u_id_user3 = login_user3['u_id']
+    token_user3 = login_user3['token']
+
+
+    # Owner creates a test channel.
+    chan_id = channels_create(token_owner, "Test_Channel", True).get('channel_id')
+    assert chan_id
+    assert type(chan_id) is int
+
+    channel_join(token_user1, chan_id)
+    channel_join(token_user2, chan_id)
+    channel_join(token_user3, chan_id)
+
+    # Normal case:
+    channel_leave(token_user1, chan_id)
+    channel_leave(token_owner, chan_id)
+
+
+    # We removed user2 and user3, so the owner and user should be remaining here.
+    # The total number of members in the channel should be 2.
+
+    with pytest.raises(InputError):
+        channel_details(token_owner,chan_id)
+
 
 def test_channel_leave_invalid_channel():
     """

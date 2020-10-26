@@ -111,12 +111,13 @@ def check_in_index(url, user1, user2, channel, index):
 
 ################################################################################
 
-def test_clear():
-    send_request('DELETE', url, 'other_http/clear', {})
+def test_clear(url):
+    send_request('DELETE', url, 'other/clear', {})
 
 def test_user_all(url):
 
-    other.clear()
+    send_request('DELETE', url, 'other/clear', {})
+
 
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
     user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
@@ -127,7 +128,10 @@ def test_user_all(url):
     u2_token = user2['token']
     u3_token = user3['token']
     u4_token = user4['token']
-    i = other.users_all(u1_token)
+    #i = other.users_all(u1_token)
+    i = send_request('GET', url, 'other/users_all', {
+        'token': user1.get('token'),
+    })
 
     assert u1_token != u2_token != u3_token != u4_token
     assert len(i) == 4
@@ -136,24 +140,32 @@ def test_user_all(url):
     assert i[2]['name_first'] == 'Emily3'
     assert i[3]['name_last'] == 'Luo4'
 
-def test_userpermission_change():
+def test_userpermission_change(url):
+    send_request('DELETE', url, 'other/clear', {})
+
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
     user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
 
-    resp = send_request('POST', url, 'other_http/userpermission_change', {
-        'token': user1['token'],
-        'u_id': user2['u_id'],
+    resp = send_request('POST', url, 'other/permission_change', {
+        'token': user1.get('token'),
+        'u_id': user2.get('u_id'),
         'permission_id': 1
     })
+    #i = other.users_all(u1_token)
+    i = send_request('GET', url, 'other/users_all', {
+        'token': user1.get('token'),
+    })
+    i_user1 = i[0]
+    i_user2 = i[1]
+    assert i_user1['permission_id'] == 1
+    assert i_user2['permission_id'] == 1
 
-    assert len(resp) == 2
-    assert resp[0]['permission_id'] == 1
-    assert resp[1]['permission_id'] == 1
 
 
-def test_search():
+def test_search(url):
 
-    other.clear()
+    send_request('DELETE', url, 'other/clear', {})
+
 
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
     user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
@@ -182,11 +194,11 @@ def test_search():
         'message': "If you are tired, you need go sleep."
     })
 
-    resp = send_request('GET', url, 'other_http/search', {
+    resp = send_request('GET', url, 'other/search', {
         'token': user1.get('token'),
         'query_str': 'tired'
     })
 
     assert len(resp) == 2
-    assert resp[0]['message'] == 'I am tired.'
-    assert resp[1]['message'] == 'If you are tired, you need go sleep.'
+    assert resp[1]['message'] == 'I am tired.'
+    assert resp[0]['message'] == 'If you are tired, you need go sleep.'

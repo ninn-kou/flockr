@@ -12,7 +12,7 @@ def test_owner_from_token():
     other.clear()
     #create a user and take its  id and token
     user1 = auth.auth_register('12345@test.com', 'password', 'FirstN', 'LastN')
-    u1_token = user1['token']    
+    u1_token = user1['token']
     token_tem = u1_token + ' '
     with pytest.raises(InputError):
         other.owner_from_token(token_tem)

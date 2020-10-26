@@ -215,16 +215,18 @@ def test_search_in_several_channel():
     message.message_send(u1_token, channel_test_id1, 'Tomorrow, I will be the winner.') #t
 
     #add some message to another channel
-    message.message_send(u2_token, channel_test_id2, 'We are the winner.')              #f
-    message.message_send(u2_token, channel_test_id2, 'I heard he is the winner')        #f
+    message.message_send(u2_token, channel_test_id2, 'We are the winner.')              #t
+    message.message_send(u2_token, channel_test_id2, 'I heard he is the winner')        #t
     message.message_send(u1_token, channel_test_id2, 'the winner.')                     #t
     message.message_send(u2_token, channel_test_id2, 'I am pretty sure about that')     #f
     message.message_send(u1_token, channel_test_id2, 'Our team is the winner.')         #t
 
     i = other.search(u1_token, 'the winner')
-    assert len(i) == 5
+    assert len(i) == 7
     assert i[0]['message'] == 'Our team is the winner.'
     assert i[1]['message'] == 'the winner.'
-    assert i[2]['message'] == 'Tomorrow, I will be the winner.'
-    assert i[3]['message'] == 'Yesterday, I was the winner.'
-    assert i[4]['message'] == 'Today, I am the winner.'''''''
+    assert i[2]['message'] == 'I heard he is the winner'
+    assert i[3]['message'] == 'We are the winner.'
+    assert i[4]['message'] == 'Tomorrow, I will be the winner.'
+    assert i[5]['message'] == 'Yesterday, I was the winner.'
+    assert i[6]['message'] == 'Today, I am the winner.'

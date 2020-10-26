@@ -56,9 +56,16 @@ def search(token, query_str):
     user = owner_from_token(token)
     id_from = user.get('u_id')
     mes_list = []
+    chan_list = []
+    channels = data.return_channels()
+    for i in channels:
+        for j in i['all_members']:
+            if id_from == j['u_id']:
+                chan_list.append(i['channel_id'])
+    
     messages = data.return_messages()
     for i in messages:
-        if id_from == i['u_id']:    # focus on the messages which is joinned by the user
+        if i['channel_id'] in chan_list:   # focus on the channels which is joinned by the user
             if query_str in i['message']:
-                mes_list.append(i)
+                mes_list.append(i)                
     return mes_list

@@ -54,6 +54,20 @@ def send_request(method, url, url_extension, json_obj):
         resp = requests.put(url_time, json=json_obj)
     return json.loads(resp.text)
 
+def send_request_params(method, url, url_extension, json_obj):
+    ''' function to help send requests more easily'''
+    resp = None
+    url_time = url + url_extension
+    if method == 'GET':
+        resp = requests.get(url_time, params=json_obj)
+    elif method == 'POST':
+        resp = requests.post(url_time, params=json_obj)
+    elif method == 'DELETE':
+        resp = requests.delete(url_time, params=json_obj)
+    elif method == 'PUT':
+        resp = requests.put(url_time, params=json_obj)
+    return json.loads(resp.text)
+
 def register_user(url, email, password, name_first, name_last):
     ''' register a new user '''
     return send_request('POST', url, 'auth/register', {
@@ -115,7 +129,7 @@ def test_message_send_works(url):
     Test whether the msg can be sent normally
     '''
     # clear out the databases
-    requests.delete(url + 'other/clear', json={})
+    requests.delete(url + 'clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -127,19 +141,19 @@ def test_message_send_works(url):
 
 
     # get the sent messages in channel
-    send_request('POST', url, 'meg/send', {
+    send_request('POST', url, 'message/send', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'message': "test_msg_01"
     })
-    send_request('POST', url, 'meg/send', {
+    send_request('POST', url, 'message/send', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'message': "test_msg_02"
     })
     # get the sent messages in channel
 
-    resp = send_request('GET', url, 'channel/messages', {
+    resp = send_request_params('GET', url, 'channel/messages', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'start': 0
@@ -156,7 +170,7 @@ def test_message_remove(url):
     Test whether the msg can be sent normally
     '''
     # clear out the databases
-    requests.delete(url + 'other/clear', json={})
+    requests.delete(url + 'clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -168,30 +182,30 @@ def test_message_remove(url):
 
 
     # get the sent messages in channel
-    send_request('POST', url, 'meg/send', {
+    send_request('POST', url, 'message/send', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'message': "test_msg_01"
     })
-    send_request('POST', url, 'meg/send', {
+    send_request('POST', url, 'message/send', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'message': "test_msg_02"
     })
-    message_test_id = send_request('POST', url, 'meg/send', {
+    message_test_id = send_request('POST', url, 'message/send', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'message': "test_msg_03"
     })['message_id']
 
     # 1. remove the message we need
-    send_request('DELETE', url, 'meg/remove', {
+    send_request('DELETE', url, 'message/remove', {
         'token': user1.get('token'),
         'message_id': message_test_id,
     })
 
     # get the sent messages in channel
-    resp = send_request('GET', url, 'channel/messages', {
+    resp = send_request_params('GET', url, 'channel/messages', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'start': 0
@@ -208,7 +222,7 @@ def test_message_edit(url):
     Test whether the msg can be sent normally
     '''
     # clear out the databases
-    requests.delete(url + 'other/clear', json={})
+    requests.delete(url + 'clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -220,31 +234,31 @@ def test_message_edit(url):
 
 
     # get the sent messages in channel
-    send_request('POST', url, 'meg/send', {
+    send_request('POST', url, 'message/send', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'message': "test_msg_01"
     })
-    send_request('POST', url, 'meg/send', {
+    send_request('POST', url, 'message/send', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'message': "test_msg_02"
     })
-    message_test_id = send_request('POST', url, 'meg/send', {
+    message_test_id = send_request('POST', url, 'message/send', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'message': "test_msg_03"
     })['message_id']
 
     # 1. edit the message we need
-    send_request('PUT', url, 'meg/edit', {
+    send_request('PUT', url, 'message/edit', {
         'token': user1.get('token'),
         'message_id': message_test_id,
         'message': 'test edit msg'
     })
 
     # get the sent messages in channel
-    resp = send_request('GET', url, 'channel/messages', {
+    resp = send_request_params('GET', url, 'channel/messages', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'start': 0

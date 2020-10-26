@@ -4,6 +4,9 @@ Joseph Jeong 15 OCT 2020
 After experimentation with Flask Blueprints, I'm setting up a server to allow auth.py
 to interface with the frontend
 
+None of these tests follow spec because the frontend doesn't follow spec
+frontend has been prioritised in these tests
+
 '''
 
 import re
@@ -47,7 +50,7 @@ def url():
         server.kill()
         raise Exception("Couldn't get URL from local server")
 
-def send_request(method, url, url_extension, json_obj):
+def send_request_json(method, url, url_extension, json_obj):
     ''' function to help send requests more easily'''
     resp = None
     url_time = url + url_extension
@@ -58,9 +61,20 @@ def send_request(method, url, url_extension, json_obj):
 
     return json.loads(resp.text)
 
+def send_request(method, url, url_extension, json_obj):
+    ''' function to help send requests more easily'''
+    resp = None
+    url_time = url + url_extension
+    if method == 'GET':
+        resp = requests.get(url_time, params = json_obj)
+    elif method == 'POST':
+        resp = requests.post(url_time, params = json_obj)
+
+    return json.loads(resp.text)
+
 def register_user(url, email, password, name_first, name_last):
     ''' register a new user '''
-    return send_request('POST', url, 'auth/register', {
+    return send_request_json('POST', url, 'auth/register', {
         'email': email,
         'password': password,
         'name_first': name_first,
@@ -75,10 +89,10 @@ def create_channels(url, token, is_public, num):
     for i in range(num):
         # add a channel
         channel_name = 'channel' + str(i)
-        channel_id = send_request('POST', url, 'channels/create', {
+        channel_id = send_request_json('POST', url, 'channels/create', {
             'token': token,
             'name': channel_name,
-            'is_public': is_public
+            'is_public': str(is_public)
         }).get('channel_id')
 
         # add the channel object, not just the channel itself
@@ -91,9 +105,9 @@ def create_channels(url, token, is_public, num):
 
 def invite_user(url, user1, channel_id, user2):
     ''' user1 invites user2 to channel '''
-    send_request('POST', url, 'channel/invite', {
+    send_request_json('POST', url, 'channel/invite', {
         'token': user1.get('token'),
-        'channel_id': channel_id,
+        'channel_id': str(channel_id),
         'u_id': user2.get('u_id')
     })
 
@@ -132,7 +146,7 @@ def send_random_messages(channel_id, num):
         msg = create_random_message(characters, i)
         return_message = {
         'message_id': i,
-        'u_id': random.choice(focus_channel['all_members'])['u_id'],
+        'u_id': str(random.choice(focus_channel['all_members'])['u_id']),
         'message': msg,
         'time_created': i,
         }
@@ -154,7 +168,7 @@ def check_in_index(url, user1, user2, channel, index):
     # find out channel from user1's perspective
     details = send_request('GET', url, 'channel/details', {
         'token': user1['token'],
-        'channel_id': channel['channel_id']
+        'channel_id': str(channel['channel_id'])
     })
 
     # check if user2 is in channel
@@ -187,7 +201,7 @@ def test_invite(url):
     ''' testing channel_invite requests '''
 
     # clear out the databases
-    requests.delete(url + 'other/clear', json={})
+    requests.delete(url + 'clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -212,7 +226,7 @@ def test_details(url):
     ''' testing channel_details requests '''
 
     # clear out the databases
-    requests.delete(url + 'other/clear', json={})
+    requests.delete(url + 'clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -227,7 +241,7 @@ def test_details(url):
     # get channel details
     details = send_request('GET', url, 'channel/details', {
         'token': user1['token'],
-        'channel_id': channels[0]['channel_id']
+        'channel_id': str(channels[0]['channel_id'])
     })
 
     # check channel name
@@ -244,7 +258,7 @@ def test_messages(url):
     ''' testing channel_messages requests '''
 
     # clear out the databases
-    requests.delete(url + 'other/clear', json={})
+    requests.delete(url + 'clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -277,7 +291,7 @@ def test_leave(url):
     ''' testing channel_leave requests '''
 
     # clear out the databases
-    requests.delete(url + 'other/clear', json={})
+    requests.delete(url + 'clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -287,10 +301,10 @@ def test_leave(url):
     user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
     invite_user(url, user1, channels[0].get('channel_id'), user2)
 
-    # leave as user1
-    send_request('POST', url, 'channel/leave', {
+    # leave as user2
+    send_request_json('POST', url, 'channel/leave', {
         'token': user2.get('token'),
-        'channel_id': channels[0].get('channel_id')
+        'channel_id': str(channels[0].get('channel_id'))
     })
 
     # check whether user is in channel
@@ -301,7 +315,7 @@ def test_join(url):
     ''' testing channel_join requests '''
 
     # clear out the databases
-    requests.delete(url + 'other/clear', json={})
+    requests.delete(url + 'clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -311,7 +325,7 @@ def test_join(url):
     user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
 
     # get user2 to join
-    send_request('POST', url, 'channel/join', {
+    send_request_json('POST', url, 'channel/join', {
         'token': user2.get('token'),
         'channel_id': channels[0].get('channel_id')
     })
@@ -323,7 +337,7 @@ def test_addowner(url):
     ''' testing channel_join requests '''
 
     # clear out the databases
-    requests.delete(url + 'other/clear', json={})
+    requests.delete(url + 'clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -334,7 +348,7 @@ def test_addowner(url):
     invite_user(url, user1, channels[0]['channel_id'], user2)
 
     # add user2 to chnnel
-    send_request('POST', url, 'channel/addowner', {
+    send_request_json('POST', url, 'channel/addowner', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'u_id': user2.get('u_id')
@@ -347,7 +361,7 @@ def test_removeowner(url):
     ''' testing channel_removeowner requests '''
 
     # clear out the databases
-    requests.delete(url + 'other/clear', json={})
+    requests.delete(url + 'clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -358,15 +372,15 @@ def test_removeowner(url):
     invite_user(url, user1, channels[0]['channel_id'], user2)
 
     # invite user2
-    send_request('POST', url, 'channel/addowner', {
+    send_request_json('POST', url, 'channel/addowner', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'u_id': user2.get('u_id')
     })
 
-    # remove user2 as owner
-    send_request('POST', url, 'channel/removeowner', {
-        'token': user1.get('token'),
+    # remove user1 as owner
+    send_request_json('POST', url, 'channel/removeowner', {
+        'token': user2.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'u_id': user2.get('u_id')
     })

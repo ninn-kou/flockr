@@ -23,6 +23,7 @@ def users_all(token):
     '''return all of the users list'''
     # check that token exists
     owner_from_token(token)
+
     users = data.return_users()
     return users
 

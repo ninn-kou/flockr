@@ -39,9 +39,9 @@ APP.register_blueprint(echo_http.ECHOHTTP)
 APP.register_blueprint(auth_http.AUTHHTTP, url_prefix='/auth')
 APP.register_blueprint(channel_http.CHANNELHTTP, url_prefix='/channel')
 APP.register_blueprint(channels_http.CHANNELSHTTP, url_prefix='/channels')
-APP.register_blueprint(message_http.MESSAGEHTTP, url_prefix='/meg')
-APP.register_blueprint(other_http.OTHERHTTP, url_prefix='/other')
+APP.register_blueprint(message_http.MESSAGEHTTP, url_prefix='/message')
+APP.register_blueprint(other_http.OTHERHTTP)
 APP.register_blueprint(user_http.USERHTTP, url_prefix='/user/profile')
 
 if __name__ == "__main__":
-    APP.run(port=45411) # Do not edit this port
+    APP.run(port=0) # Do not edit this port

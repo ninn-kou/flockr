@@ -29,7 +29,8 @@ def create():
 def listall():
     '''lists all channels that exist'''
 
-    input_obj = request.json
+    # I will never understand why they did this
+    input_obj = request.args
 
     output = channels.channels_listall(
         input_obj.get('token')
@@ -41,7 +42,7 @@ def listall():
 def list():
     '''lists all channels that exist'''
 
-    input_obj = request.json
+    input_obj = request.args
 
     output = channels.channels_list(
         input_obj.get('token')

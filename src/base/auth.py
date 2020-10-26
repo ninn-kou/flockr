@@ -9,6 +9,7 @@ import os.path
 import pickle
 import jwt
 from jwt import DecodeError
+from email.utils import parseaddr
 
 import data.data as data
 from base.error import InputError
@@ -45,12 +46,18 @@ def read_jwt_secret():
 JWT_SECRET = read_jwt_secret()
 
 def regex_email_check(email):
-    """Check that the email is validly formatted email."""
+    """
+    Check that the email is validly formatted email.
+    Not using the given regex method as it tells me that my own
+    actual email is not a real email
+    """
 
-    regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+
+    regex = r"\"?([-a-zA-Z0-9.`?{}]+@\w+\.\w+)\"?"  
+    # regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 
     if re.search(regex, email) is None:
-        raise InputError('Invalid Email')
+        raise InputError("That's not a real email!")
 
 def check_in_users(data_type, users, item):
     """Check for a particular data type in users list."""
@@ -104,7 +111,7 @@ def auth_register_error_check(email, password, name_first, name_last):
 
     # Check if email is already used.
     if check_in_users('email', data.return_users(), email) is not None:
-        raise InputError('Invalid Email')
+        raise InputError('Email Already in Use')
 
     # check len(password) >= 6.
     if len(password) < 6:

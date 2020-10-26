@@ -113,6 +113,7 @@ def check_in_index(url, user1, user2, channel, index):
 
 def test_clear(url):
     send_request('DELETE', url, 'other/clear', {})
+################################################################################
 
 def test_user_all(url):
 
@@ -139,6 +140,7 @@ def test_user_all(url):
     assert i[1]['name_first'] == 'Emily2'
     assert i[2]['name_first'] == 'Emily3'
     assert i[3]['name_last'] == 'Luo4'
+################################################################################
 
 def test_userpermission_change(url):
     send_request('DELETE', url, 'other/clear', {})
@@ -160,6 +162,7 @@ def test_userpermission_change(url):
     assert i_user1['permission_id'] == 1
     assert i_user2['permission_id'] == 1
 
+################################################################################
 
 
 def test_search(url):
@@ -199,6 +202,6 @@ def test_search(url):
         'query_str': 'tired'
     })
 
-    assert len(resp) == 2
-    assert resp[1]['message'] == 'I am tired.'
-    assert resp[0]['message'] == 'If you are tired, you need go sleep.'
+    assert len(resp) == 1
+    assert resp[0]['message'] == 'I am tired.'
+

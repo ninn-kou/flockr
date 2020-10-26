@@ -148,6 +148,7 @@ def test_message_send_works(url):
     # make sure the messages are the same
     assert resp['messages'][0]['message'] == "test_msg_02"
     assert resp['messages'][1]['message'] == "test_msg_01"
+###################################################################
 
 def test_message_remove(url):
     '''
@@ -199,6 +200,7 @@ def test_message_remove(url):
     # make sure the messages are the same
     assert resp['messages'][0]['message'] == "test_msg_02"
     assert resp['messages'][1]['message'] == "test_msg_01"
+###################################################################
 
 def test_message_edit(url):
     '''

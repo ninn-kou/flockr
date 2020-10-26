@@ -47,7 +47,7 @@ def test_register(url):
     Test whether requests sent to auth_http for auth_register come back
     '''
     # clear out the databases
-    clear()
+    requests.delete(url + 'other/clear', json={})
 
     resp = requests.post(url + 'auth/register',
     json = {
@@ -75,7 +75,8 @@ def test_login(url):
     Test whether requests sent to auth_http for auth_register come back
     '''
     # clear out the databases
-    clear()
+
+    requests.delete(url + 'other/clear', json={})
 
     register_text = requests.post(url + 'auth/register',
     json = {
@@ -98,7 +99,8 @@ def test_logout(url):
     Test whether request actually logs the person out
     '''
     # clear out the databases
-    clear()
+    requests.delete(url + 'other/clear', json={})
+
 
     # register the user
     user = requests.post(url + 'auth/register',

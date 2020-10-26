@@ -12,4 +12,20 @@ stages:
 pytest:
   stage: checks
   script:
-    - pytest
+    # Generate coverage data at the same time we run the tests
+    - coverage run -m pytest --junitxml=pytest_report.xml
+    - coverage report
+    - coverage html
+  coverage: '/TOTAL.*\s+(\d+%)$/'
+  artifacts:
+    reports:
+      junit: pytest_report.xml
+    paths:
+      - htmlcov/
+    expose_as: Coverage Report
+    expire_in: 1 week
+
+pylint:
+  stage: checks
+  script:
+    - find . -type f -name "*.py" | xargs pylint

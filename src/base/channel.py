@@ -1,7 +1,11 @@
-import data
-import channels
-from error import InputError, AccessError
+'''
+    channel.py written by Xingyu Tan, Yuhan Yan and Hao Ren.
+'''
+import jwt
 
+import data.data as data
+from base.error import InputError, AccessError
+from base.auth import decode_token, JWT_SECRET
 
 ################################################################################
 ################################################################################
@@ -23,34 +27,54 @@ from error import InputError, AccessError
 #      Xingyu's Helper Functions
 ############################################################
 
-def add_one_in_channel(channel_id,user):
+def add_one_in_channel(channel_id, user):
     """Adding a member into the channel."""
-    for i in data.channels:
+
+    # get the channels
+    channels = data.return_channels()
+
+    # add user into memory
+    for i in channels:
         if i['channel_id'] == channel_id:
             i['all_members'].append(user)
-            break
+            if check_permission(user['u_id']) == 1:
+                i['owner_members'].append(user)
+
+    # add it to memory
+    data.replace_channels(channels)
 
 def token_into_user_id(token):
     """Transfer the token into the user id."""
-    au_id = -1
-    for i in data.users:
-        if i['token'] == token:
-            au_id = i['u_id']
+
+    user = decode_token(token)
+    if user is None:
+        return -1
+    au_id = user.get('u_id')
+
     return au_id
 
 def find_channel(channel_id):
     """Interate the channels list by its id, return the channel we need."""
     answer = None
-    for i in data.channels:
+    for i in data.return_channels():
         if i['channel_id'] == channel_id:
             answer = i
             break
     return answer
 
+def check_permission(user_id):
+    '''check if given u_id person is permission one'''
+    permission_check = 1
+    for i in data.return_users():
+        if i['u_id'] == user_id:
+            permission_check = i['permission_id']
+
+    return permission_check
+
 def find_user(user_id):
     """Find user's info by search one's id."""
     u_id = -1
-    for i in data.users:
+    for i in data.return_users():
         if i['u_id'] == user_id:
             u_id = i
             break
@@ -89,27 +113,23 @@ def channel_invite(token, channel_id, u_id):
         3. Repeated Invite
             - Repeated invite one person who is already in.
     """
-    data.init_channels()
-    data.init_users()                       # Global variables.
-
     auth_id = token_into_user_id(token)     # InputError 1: invalid token.
     if auth_id == -1:
-        raise(InputError)
+        raise InputError('invalid token')
 
     channel_got = find_channel(channel_id)  # InputError 2: invalid channel_id.
-    if channel_got == None:
-        raise(InputError)
+    if channel_got is None:
+        raise InputError('invalid channel_id')
 
     user = find_user(u_id)                  # InputError 3: invalid user_id.
     if user == -1:
-        raise(InputError)
+        raise InputError('invalid user_id')
 
-    if find_one_in_channel(channel_got, auth_id) == False:
-        raise(AccessError)                  # AccessError 4: if the auth not in channel.
+    if not find_one_in_channel(channel_got, auth_id):
+        raise AccessError('the auth not in channel')                   # AccessError 4: if the auth not in channel.
 
-    if find_one_in_channel(channel_got, u_id) == True:
+    if find_one_in_channel(channel_got, u_id):
         return                              # Case 5: if the member already in, skip it.
-
 
     user_struct = find_user(u_id)           # Case 6: no error, add the member.
     user = {                                # Create a new struct to store user's info.
@@ -117,7 +137,7 @@ def channel_invite(token, channel_id, u_id):
         'name_first': user_struct['name_first'],
         'name_last': user_struct['name_last'],
     }
-    add_one_in_channel(channel_id,user)     # Add the above struct into channel.
+    add_one_in_channel(channel_id, user)     # Add the above struct into channel.
 
 
 ############################################################
@@ -133,7 +153,7 @@ def channel_details(token, channel_id):
 
     Returns:
         {'name': channel_got['name'],
-        'owner_members':channel_got['owner'],
+        'owner_members':channel_got['owner_members'],
         'all_members': channel_got['all_members'],}
 
     Raises:
@@ -143,23 +163,20 @@ def channel_details(token, channel_id):
         2. AccessError
             - the authorised user is not in this channel.
     """
-    data.init_channels()                    # Global variables.
-    data.init_users()
-
     auth_id = token_into_user_id(token)     # InputError 1: invalid token.
     if auth_id == -1:
-        raise(InputError)
+        raise InputError('invalid token')
 
     channel_got = find_channel(channel_id)  # InputError 2: invalid channel_id.
-    if channel_got == None:
-        raise(InputError)
+    if channel_got is None:
+        raise InputError('invalid channel_id')
 
-    if find_one_in_channel(channel_got, auth_id) == False:
-        raise(AccessError)                  # AccessError 3: if the auth not in channel.
+    if not find_one_in_channel(channel_got, auth_id):
+        raise AccessError('the auth is not in channel')                   # AccessError 3: if the auth not in channel.
 
     return {                                # Case 4: all passed, return channel.
         'name': channel_got['name'],
-        'owner_members':channel_got['owner'],
+        'owner_members':channel_got['owner_members'],
         'all_members': channel_got['all_members'],
     }
 
@@ -190,24 +207,22 @@ def channel_messages(token, channel_id, start):
         2. AccessError
             - the authorised user is not in this channel.
     """
-    data.init_channels()                    # Global variables.
-    data.init_users()
     end = start + 50
 
     auth_id = token_into_user_id(token)     # InputError 1: invalid token.
     if auth_id == -1:
-        raise(InputError)
+        raise InputError('invalid token')
 
     channel_got = find_channel(channel_id)  # InputError 2: invalid channel_id.
-    if channel_got == None:
-        raise(InputError)
+    if channel_got is None:
+        raise InputError('onvalid channel_id')
 
-    if find_one_in_channel(channel_got, auth_id) == False:
-        raise(AccessError)                  # AccessError 3: if the auth not in channel.
+    if not find_one_in_channel(channel_got, auth_id):
+        raise AccessError('the auth is not in channel')                   # AccessError 3: if the auth not in channel.
 
     num_msgs = len(channel_got['message'])
     if num_msgs < start:                    # InputError 4: the start >= total messages.
-        raise(InputError)
+        raise InputError(' the start >= total messages')
 
     if num_msgs == start:                   # Case 5: no message from start.
         end = -1
@@ -215,7 +230,7 @@ def channel_messages(token, channel_id, start):
     return_msg = []                         # Case 6: messages is more than 50, get top.
     if num_msgs > (start + 50):
         return_msg = channel_got['message'][start: start + 51]
-    else :                                  # Case 7: Get all messages which in (0, 50].
+    else:                                  # Case 7: Get all messages which in (0, 50].
         return_msg = channel_got['message'][start:]
 
     return {                                # Return the struct.
@@ -247,39 +262,48 @@ def channel_messages(token, channel_id, start):
 
 def remove_a_member_in_channel(u_id, channel_id):
     """Remove the member by user if from the channel."""
-    data.init_channels()
-    for users in data.channels:
+
+    channels = data.return_channels()
+
+    for users in channels:
         if users['channel_id'] == channel_id:
             for member in users['all_members']:
                 if member['u_id'] == u_id:
                     users['all_members'].remove(member)
-            break
+
+
+    data.replace_channels(channels)
 
 def number_of_owners(channel_id):
     """Return the total number of owners."""
-    data.init_channels()
-    num = 0
-    for chan in data.channels:
+
+    test = None
+    for chan in data.return_channels():
         if chan['channel_id'] == channel_id:
-            num = len(chan['owner'])
-            break
-    return num
+            test = chan
+
+
+    return len(test['owner_members'])
 
 def remove_whole_channel(channel_id):
     """If no owner exist, remove the whole channel."""
-    data.init_channels()
-    for chan in data.channels:
+
+    channels = data.return_channels()
+
+    for chan in channels:
         if chan['channel_id'] == channel_id:
-            chan.remove('chan')
-        break
+            channels.remove(chan)
+
+    data.replace_channels(channels)
 
 def is_channel_public(channel_id):
     """To indicate if the channel is public."""
-    data.init_channels()
-    for channel in data.channels:
+    is_public = False
+    for channel in data.return_channels():
         if channel['channel_id'] == channel_id:
-            return channel['is_public']
-        break
+            is_public = channel['is_public']
+
+    return is_public
 
 
 ############################################################
@@ -302,24 +326,21 @@ def channel_leave(token, channel_id):
         2. AccessError
             - the authorised user is not in this channel.
     """
-    data.init_channels()                    # Global variables.
-    data.init_users()
-
     target_channel = find_channel(channel_id)
     if target_channel is None:              # InputError 1: invalid channel_id.
-        raise(InputError)
+        raise InputError('invalid channel_id')
 
     auth_id = token_into_user_id(token)
     if auth_id == -1:                       # InputError 2: invalid token.
-        raise(InputError)
+        raise InputError('invalid token')
 
     if find_one_in_channel(target_channel, auth_id) is False:
-        raise(AccessError)                  # AccessError 3: if the auth not in channel.
+        raise AccessError('the auth not in channel')                  # AccessError 3: if the auth not in channel.
 
                                             # Case 4: the user is one of the owners.
     if find_current_owner(target_channel, auth_id) is True:
-        if number_of_owners(channel_id) >= 1:
-            rm_owner_in_channel(channel_id,auth_id)
+        if number_of_owners(channel_id) > 1:
+            rm_owner_in_channel(channel_id, auth_id)
             remove_a_member_in_channel(auth_id, channel_id)
         else:                               # Case 5: close the non-owner channel.
             remove_whole_channel(channel_id)
@@ -347,19 +368,16 @@ def channel_join(token, channel_id):
         2. AccessError
             - the channel is PRIVATE.
     """
-    data.init_channels()                    # Global variables.
-    data.init_users()
-
     target_channel = find_channel(channel_id)
     if target_channel is None:              # InputError 1: invalid channel_id.
-        raise(InputError)
+        raise InputError('invalid channel_id')
 
-    if is_channel_public(channel_id) is False:
-        raise(AccessError)                  # AccessError 2: channel is PRIVATE.
+    if not is_channel_public(channel_id):
+        raise AccessError('channel is PRIVATE')                   # AccessError 2: channel is PRIVATE.
 
     auth_id = token_into_user_id(token)
     if auth_id == -1:
-        raise(InputError)                   # InputError 3: invalid token.
+        raise InputError('invalid token')                    # InputError 3: invalid token.
 
     new_member_struct = find_user(auth_id)
     user = {                                # Case 4: add this user into member list.
@@ -367,7 +385,7 @@ def channel_join(token, channel_id):
         'name_first': new_member_struct['name_first'],
         'name_last': new_member_struct['name_last'],
     }
-    add_one_in_channel(channel_id,user)
+    add_one_in_channel(channel_id, user)
 
 
 ################################################################################
@@ -391,27 +409,34 @@ def channel_join(token, channel_id):
 
 def find_current_owner(channel, u_id):
     """Check if the user we input is the owner."""
-    for owners in channel['owner']:
+    for owners in channel['owner_members']:
         if owners['u_id'] == u_id:
             return True
     return False
 
 def add_owner_in_channel(channel_id, owners):
     """Add a member into the owner list."""
-    for users in data.channels:
+
+    channels = data.return_channels()
+
+    for users in channels:
         if users['channel_id'] == channel_id:
-            users['owner'].append(owners)
-            break
+            users['owner_members'].append(owners)
+
+    data.replace_channels(channels)
 
 def rm_owner_in_channel(channel_id, owners):
     """Remove a member from the owner list."""
-    data.init_channels()
-    for users in data.channels:
+
+    channels = data.return_channels()
+
+    for users in channels:
         if users['channel_id'] == channel_id:
-            for onrs in users['owner']:
+            for onrs in users['owner_members']:
                 if onrs['u_id'] == owners:
-                    users['owner'].remove(onrs)
-            break
+                    users['owner_members'].remove(onrs)
+
+    data.replace_channels(channels)
 
 
 ############################################################
@@ -437,23 +462,20 @@ def channel_addowner(token, channel_id, u_id):
             - when the authorized user is not an owner of the flockr;
             - or an owner of this channel(won't focus on flockr this iteration).
     """
-    data.init_channels()                    # Global variables.
-    data.init_users()
-
     this_channel = find_channel(channel_id)
     if this_channel is None:                # InputError 1: invalid channel_id.
-        raise(InputError)
+        raise InputError('invalid channel_id')
 
     auth_id = token_into_user_id(token)
     if auth_id == -1:                       # InputError 2: invalid token.
-        raise(InputError)
+        raise InputError('invalid token')
 
     # check whether the user is already an owner
-    if find_current_owner(this_channel, u_id) == True:
-        raise(InputError)                   # InputError 3: check whether user is owner.
+    if find_current_owner(this_channel, u_id):
+        raise InputError('user is already owner')                   # InputError 3: check whether user is owner.
 
-    if find_current_owner(this_channel, auth_id) == False:
-        raise(AccessError)                  # AccessError 4: if the auth not in channel.
+    if not find_current_owner(this_channel, auth_id) and check_permission(auth_id) != 1:
+        raise AccessError('auth is not flockr owner or this channel owner') # AccessError 4: if the auth not in channel.
 
     owner_detail = find_user(u_id)
     owners = {                              # Case 5: if all passed, add user into owner.
@@ -462,7 +484,6 @@ def channel_addowner(token, channel_id, u_id):
         'name_last': owner_detail['name_last'],
     }
     add_owner_in_channel(channel_id, owners)
-
 
 ############################################################
 #       channel_removeowner(token, channel_id, u_id)
@@ -487,25 +508,22 @@ def channel_removeowner(token, channel_id, u_id):
             - when the authorized user is not an owner of the flockr;
             - or an owner of this channel(won't focus on flockr this iteration).
     """
-    data.init_channels()                    # Global variables.
-    data.init_users()
-
     this_channel = find_channel(channel_id)
     if this_channel is None:                # InputError 1: invalid channel_id.
-        raise(InputError)
+        raise InputError('invalid channel_id')
 
     auth_id = token_into_user_id(token)
     if auth_id == -1:                       # InputError 2: invalid token.
-        raise(InputError)
+        raise InputError('invalid token')
 
     if find_current_owner(this_channel, u_id) is False:
-        raise(InputError)                   # InputError 3: check whether user is owner.
+        raise InputError('user is not owner')                   # InputError 3: check whether user is owner.
 
     user = find_user(u_id)
     if user == -1:                          # InputError 4: check if the user_id valid.
-        raise(InputError)
+        raise InputError('u_id is not valid')
 
-    if find_current_owner(this_channel, auth_id) is False:
-        raise(AccessError)                  # AccessError 5: if the auth not in channel.
+    if find_current_owner(this_channel, auth_id) is False and check_permission(auth_id) != 1:
+        raise AccessError('auth is not flockr owner or this channel owner')                 # AccessError 5: if the auth not in channel.
 
     rm_owner_in_channel(channel_id, u_id)   # Case 6: if all passed, pop the user off.

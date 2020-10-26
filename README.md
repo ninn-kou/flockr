@@ -73,6 +73,8 @@ Complete. Please see commit history to view old iteration info.
 
 Iteration 3 builds off all of the work you've completed in iteration 2.
 
+If you haven't completed the implementations for iteration 2, you must complete them as part of this iteration. The automarks for iteration 3 will test on a fully completed interface - i.e. the work you've had to do for iteration 1, 2, 3.
+
 ### 5.1. Task
 
 In this iteration, you are expected to:
@@ -183,6 +185,7 @@ Now that you have a sense of the problem to solve, and what capabilities you wil
 |Next Stage: Requirements & Design|20%|<ul><li>Requirements elicited from potential users, recorded as user stories</li><li>User journey justified and expressed as use case(s)</li><li>Interface proposed as a potential solution to provide capabilities</li><li>State diagram drawn to demonstrate how application responds to actions</li></ul>|
 |Git practices & Project Management|20%|<ul><li>Meaningful and informative git commit names being used</li><li>Effective use of merge requests (from branches being made) across the team</li><li>Effective use of course-provided flockr, demonstrating an ability to communicate and manage effectivelly digitally</li><li>Use of task board on Gitlab to track and manage tasks</li><li>Effective use of agile methods such as standups</li></ul>|
 |Teamwork|10%|<ul><li>A generally equal contribution between team members</li><li>Clear evidence of reflection on group's performance and state of the team, with initiative to improve in future iterations</li></ul>|
+|(Bonus Marks) Extra Features|20%|<ul><li>Up to 20% extra marks can be gained through additions of "extra feature(s)".</li><li>Marks will be awarded based on 1) Originality, 2) Technical or creative achievement, 3) Lack of bugs associated with it, 4) Size/scale of the addition.</li><li>Your tutor is not required to provide any assistance with this, as it's intended for more advanced students once they complete all other criteria at a high level of quality.</li><li>A brief explanation of your additions must be written in a file `extra.md` that is added to your repo.</li><li>Section 5.8 provides some examples of extra features you may want to implement, if you need some suggestions.</li>|
 
 For this and for all future milestones, you should consider the other expectations as outlined in section 8 below.
 
@@ -199,6 +202,41 @@ At the due date provided, we will automatically collect and submit the code that
 ### 5.7. Demonstration
 
 When you demonstrate this iteration in your week 10 lab, it will consist of a 15 minute Q&A in front of your tutorial class via zoom. Webcams are required to be on during this Q&A (your phone is a good alternative if your laptop/desktop doesn't have a webcam).
+
+### 5.8. Extra Features Suggestions
+
+#### Frontend
+​
+**Hangman on Frontend**
+​
+After a game of Hangman has been started any user in the channel can type /guess X where X is an individual letter. If that letter is contained in the word or phrase they're trying to guess, the app should indicate where it occurs. If it does not occur, more of the hangman is drawn. There is a lot of flexibility in how you achieve this. It can be done only by modifying the backend and relying on messages to communicate the state of the game (e.g. after making a guess, the "Hangman" posts a message with a drawing of the hangman in ASCII/emoji art). Alternatively you can modify the frontend, if you want to experiment with fancier graphics.
+
+The app should use words and phrases from an external source, not just a small handful hardcoded into the app. One suitable source is /usr/share/dict/words available on Unix-based systems. Alternatively, the python wikiquote module is available via pip and can be used to retrieve quotes and phrases from Wikiquote.
+
+Note that this part of the specification is deliberately open-ended. You're free to make your own creative choices in exactly how the game should work, as long as the end result is something that could be fairly described as Hangman.
+​
+**admin/user/remove full implementation (frontend and backend)**
+​
+`admin/user/remove       DELETE      (token, u_id)           {}`
+​
+InputError when:u_id does not refer to a valid user
+AccessError whenThe authorised user is not an owner of the slackr
+​
+Given a User by their user ID, remove the user from the slackr.
+​
+#### Databases
+​
+Implementing persistence using a form of database. Ways to do this in python include:
+    * Using the `sqlite3` or `peewee` or `psycopg2` modules to run SQL queries on a local .db file, for people studying/have studied COMP3311 may find this integrates well
+    * Using the `sqlite3` or `peewee` or `psycopg2` to run SQL queries on a local .db file OR a remote database (using Postgresql or MySQL)
+​
+#### Object-Oriented Programming
+​
+Refactor your code so it is stored in objects instead of dictionaries (if it's not already) and make use of OO concepts taught in lectures to pass data around the backend.
+​
+#### Deployment
+​
+Deploying your project using heroku or something similar (not sure if this is possible/allowed)
 
 ## 6. Interface specifications
 

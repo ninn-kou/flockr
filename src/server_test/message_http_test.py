@@ -115,7 +115,7 @@ def test_message_send_works(url):
     Test whether the msg can be sent normally
     '''
     # clear out the databases
-    clear()
+    requests.delete(url + 'other/clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -155,7 +155,7 @@ def test_message_remove(url):
     Test whether the msg can be sent normally
     '''
     # clear out the databases
-    clear()
+    requests.delete(url + 'other/clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -206,7 +206,7 @@ def test_message_edit(url):
     Test whether the msg can be sent normally
     '''
     # clear out the databases
-    clear()
+    requests.delete(url + 'other/clear', json={})
 
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')

@@ -64,7 +64,7 @@ def create_channels(url, token, is_public, num):
     for i in range(num):
         # add a channel
         channel_name = 'channel' + str(i)
-        channel_id = json.loads(requests.post(url + '/channels/create', 
+        channel_id = json.loads(requests.post(url + '/channels/create',
         json = {
             'token': token,
             'name': channel_name,
@@ -85,13 +85,13 @@ def create_channels(url, token, is_public, num):
 def test_create(url):
     ''' testing creation of channels '''
     # clear out the databases
-    clear()
+    requests.delete(url + 'other/clear', json={})
 
     # register a new user
     token = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo').get('token')
 
     # create a new channel
-    resp = requests.post(url + '/channels/create', 
+    resp = requests.post(url + '/channels/create',
     json = {
         'token': token,
         'name': 'wtv channel',
@@ -113,7 +113,7 @@ def test_create(url):
 def test_listall(url):
     ''' testing channels_listall '''
     # clear out the databases
-    clear()
+    requests.delete(url + 'other/clear', json={})
 
     # register a new user
     token = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo').get('token')
@@ -137,14 +137,13 @@ def test_listall(url):
             if channel.get('channel_id') == obj.get('channel_id'):
                 # only adds it to channel_list if channels match
                 channel_list.append(channel)
-                break    
+                break
     assert len(channel_list) == len(channels)
 
 def test_listall_two_users(url):
     ''' testing channels_listall with multiple users '''
     # clear out the databases
-    clear()
-
+    requests.delete(url + 'other/clear', json={})
     # register new tokens
     token1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo').get('token')
     token2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2').get('token')
@@ -170,7 +169,7 @@ def test_listall_two_users(url):
 def test_list(url):
     ''' testing channels_list'''
     # clear out the databases
-    clear()
+    requests.delete(url + 'other/clear', json={})
 
     # register new tokens
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
@@ -189,7 +188,7 @@ def test_list(url):
     channel_invite(token3, public_channels[0].get('channel_id'), user2.get('u_id'))
 
     # authorised channels for user1
-    auth_channels1 = json.loads(requests.get(url + 'channels/list', 
+    auth_channels1 = json.loads(requests.get(url + 'channels/list',
     json = {
         'token': token1
     }).text).get('channels')
@@ -198,16 +197,16 @@ def test_list(url):
     assert len(auth_channels1) == (len(user1_channels) + len(public_channels))
 
     # authorised channels for user2
-    auth_channels2 = json.loads(requests.get(url + 'channels/list', 
+    auth_channels2 = json.loads(requests.get(url + 'channels/list',
     json = {
         'token': token2
     }).text).get('channels')
 
     # user 2 should have 3 channels visible
     assert len(auth_channels2) == (len(user2_channels) + len(public_channels))
-    
+
     # authorised channels for user3
-    auth_channels3 = json.loads(requests.get(url + 'channels/list', 
+    auth_channels3 = json.loads(requests.get(url + 'channels/list',
     json = {
         'token': token3
     }).text).get('channels')

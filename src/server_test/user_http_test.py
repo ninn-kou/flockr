@@ -10,6 +10,8 @@ import pytest
 
 import data.data as data
 from base.other import clear
+from server_test.channel_http_test import send_request
+
 
 # copy-pasted this straight out of echo_http_test.py
 # Use this fixture to get the URL of the server. It starts the server for you,
@@ -40,7 +42,7 @@ def test_profile(url):
     Test whether request actually logs the person out
     '''
     # clear out the databases
-    clear()
+    requests.delete(url + 'other/clear', json={})
 
     user = requests.post(url + 'auth/register',
                          json={
@@ -65,7 +67,8 @@ def test_setprofile_email(url):
     Test whether request actually logs the person out
     '''
     # clear out the databases
-    clear()
+    requests.delete(url + 'other/clear', json={})
+
     # register the user
     user = requests.post(url + 'auth/register',
                          json={
@@ -103,7 +106,7 @@ def test_setprofile_name(url):
     Test whether request actually logs the person out
     '''
     # clear out the databases
-    clear()
+    requests.delete(url + 'other/clear', json={})
 
     # register the user
     user = requests.post(url + 'auth/register',
@@ -141,7 +144,8 @@ def test_setprofile_handle(url):
     Test whether request actually logs the person out
     '''
     # clear out the databases
-    clear()
+    requests.delete(url + 'other/clear', json={})
+
 
     # register the user
     user = requests.post(url + 'auth/register',

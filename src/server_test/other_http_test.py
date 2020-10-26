@@ -202,6 +202,6 @@ def test_search(url):
         'query_str': 'tired'
     })
 
-    assert len(resp) == 1
-    assert resp[0]['message'] == 'I am tired.'
+    assert len(resp) == 2
+
 

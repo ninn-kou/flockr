@@ -2,7 +2,7 @@
 
 ## Changelog
 
-N/A
+* 28-10: Adding password reset as routes not automatically auth checking
 
 ## Contents
 
@@ -311,7 +311,7 @@ These interface specifications come from Sally and Bob, who are building the fro
 
 Either an `InputError` or `AccessError` is thrown when something goes wrong. All of these cases are listed in the **Interface** table.
 
-One exception is that, even though it's not listed in the table, for all functions except `auth/register` and `auth/login`, an `AccessError` is thrown when the token passed in is not a valid token.
+One exception is that, even though it's not listed in the table, for all functions except `auth/register`, `auth/login`, `auth/passwordreset/request` and `auth/passwordreset/reset`, an `AccessError` is thrown when the token passed in is not a valid token.
 
 ### 6.4. Token
 

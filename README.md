@@ -160,7 +160,7 @@ Develop a series of questions to ask these target users to understand what *prob
 
 Once you've elicited this information, it's time to consolidate it.
 
-Take the responses from the elicitation and express these requirements as **User Stories**. Document these user stories. 
+Take the responses from the elicitation and express these requirements as **User Stories**. Document these user stories. For each user story, add User Acceptance Criteria as notes so that you have a clear definition of when a story has been completed.
 
 Once documented, generate at least one use case that attempts to tell a story of a solution that satifies the requirements elicited. You can generate a visual diagram or a more written-recipe style, as per lectures.
 

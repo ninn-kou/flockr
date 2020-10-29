@@ -14,7 +14,7 @@ def test_user_profile_correct_return():
     token = registration['token']
     u_id = registration["u_id"]
 
-    result = user.user_profile(token,u_id)
+    result = user.user_profile(token,u_id).get('user')
 
     # - Dict structure -> {u_id, token}
     assert isinstance(result, dict)
@@ -158,3 +158,4 @@ def test_user_profile_handle_input_error_invalid_handle():
         user.user_profile_sethandle(token, "27")
     with pytest.raises(InputError):
         user.user_profile_setemail(token, "2367brehjrtjehjtrghjtjrtjtjk")
+    

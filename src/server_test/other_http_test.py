@@ -145,7 +145,7 @@ def test_user_all(url):
     #i = other.users/all(u1_token)
     i = send_request_params('GET', url, 'users/all', {
         'token': user1.get('token'),
-    })
+    }).get('users')
 
     assert u1_token != u2_token != u3_token != u4_token
     assert len(i) == 4
@@ -167,9 +167,8 @@ def test_userpermission_change(url):
         'permission_id': 1
     })
     #i = other.users/all(u1_token)
-    i = send_request_params('GET', url, 'users/all', {
-        'token': user1.get('token'),
-    })
+    
+    i = data.return_users()
     i_user1 = i[0]
     i_user2 = i[1]
     assert i_user1['permission_id'] == 1
@@ -212,7 +211,7 @@ def test_search(url):
     resp = send_request('GET', url, 'search', {
         'token': user1.get('token'),
         'query_str': 'tired'
-    })
+    }).get('messages')
 
     assert len(resp) == 2
 

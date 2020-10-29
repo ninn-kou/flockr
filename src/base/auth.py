@@ -229,7 +229,7 @@ def auth_register(email, password, name_first, name_last):
     # Creates an object with u_id and token.
     token_object = {
         'u_id': u_id,
-        'token': token
+        'token': token,
     }
     return token_object
 
@@ -260,7 +260,7 @@ def auth_login(email, password):
 
     token_object = {
         'u_id': u_id,
-        'token': token
+        'token': token,
     }
 
     return token_object

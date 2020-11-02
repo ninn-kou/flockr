@@ -26,15 +26,23 @@ def channels_list(token):
     """Need to fix implementation """
 
     # find the token
-    i = owner_from_token(token)
-    user_id = i['u_id']
+    u_id = owner_from_token(token)
 
-    channel_list = []
-    for i in range(len(data.return_channels())):     # Use loops to check if user in channel.
-        for j in range(len(data.return_channels()[i]['all_members'])):
-            if data.return_channels()[i]['all_members'][j]['u_id'] == user_id:
-                channel_list.append(data.return_channels()[i])
-    return {'channels': channel_list}
+    channel_temp = data.return_channels()
+
+    list_channel = []
+
+    for i in channel_temp:
+        for j in i['all_members']:
+            if u_id == j['u_id']:
+                temp = {
+                    'channel_id': i['channel_id'],
+                    'name': i['name'],
+                }
+                list_channel.append(temp)
+    return {
+        'channels': list_channel,
+    }
 
 
 def channels_listall(token):
@@ -42,8 +50,21 @@ def channels_listall(token):
 
     # check that token exists
     owner_from_token(token)
+    channel_temp = data.return_channels()
+    all_channels = []
 
-    return {'channels': data.return_channels()}
+    for i in channel_temp:
+        temp = {
+            'channel_id': i['channel_id'],
+            'name': i['name'],
+        }
+        all_channels.append(temp)
+
+    return {
+        'channels': all_channels,
+    }
+
+
 
 def create_channel_id(channels):
     """Create a random channel id."""

@@ -108,7 +108,7 @@ def return_channels():
 
     the struct using for channel
     channels = [
-        channel:  {
+        {
             'name': 'Hayden',
             'channel_id':
             'owner_members': [

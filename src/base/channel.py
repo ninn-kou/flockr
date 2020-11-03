@@ -347,6 +347,8 @@ def channel_leave(token, channel_id):
                                             # Case 6: the user is not an owner.
     remove_a_member_in_channel(auth_id, channel_id)
 
+    return {
+    }
 
 ############################################################
 #       channel_join(token, channel_id)
@@ -387,7 +389,7 @@ def channel_join(token, channel_id):
     }
     add_one_in_channel(channel_id, user)
 
-
+    return {}
 ################################################################################
 ################################################################################
 ##
@@ -484,7 +486,8 @@ def channel_addowner(token, channel_id, u_id):
         'name_last': owner_detail['name_last'],
     }
     add_owner_in_channel(channel_id, owners)
-
+    return {
+    }
 ############################################################
 #       channel_removeowner(token, channel_id, u_id)
 ############################################################
@@ -527,3 +530,5 @@ def channel_removeowner(token, channel_id, u_id):
         raise AccessError('auth is not flockr owner or this channel owner')                 # AccessError 5: if the auth not in channel.
 
     rm_owner_in_channel(channel_id, u_id)   # Case 6: if all passed, pop the user off.
+    return {
+    }

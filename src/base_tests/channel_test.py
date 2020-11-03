@@ -650,7 +650,7 @@ def test_channel_join_normal():
 
     # Normal case:
     # If the function executed correctly, it would return a 'None'
-    assert channel_join(token_user, chan_id) == None
+    assert channel_join(token_user, chan_id) == {}
 def test_channel_join_invalid_token():
     """
     InputError: when any of Channel ID is not a valid channel.

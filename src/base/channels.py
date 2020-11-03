@@ -71,6 +71,11 @@ def create_channel_id(channels):
                                             # Randomly generated a 32 bit unsigned int.
                                             # Check if this int is unique.
     channel_id = random.randint(0, 0xFFFFFFFF)
+    for i in channels:
+        if i['channel_id'] is channel_id:
+            channel_id = create_channel_id(i)
+            break
+
     return channel_id
 
 
@@ -107,4 +112,6 @@ def channels_create(token, name, is_public):
     }
 
     data.append_channels(channel_new)       # Add this new channel into data.
-    return {'channel_id': channel_id}
+    return {
+        'channel_id': channel_id
+    }

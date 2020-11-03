@@ -25,7 +25,23 @@ def users_all(token):
     owner_from_token(token)
 
     users = data.return_users()
-    return users
+    list_users = []
+
+    for i in users:
+        user = {
+            'u_id': i['u_id'],
+            'email': i['email'],
+            'name_first': i['name_first'],
+            'name_last': i['name_last'],
+            'handle_str': i['handle_str'],
+        }
+
+        list_users.append(user)
+
+    return {
+        'users': list_users
+    }
+
 
 def admin_userpermission_change(token, u_id, permission_id):
     '''change the permission if the admin is a owner'''
@@ -68,5 +84,15 @@ def search(token, query_str):
     for i in messages:
         if i['channel_id'] in chan_list:   # focus on the channels which is joinned by the user
             if query_str in i['message']:
-                mes_list.append(i)                
-    return mes_list
+                added_message = {
+                    "message_id" : i['message_id'],
+                    "u_id" : i['u_id'],
+                    "message" : i['message'],
+                    "time_created" : i['time_created'],
+                }
+                mes_list.append(added_message)
+    return {
+        'messages': mes_list
+    }
+
+

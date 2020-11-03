@@ -90,7 +90,7 @@ def clear_users():
     with open('src/data/users.json', 'w') as file:
         json.dump([], file)
 
-def updateByEmail(user,email):
+def updateByEmail(user, email):
     with open('src/data/users.json', 'r') as file:
         users = json.load(file)
     newusers = []

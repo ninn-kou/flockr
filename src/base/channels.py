@@ -26,7 +26,7 @@ def channels_list(token):
     """Need to fix implementation """
 
     # find the token
-    u_id = owner_from_token(token)
+    u_id = owner_from_token(token).get('u_id')
 
     channel_temp = data.return_channels()
 

@@ -213,7 +213,7 @@ def test_channel_non_member_invite():
     channel_test_id = channels_create(u_token1,"channel_test",True).get('channel_id')
 
     # testing for channel invite function for invalid token people.
-    with pytest.raises(AccessError):
+    with pytest.raises(InputError):
         channel_invite(u_token3,channel_test_id, u_id2)
 
 #########################################################################
@@ -352,7 +352,7 @@ def test_channel_non_member_call_details():
 
 
     # testing for channel invite function for invalid token people.
-    with pytest.raises(AccessError):
+    with pytest.raises(InputError):
         channel_details(u_token3,channel_test_id)
 
 
@@ -507,7 +507,7 @@ def test_channel_message_non_member_call_details():
     channel_test_id = channels_create(u_token1,"channel_test",True).get('channel_id')
 
     # testing for channel invite function for invalid token people.
-    with pytest.raises(AccessError):
+    with pytest.raises(InputError):
         channel_messages(u_token3,channel_test_id,0)
 
 ######   test  for normally channel_messsge work and  correct return #########
@@ -756,7 +756,7 @@ def test_channel_join_for_private():
     assert chan_id
     assert type(chan_id) is int
 
-    with pytest.raises(AccessError):
+    with pytest.raises(InputError):
         channel_join(token_user, chan_id)
 
 ################################################################################
@@ -1099,7 +1099,7 @@ def test_channel_leave_not_a_member():
 
     # User had left channel by the above code.
     # If we re-leave him, there should be an access error.
-    with pytest.raises(AccessError):
+    with pytest.raises(InputError):
         channel_leave(token_user2, chan_id)
 
 ################################################################################
@@ -1302,7 +1302,7 @@ def test_channel_addowner_not_owner():
     assert u_id2 == cnl['owner_members'][0]['u_id']
 
     # raise input error for unexist owner
-    with pytest.raises(AccessError):
+    with pytest.raises(InputError):
         channel_addowner(token2, cid1, u_id3)
 
 ###########################################################################################
@@ -1333,7 +1333,7 @@ def test_channel_addowner_not_flockrowner():
     channel_invite(token1, cid1, u_id3)
 
     # user2 is neither flockr owner nor this channel's owner
-    with pytest.raises(AccessError):
+    with pytest.raises(InputError):
         channel_addowner(token2, cid1, u_id3)
 
 ###########################################################################################
@@ -1686,7 +1686,7 @@ def test_channel_removeowner_nonchannel_owner():
     assert u_id2 == cnl['owner_members'][0]['u_id']
 
     # raise input error for unexist owner
-    with pytest.raises(AccessError):
+    with pytest.raises(InputError):
         channel_removeowner(token2, cid1, u_id1)
 
 ################################################################################
@@ -1718,7 +1718,7 @@ def test_channel_rmowner_not_flockrowner():
     channel_addowner(token1, cid1, u_id3)
 
     # user2 is neither flockr owner nor this channel's owner
-    with pytest.raises(AccessError):
+    with pytest.raises(InputError):
         channel_removeowner(token2, cid1, u_id3)
 
 ################################################################################

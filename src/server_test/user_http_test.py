@@ -5,11 +5,7 @@ import signal
 from time import sleep
 import json
 import requests
-
 import pytest
-
-import data.data as data
-from base.other import clear
 from server_test.channel_http_test import send_request
 
 
@@ -60,7 +56,7 @@ def test_profile(url):
     # log that user out with returned jwt
     result = requests.get(url + 'user/profile/?token='+token+"&u_id="+str(u_id))
     # make sure logging out user was successful
-    assert json.loads(result.text)['email']
+    assert json.loads(result.text)['user']['email']
 
 def test_setprofile_email(url):
     '''
@@ -94,7 +90,7 @@ def test_setprofile_email(url):
     assert json.loads(result.text) is not None
     result = requests.get(url + 'user/profile/?token='+token+"&u_id="+str(u_id))
     user=json.loads(result.text)
-    assert user["email"]=="test23@example.com"
+    assert user['user']["email"]=="test23@example.com"
 #
 #
 #
@@ -136,8 +132,8 @@ def test_setprofile_name(url):
     result = requests.get(url + 'user/profile/?token='+token+"&u_id="+str(u_id))
     user=json.loads(result.text)
     print(user)
-    assert user["name_first"]=="Morb"
-    assert user["name_last"]=="Old"
+    assert user['user']["name_first"]=="Morb"
+    assert user['user']["name_last"]=="Old"
 
 def test_setprofile_handle(url):
     '''
@@ -170,5 +166,7 @@ def test_setprofile_handle(url):
     assert json.loads(result.text) is not None
 
     result = requests.get(url + 'user/profile/?token='+token+"&u_id="+str(u_id))
-    user=json.loads(result.text)
+    user=json.loads(result.text).get('user')
     assert user["handle_str"]=="ege64ydegehg"
+    # clear out the databases
+    requests.delete(url + 'clear', json={})

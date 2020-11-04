@@ -37,13 +37,25 @@ def user_profile(token, u_id):
         u_id = int(u_id)
     except Exception:
         raise InputError('terrible uid')
+    user = None
 
-    user = check_in_users("u_id",data.return_users(),int(u_id))
-    if user:
-        return user
-    # User with u_id is not a valid user
-    else:
+    for i in data.return_users():
+        if i['u_id'] == u_id:
+            user = i
+
+    if user is None:
         raise InputError('not user')
+
+    return {
+        'user': {
+            'u_id': u_id,
+            'email': user['email'],
+            'name_first': user['name_first'],
+            'name_last': user['name_last'],
+            'handle_str': user['handle_str'],
+        },
+    }
+
 
 def user_profile_setname(token, name_first, name_last):
     """Update the authorised user's first and last name

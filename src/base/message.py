@@ -129,7 +129,7 @@ def find_channel(channel_id):
     for i in data.return_channels():
         if i['channel_id'] == channel_id:
             answer = i
-
+            break
     return answer
 
 def find_one_in_channel(channel, u_id):
@@ -253,7 +253,8 @@ def message_remove(token, message_id):
 
     # Case 4: no error, delete the message
     delete_msg_in_list(message_using)
-    return {}
+    return {
+    }
 ############################################################
 #       message_edit(token, message_id, message)
 ############################################################
@@ -298,4 +299,5 @@ def message_edit(token, message_id, message):
     # Case 3: no error, edit the message
     else:
         edit_msg_in_list(message_using, message)
-    return {}
+    return {
+    }

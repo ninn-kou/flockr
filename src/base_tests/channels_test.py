@@ -43,12 +43,10 @@ def test_channels_listall():
     #create two user and take their id and token
     user1 = auth.auth_register('1234@test.com', 'password', 'FirstN', 'LastN')
     user1 = auth.auth_login('1234@test.com', 'password')
-    u1_id = user1['u_id']
     u1_token = user1['token']
 
     user2 = auth.auth_register('2345@test.com', 'password', 'FirstN2', 'LastN2')
     user2 = auth.auth_login('2345@test.com', 'password')
-    u2_id = user2['u_id']
     u2_token = user2['token']
 
     #create a channel by user1 in channels and return its channel id
@@ -58,49 +56,12 @@ def test_channels_listall():
     channel_2_id = channels.channels_create(u2_token,'team2',True).get('channel_id')
 
     #check if the function return them all
-
-    assert channels.channels_listall(u1_token).get('channels') == [
-        {
-            'name':'team',
-            'channel_id':channel_1_id,
-            'owner_members':[
-                {
-                    'u_id': u1_id,
-                    'name_first': 'FirstN',
-                    'name_last': 'LastN'
-                }
-            ],
-            'all_members':[
-                {
-                    'u_id': u1_id,
-                    'name_first': 'FirstN',
-                    'name_last': 'LastN'
-                }
-            ],
-            'is_public':True,
-            'message':[]
-
-        } , {
-            'name':'team2',
-            'channel_id':channel_2_id,
-            'owner_members':[
-                {
-                    'u_id': u2_id,
-                    'name_first': 'FirstN2',
-                    'name_last': 'LastN2'
-                }
-            ],
-            'all_members':[
-                {
-                    'u_id': u2_id,
-                    'name_first': 'FirstN2',
-                    'name_last': 'LastN2'
-                }
-            ],
-            'is_public':True,
-            'message':[]
-        }
-    ]
+    l_test = channels.channels_listall(u1_token).get('channels')
+    assert len(l_test) == 2
+    assert l_test[0]['channel_id'] == channel_1_id
+    assert l_test[1]['channel_id'] == channel_2_id
+    assert l_test[0]['name'] == 'team'
+    assert l_test[1]['name'] == 'team2'
 
 def test_channels_list():
     '''

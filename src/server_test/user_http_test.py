@@ -5,11 +5,7 @@ import signal
 from time import sleep
 import json
 import requests
-
 import pytest
-
-import data.data as data
-from base.other import clear
 from server_test.channel_http_test import send_request
 
 
@@ -172,3 +168,5 @@ def test_setprofile_handle(url):
     result = requests.get(url + 'user/profile/?token='+token+"&u_id="+str(u_id))
     user=json.loads(result.text).get('user')
     assert user["handle_str"]=="ege64ydegehg"
+    # clear out the databases
+    requests.delete(url + 'clear', json={})

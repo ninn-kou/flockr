@@ -7,6 +7,7 @@ import base.message as message
 import base.channel as channel
 import base.channels as channels
 from base.error import InputError, AccessError
+import data.data as data
 
 def test_owner_from_token():
     other.clear()
@@ -27,7 +28,7 @@ def test_users_all_initial():
     u1_token = user1['token']
     u1_id = user1['u_id']
 
-    i = other.users_all(u1_token)
+    i = other.users_all(u1_token).get('users')
     i_user1 = i[0]
     assert len(i) == 1
     assert i_user1['u_id'] == u1_id
@@ -50,7 +51,7 @@ def test_users_all_add_new():
     user2 = auth.auth_login('2345@test.com', 'password')
     u2_id = user2['u_id']
 
-    i = other.users_all(u1_token)
+    i = other.users_all(u1_token).get('users')
     i_user1 = i[0]
     i_user2 = i[1]
     assert len(i) == 2
@@ -79,7 +80,7 @@ def test_admin_userpermission_change_permission_id():
     auth.auth_login('34567@test.com', 'password')
 
     #check the default value
-    i = other.users_all(u1_token)
+    i = data.return_users()
     i_user1 = i[0]
     i_user2 = i[1]
     i_user3 = i[2]
@@ -160,7 +161,7 @@ def test_admin_userpermission_change():
     #run the function and test
     other.admin_userpermission_change(u1_token, u2_id, 1)
 
-    i = other.users_all(u1_token)
+    i = data.return_users()
     i_user1 = i[0]
     i_user2 = i[1]
     assert i_user1['permission_id'] == 1
@@ -185,7 +186,7 @@ def test_search_basic():
     message.message_send(u1_token, channel_test_id1, 'Cool!')                           #f
     message.message_send(u1_token, channel_test_id1, 'Tomorrow, I will be the winner.') #t
 
-    i = other.search(u1_token, 'the winner')
+    i = other.search(u1_token, 'the winner').get('messages')
     assert len(i) == 3
     assert i[0]['message'] == 'Tomorrow, I will be the winner.'
     assert i[1]['message'] == 'Yesterday, I was the winner.'
@@ -221,7 +222,7 @@ def test_search_in_several_channel():
     message.message_send(u2_token, channel_test_id2, 'I am pretty sure about that')     #f
     message.message_send(u1_token, channel_test_id2, 'Our team is the winner.')         #t
 
-    i = other.search(u1_token, 'the winner')
+    i = other.search(u1_token, 'the winner').get('messages')
     assert len(i) == 7
     assert i[0]['message'] == 'Our team is the winner.'
     assert i[1]['message'] == 'the winner.'

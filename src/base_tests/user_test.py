@@ -14,7 +14,7 @@ def test_user_profile_correct_return():
     token = registration['token']
     u_id = registration["u_id"]
 
-    result = user.user_profile(token,u_id)
+    result = user.user_profile(token,u_id).get('user')
 
     # - Dict structure -> {u_id, token}
     assert isinstance(result, dict)

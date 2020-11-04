@@ -69,8 +69,8 @@ def test_admin_userpermission_change_permission_id():
     other.clear()
     #initialise the users list
     #create the first user
-    user1 = auth.auth_register('12345@test.com', 'password', 'FirstN', 'LastN')
-    user1 = auth.auth_login('12345@test.com', 'password')
+    auth.auth_register('12345@test.com', 'password', 'FirstN', 'LastN')
+    auth.auth_login('12345@test.com', 'password')
 
     #create another 2 users
     auth.auth_register('23456@test.com', 'password', 'FirstN2', 'LastN2')

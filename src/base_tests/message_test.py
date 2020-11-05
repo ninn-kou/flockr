@@ -934,6 +934,41 @@ def test_sendlater_input_error_invalid_time():
 
     auth_logout(u_token1)
 
+
+#######################      TEST NORMALLY    ##############################
+# case 1: test if we can show the correct message_send information
+def test_channel_message_sendlater_correct_message_infors():
+    '''
+    this test using for check if the channel function can return correctly
+    2. check the function can return the message correctly.
+    2.1 the [0] always the top fresh one
+    '''
+    # create 2 users
+    other.clear()
+    user1 = auth_register("test1@test.com", "check_test", "Xingyu", "TAN")
+    user1 = auth_login("test1@test.com", "check_test")
+    u_token1 = user1['token']
+
+
+    # create channel for testing
+    channel_test_id = channels_create(u_token1, "channel_test", True).get('channel_id')
+
+    # create the new time
+    now = datetime.utcnow()
+    timestamp = int(now.replace(tzinfo=timezone.utc).timestamp())
+    time_furture = timestamp + 5
+
+    #create test message we needed
+    message_sendlater(u_token1, channel_test_id, "msg test 01", time_furture)
+
+
+    # 2. check the function can return the message correctly.
+    check_work_msg = channel_messages(u_token1, channel_test_id, 0)
+    assert check_work_msg['messages'][2]['message'] == 'msg test 01'
+    assert check_work_msg['messages'][2]['time_created'] == 'time_furture'
+
+    auth_logout(u_token1)
+
 #########################################################################
 #
 #                     test for message_react Function

@@ -11,12 +11,11 @@ import json
 import requests
 
 import pytest
-from PIL import Image
 
 import data.data as data
 import base.other as other
 import server.other_http as other_http
-from base_tests.user_test import compare_images
+
 
 # copy-pasted this straight out of echo_http_test.py
 # Use this fixture to get the URL of the server. It starts the server for you,
@@ -219,80 +218,3 @@ def test_search(url):
     }).get('messages')
 
     assert len(resp) == 2
-
-@pytest.fixture
-def example():
-    ''' start server and create url'''
-    url_re = re.compile(r' \* Running on ([^ ]*)')
-    server = Popen(["python3", "src/base_tests/uploadphoto_test/upload_server.py"], stderr=PIPE, stdout=PIPE)
-    line = server.stderr.readline()
-    local_url = url_re.match(line.decode())
-    if local_url:
-        yield local_url.group(1)
-        # Terminate the server
-        server.send_signal(signal.SIGINT)
-        waited = 0
-        while server.poll() is None and waited < 5:
-            sleep(0.1)
-            waited += 0.1
-        if server.poll() is None:
-            server.kill()
-    else:
-        server.kill()
-        raise Exception("Couldn't get URL from local server")
-
-def test_uploadphoto(url, example):
-    ''' test to see if uploaded crop is correct '''
-    clear(url)
-
-    user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
-
-    # get the url for the image from local image server
-    url_test = example + '/one'
-    url_cropped = url_test + '/crop'
-
-    # get the first already cropped image from the test server
-    r = requests.get(url_cropped, stream=True)
-    test_image = Image.open(r.raw)
-
-    # get the first image cropped
-    r = requests.get(url + '/user/profile/uploadphoto', json = {
-        'token': user1.get('token'),
-        'img_url': url_test,
-        'x_start': 0,
-        'y_start': 0,
-        'x_end': 70,
-        'y_end': 70
-    }, stream=True )
-    saved_image = Image.open(r.raw)
-
-    # check that image was cropped correctly
-    assert compare_images(test_image, saved_image) == True
-
-def test_uploadphoto_two(url, example):
-    ''' test to see if uploaded crop is correct '''
-    clear(url)
-
-    user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
-
-    # get the url for the image from local image server
-    url_test = example + '/two'
-    url_cropped = url_test + '/crop'
-
-    # get the first already cropped image from the test server
-    r = requests.get(url_cropped, stream=True)
-    test_image = Image.open(r.raw)
-
-    # get the first image cropped
-    r = requests.get(url + '/user/profile/uploadphoto', json = {
-        'token': user1.get('token'),
-        'img_url': url_test,
-        'x_start': 400,
-        'y_start': 400,
-        'x_end': 800,
-        'y_end': 800
-    }, stream=True )
-    saved_image = Image.open(r.raw)
-
-    # check that image was cropped correctly
-    assert compare_images(test_image, saved_image) == True

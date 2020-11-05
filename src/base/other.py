@@ -18,7 +18,7 @@ def clear():
     data.clear_channels()
     data.clear_messages()
     data.clear_users()
-    # data.clear_profiles()
+    data.clear_profiles()
 
 def users_all(token):
     '''return all of the users list'''

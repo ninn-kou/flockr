@@ -212,6 +212,8 @@ def message_send(token, channel_id, message):
         'u_id': auth_id,
         'message': message,
         'time_created': timestamp,
+        'reacts': False,
+        'is_pinned': False
     }
 
     # insert the message in the top of messages in the channel.
@@ -379,6 +381,9 @@ def message_sendlater(token, channel_id, message, time_sent):
         'u_id': auth_id,
         'message': message,
         'time_created': time_sent,
+        'reacts': False,
+        'is_pinned': False
+
     }
 
     # insert the message in the top of messages in the channel.

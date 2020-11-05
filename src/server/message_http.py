@@ -41,3 +41,16 @@ def edit():
         input_obj.get('message_id'),
         input_obj.get('message')
     )
+
+
+@MESSAGEHTTP.route("/sendlater", methods=['POST'])
+def sendlater():
+    input_obj = request.json
+    output = message.message_sendlater(
+        input_obj.get('token'),
+        input_obj.get('channel_id'),
+        input_obj.get('message'),
+        input_obj.get('time_sent')
+    )
+
+    return jsonify(output)

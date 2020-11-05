@@ -1,5 +1,5 @@
 '''
-Main file to run in order to run backend server
+Test Server to deliver cropped and uncropped images
 '''
 
 from json import dumps
@@ -27,10 +27,40 @@ APP.config['TRAP_HTTP_EXCEPTIONS'] = True
 APP.register_error_handler(Exception, default_handler)
 
 @APP.route('/one', methods = ['GET'])
-def list():
+def jpg_one():
+    '''lists all channels that exist'''
+    path = 'test_one.jpg'
+    return send_file(path, mimetype='image/gif')
+
+@APP.route('/one/crop', methods = ['GET'])
+def jpg_one_crop():
     '''lists all channels that exist'''
     path = 'test_one_cropped.jpg'
     return send_file(path, mimetype='image/gif')
+
+@APP.route('/two', methods = ['GET'])
+def jpg_two():
+    '''lists all channels that exist'''
+    path = 'test_two.jpg'
+    return send_file(path, mimetype='image/gif')
+
+@APP.route('/two/crop', methods = ['GET'])
+def jpg_two_crop():
+    '''lists all channels that exist'''
+    path = 'test_two_cropped.jpg'
+    return send_file(path, mimetype='image/gif')
+
+@APP.route('/png')
+def png():
+    '''lists all channels that exist'''
+    path = 'ttm.png'
+    return send_file(path, mimetype='image/gif')
+
+@APP.route('/txt')
+def txt():
+    '''lists all channels that exist'''
+    path = 'test.txt'
+    return send_file(path)
 
 if __name__ == "__main__":
     APP.run(port=0) # Do not edit this port

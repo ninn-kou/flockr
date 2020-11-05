@@ -129,3 +129,12 @@ def user_profile_sethandle(token, handle_str):
     user['handle_str']=handle_str
     data.updateByEmail(user,email)
     return {}
+
+def user_profile_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
+    '''
+    Given a URL of an image on the internet, crops the image within bounds (x_start, y_start)
+    and (x_end, y_end). Position (0,0) is the top left.
+
+    It will save this file to be served
+    '''
+    return {}

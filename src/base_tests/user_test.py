@@ -187,6 +187,24 @@ def url():
         server.kill()
         raise Exception("Couldn't get URL from local server")
 
+def compare_images(input_image, output_image):
+    ''' image comparison function '''
+    # compare image dimensions
+    if input_image.size != output_image.size:
+        return False
+
+    rows, cols = input_image.size
+
+    # compare image pixels
+    for row in range(rows):
+        for col in range(cols):
+            input_pixel = input_image.getpixel((row, col))
+            output_pixel = output_image.getpixel((row, col))
+            if input_pixel != output_pixel:
+                return False
+
+    return True
+
 def test_user_profile_uploadphoto(url):
     '''
     Given a URL of an image on the internet, crops the image within bounds (x_start, y_start)
@@ -201,9 +219,114 @@ def test_user_profile_uploadphoto(url):
     any of x_start, y_start, x_end, y_end are not within the dimensions of the image at the URL.
     Image uploaded is not a JPG
     '''
+    clear()
+    # register a new user
+    registration = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old')
+    token = registration['token']
+    u_id = registration['u_id']
 
-    # get the first test image from the test server
-    url_time = url + '/one'
-    r = requests.get(url_time, stream=True)
+    url_test = url + '/one'
+    url_cropped = url_test + '/crop'
+
+    # get the first already cropped image from the test server
+    r = requests.get(url_cropped, stream=True)
     test_image = Image.open(r.raw)
 
+    # test that the function doesn't crash
+    assert user.user_profile_uploadphoto(token, url_test, 0,0, 70,70) == {}
+
+    # get the saved image from saved path
+    path = 'src/data/profiles/{u_id}.jpg'.format(u_id = str(u_id))
+    saved_image = Image.open(path)
+
+    # check that image was cropped correctly
+    assert compare_images(test_image, saved_image) == True
+
+def test_user_profile_uploadphoto_two(url):
+    '''
+    Given a URL of an image on the internet, crops the image within bounds (x_start, y_start)
+    and (x_end, y_end). Position (0,0) is the top left.
+
+    (token, img_url, x_start, y_start, x_end, y_end)
+
+    {}
+
+    InputError when any of:
+    img_url returns an HTTP status other than 200.
+    any of x_start, y_start, x_end, y_end are not within the dimensions of the image at the URL.
+    Image uploaded is not a JPG
+    '''
+    clear()
+    # register a new user
+    registration = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old')
+    token = registration['token']
+    u_id = registration['u_id']
+
+    url_test = url + '/two'
+    url_cropped = url_test + '/crop'
+
+    # get the first already cropped image from the test server
+    r = requests.get(url_cropped, stream=True)
+    test_image = Image.open(r.raw)
+
+    # test that the function doesn't crash
+    assert user.user_profile_uploadphoto(token, url_test, 400,400, 800,800) == {}
+
+    # get the saved image from saved path
+    path = 'src/data/profiles/{u_id}.jpg'.format(u_id = str(u_id))
+    saved_image = Image.open(path)
+
+    # check that image was cropped correctly
+    assert compare_images(test_image, saved_image) == True
+
+def test_user_profile_uploadphoto_big(url):
+    ''' test InputError if the dimensions are too big '''
+    clear()
+    # register a new user
+    registration = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old')
+    token = registration['token']    
+
+    # test InputError when index is out of picture
+    url_test = url + '/one/crop'
+    with pytest.raises(InputError):
+        user.user_profile_uploadphoto(token, url_test, 0,0, 1000,1000)
+    
+    with pytest.raises(InputError):
+        user.user_profile_uploadphoto(token, url_test, 10000,1000, 1,1)
+
+def test_user_profile_uploadphoto_png(url):
+    ''' test to see if it throws InputError on files that aren't a jpg '''
+    clear()
+    # register a new user
+    registration = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old')
+    token = registration['token']
+
+    # test InputError for a png
+    url_test = url + '/png'
+    with pytest.raises(InputError):
+        user.user_profile_uploadphoto(token, url_test, 0,0, 10,10)
+
+def test_user_profile_uploadphoto_txt(url):
+    ''' test to see if it throws InputError on files that aren't a jpg '''
+    clear()
+    # register a new user
+    registration = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old')
+    token = registration['token']
+
+    # test InputError for a png
+    url_test = url + '/txt'
+    with pytest.raises(InputError):
+        user.user_profile_uploadphoto(token, url_test, 0,0, 10,10)
+
+def test_user_profile_uploadphoto_invalid_url(url):
+    ''' see if it throws Inputerror with an incorrect url '''
+    clear()
+    # register a new user
+    registration = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old')
+    token = registration['token']
+    u_id = registration['u_id']
+
+    # test InputError for a png
+    url_test = url + '/thisdoesntexist'
+    with pytest.raises(InputError):
+        user.user_profile_uploadphoto(token, url_test, 0,0, 10,10)

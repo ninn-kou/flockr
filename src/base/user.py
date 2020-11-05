@@ -1,10 +1,9 @@
 """Yuhan Yan has done all the user.py and the related tests."""
+import requests
+from PIL import Image
+
 import data.data as data
-
-import jwt
-from   jwt import DecodeError
-
-from base.auth import JWT_SECRET,check_in_users,regex_email_check, decode_token
+from base.auth import check_in_users,regex_email_check, decode_token
 from base.error import InputError
 
 ################################################################################
@@ -137,4 +136,40 @@ def user_profile_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
 
     It will save this file to be served
     '''
+    # find the user specified
+    user = decode_token(token)
+
+    # get the profile picture
+    r = requests.get(img_url, stream=True)
+
+    # check whether the image is real
+    if r.status_code != 200:
+        raise InputError('Image did not return correctly')
+    if r.headers.get('content-type') != 'image/gif':
+        raise InputError('Input is not an image')
+
+    # open image
+    img = Image.open(r.raw)
+
+    # check if img is jpeg
+    if img.format != 'JPEG':
+        raise InputError('Please Input a JPEG as your Profile Picture')
+
+    # make sure dimensions are valid
+    if x_start < 0 or y_start < 0:
+        raise InputError('Invalid Dimensions')
+    if x_end < x_start or y_end < y_start:
+        raise InputError('Invalid Dimensions')
+    width, height = img.size
+    if width < x_end or height < y_end:
+        raise InputError('Invalid Dimensions')
+    
+    # crop the image
+    cropped = img.crop((x_start, y_start, x_end, y_end))
+
+    print(user['u_id'])
+
+    # save image to directory
+    data.save_image(cropped, user['u_id'])
+
     return {}

@@ -249,3 +249,8 @@ def clear_profiles():
             os.unlink(os.path.join(root, f))
         for d in dirs:
             shutil.rmtree(os.path.join(root, d))
+def save_image(image, u_id):
+    ''' save an image in the profiles directory'''
+
+    path = 'src/data/profiles/' + str(u_id) + '.jpg'
+    image.save(path)

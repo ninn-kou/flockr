@@ -233,12 +233,12 @@ def test_user_profile_uploadphoto(url):
     test_image = Image.open(r.raw)
 
     # test that the function doesn't crash
-    assert user.user_profile_uploadphoto(token, url_test, 0,0, 70,70) == {}
+    assert user.user_profile_uploadphoto(token, url_test, 0,0, 10,10) == {}
 
     # get the saved image from saved path
     path = 'src/data/profiles/{u_id}.jpg'.format(u_id = str(u_id))
     saved_image = Image.open(path)
-
+    print(u_id)
     # check that image was cropped correctly
     assert compare_images(test_image, saved_image) == True
 
@@ -293,6 +293,21 @@ def test_user_profile_uploadphoto_big(url):
     
     with pytest.raises(InputError):
         user.user_profile_uploadphoto(token, url_test, 10000,1000, 1,1)
+
+def test_user_profile_uploadphoto_small(url):
+    ''' test InputError if the dimensions are too big '''
+    clear()
+    # register a new user
+    registration = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old')
+    token = registration['token']    
+
+    # test InputError when index is out of picture
+    url_test = url + '/one/crop'
+    with pytest.raises(InputError):
+        user.user_profile_uploadphoto(token, url_test, 0,0, -1000,-50)
+    
+    with pytest.raises(InputError):
+        user.user_profile_uploadphoto(token, url_test, -5,-5, 1,1)
 
 def test_user_profile_uploadphoto_png(url):
     ''' test to see if it throws InputError on files that aren't a jpg '''

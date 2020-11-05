@@ -799,6 +799,41 @@ def test_message_send_later_input_error1():
 
     auth_logout(u_token1)
 
+
+#######################  test for access error  #########################
+def test_message_sendlater_access_error_wrong_token():
+    '''
+    this test using for check if the authorised user
+    has not joined the channel they are trying to post to
+    '''
+    # create 2 users
+    other.clear()
+    user1 = auth_register("test1@test.com", "check_test", "Xingyu", "TAN")
+    user1 = auth_login("test1@test.com", "check_test")
+    u_token1 = user1['token']
+
+    user2 = auth_register("test2@test.com", "check_test", "steve", "TAN")
+    user2 = auth_login("test2@test.com", "check_test")
+    u_token2 = user2['token']
+
+    # create channel for testing
+    channel_test_id = channels_create(u_token1, "channel_test", True).get('channel_id')
+
+    # create a message
+    message_test = "msg test"
+    # create the new time
+    now = datetime.utcnow()
+    timestamp = int(now.replace(tzinfo=timezone.utc).timestamp())
+    time_furture = timestamp + 5
+
+    # testing for channel invite function for length more than 1000 words
+    with pytest.raises(AccessError):
+        message_sendlater(u_token2, channel_test_id, message_test, time_furture)
+
+    auth_logout(u_token1)
+    auth_logout(u_token2)
+
+
 #########################################################################
 #
 #                     test for message_react Function

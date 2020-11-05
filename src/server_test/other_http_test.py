@@ -69,9 +69,6 @@ def send_request_params(method, url, url_extension, json_obj):
         resp = requests.put(url_time, params=json_obj)
     return json.loads(resp.text)
 
-def clear(url):
-    send_request('DELETE', url, 'clear', {})
-
 def register_user(url, email, password, name_first, name_last):
     ''' register a new user '''
     return send_request('POST', url, 'auth/register', {

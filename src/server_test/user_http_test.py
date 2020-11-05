@@ -145,7 +145,7 @@ def test_setprofile_name(url):
 
     result = requests.get(url + 'user/profile/?token='+token+"&u_id="+str(u_id))
     user=json.loads(result.text)
-    print(user)
+
     assert user['user']["name_first"]=="Morb"
     assert user['user']["name_last"]=="Old"
 
@@ -213,7 +213,7 @@ def test_uploadphoto(url, example):
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
 
     # get the url for the image from local image server
-    url_test = example + '/one'
+    url_test = example + 'one'
     url_cropped = url_test + '/crop'
 
     # get the first already cropped image from the test server
@@ -221,13 +221,13 @@ def test_uploadphoto(url, example):
     test_image = Image.open(r.raw)
 
     # get the first image cropped
-    r = requests.get(url + '/user/profile/uploadphoto', json = {
+    r = requests.post(url + 'user/profile/uploadphoto', json = {
         'token': user1.get('token'),
         'img_url': url_test,
         'x_start': 0,
         'y_start': 0,
-        'x_end': 70,
-        'y_end': 70
+        'x_end': 10,
+        'y_end': 10
     }, stream=True )
     saved_image = Image.open(r.raw)
 
@@ -241,7 +241,7 @@ def test_uploadphoto_two(url, example):
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
 
     # get the url for the image from local image server
-    url_test = example + '/two'
+    url_test = example + 'two'
     url_cropped = url_test + '/crop'
 
     # get the first already cropped image from the test server
@@ -249,7 +249,7 @@ def test_uploadphoto_two(url, example):
     test_image = Image.open(r.raw)
 
     # get the first image cropped
-    r = requests.get(url + '/user/profile/uploadphoto', json = {
+    r = requests.post(url + 'user/profile/uploadphoto', json = {
         'token': user1.get('token'),
         'img_url': url_test,
         'x_start': 400,

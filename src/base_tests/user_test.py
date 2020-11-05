@@ -238,7 +238,7 @@ def test_user_profile_uploadphoto(url):
     # get the saved image from saved path
     path = 'src/data/profiles/{u_id}.jpg'.format(u_id = str(u_id))
     saved_image = Image.open(path)
-    print(u_id)
+
     # check that image was cropped correctly
     assert compare_images(test_image, saved_image) == True
 

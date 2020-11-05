@@ -7,6 +7,7 @@ __pycache__/
 *.json
 src/data/JWT_SECRET.p
 src/data/profiles/*
+!src/data/profiles/readme.md
 
 # legacy secret storage
 src/data/JWT_SECRET.txt

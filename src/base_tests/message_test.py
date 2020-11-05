@@ -834,6 +834,39 @@ def test_message_sendlater_access_error_wrong_token():
     auth_logout(u_token2)
 
 
+###########################################################################################
+def test_sendlater_access_error_invalid_channelid():
+    '''
+    This test is using for check when channel id we had is invalid
+
+    '''
+    # create 2 users
+    other.clear()
+    user1 = auth_register("test1@test.com", "check_test", "Xingyu", "TAN")
+    user1 = auth_login("test1@test.com", "check_test")
+    u_token1 = user1['token']
+
+    user2 = auth_register("test2@test.com", "check_test", "steve", "TAN")
+    user2 = auth_login("test2@test.com", "check_test")
+    u_id2 = user2['u_id']
+
+    # create channel for testing
+    channel_test_id = channels_create(u_token1, "channel_test", True).get('channel_id')
+    channel_invite(u_token1, channel_test_id, u_id2)
+
+    # create a message
+    message_test = "msg test"
+    # create the new time
+    now = datetime.utcnow()
+    timestamp = int(now.replace(tzinfo=timezone.utc).timestamp())
+    time_furture = timestamp + 5
+
+    # testing for channel message function for invalid channel id inputError
+    with pytest.raises(AccessError):
+        message_sendlater(u_token1, channel_test_id + 0xf, message_test, time_furture)
+
+    auth_logout(u_token1)
+
 #########################################################################
 #
 #                     test for message_react Function

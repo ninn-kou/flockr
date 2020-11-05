@@ -346,6 +346,30 @@ def message_sendlater(token, channel_id, message, time_sent):
     if not find_one_in_channel(channel_got, auth_id):
         raise AccessError(description='auth not in channel')
 
+    #Input error 5: the time is in the past
+    # record the time rightnow
+    now = datetime.utcnow()
+    timestamp = int(now.replace(tzinfo=timezone.utc).timestamp())
+    if (time_sent < timestamp):
+        raise InputError(description='The time is in the past')
+
+    # Case 5: no error, add the message
+    new_msg_id = 1
+    if len(data.return_messages()) != 0:
+        new_msg_id = data.return_messages()[0]['message_id'] + 1
+
+    # create the message struct
+    return_message = {
+        'message_id': new_msg_id,
+        'channel_id': channel_id,
+        'u_id': auth_id,
+        'message': message,
+        'time_created': time_sent,
+    }
+
+    # insert the message in the top of messages in the channel.
+    t = threading.Timer(time_sent - timestamp, adding_message(return_message, channel_id))
+    t.start()
 
 '''
 def message_react(token, message_id, react_id):

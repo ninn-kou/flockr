@@ -34,8 +34,8 @@ def user_profile(token, u_id):
     # Avoid someone put a string
     try:
         u_id = int(u_id)
-    except Exception:
-        raise InputError('terrible uid')
+    except Exception as e:
+        raise InputError('terrible uid') from e
     user = None
 
     for i in data.return_users():
@@ -166,8 +166,6 @@ def user_profile_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     
     # crop the image
     cropped = img.crop((x_start, y_start, x_end, y_end))
-
-    print(user['u_id'])
 
     # save image to directory
     data.save_image(cropped, user['u_id'])

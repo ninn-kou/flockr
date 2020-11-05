@@ -339,7 +339,6 @@ def test_user_profile_uploadphoto_invalid_url(url):
     # register a new user
     registration = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old')
     token = registration['token']
-    u_id = registration['u_id']
 
     # test InputError for a png
     url_test = url + '/thisdoesntexist'

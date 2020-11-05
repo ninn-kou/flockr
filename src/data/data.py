@@ -9,7 +9,7 @@ However, it allows for basic persistent storage
 
 import json
 import os
-import shutil
+import glob
 
 def users_notes():
     '''
@@ -243,14 +243,11 @@ def clear_messages():
 
 def clear_profiles():
     ''' delete user profile pictures '''
+    files = glob.glob('src/data/profiles/*')
+    for f in files:
+        os.remove(f)
 
-    for root, dirs, files in os.walk('src/data/profiles'):
-        for f in files:
-            os.unlink(os.path.join(root, f))
-        for d in dirs:
-            shutil.rmtree(os.path.join(root, d))
 def save_image(image, u_id):
     ''' save an image in the profiles directory'''
-
     path = 'src/data/profiles/' + str(u_id) + '.jpg'
     image.save(path)

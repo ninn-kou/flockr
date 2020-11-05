@@ -8,6 +8,8 @@ However, it allows for basic persistent storage
 '''
 
 import json
+import os
+import shutil
 
 def users_notes():
     '''
@@ -238,3 +240,12 @@ def clear_messages():
     # write json to file
     with open('src/data/messages.json', 'w') as file:
         json.dump([], file)
+
+def clear_profiles():
+    ''' delete user profile pictures '''
+
+    for root, dirs, files in os.walk('src/data/profiles'):
+        for f in files:
+            os.unlink(os.path.join(root, f))
+        for d in dirs:
+            shutil.rmtree(os.path.join(root, d))

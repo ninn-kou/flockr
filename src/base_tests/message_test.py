@@ -1,11 +1,15 @@
 ''' this file is using for pytest of base/message.py .'''
+from datetime import timezone, datetime
 import pytest
 from base.channel import channel_invite, channel_messages
 from base.channels import channels_create
 from base.auth import auth_login, auth_register, auth_logout
 from base.message import message_send, message_remove, message_edit
+from base.message import message_sendlater
+#, message_pin, message_unpin, message_react, message_unreact
 from base.error import InputError, AccessError
 import base.other as other
+
 
 
 #########################################################################
@@ -726,3 +730,99 @@ def test_message_edit_works_for_empty_msg():
 
     auth_logout(u_token1)
     auth_logout(u_token2)
+
+
+#########################################################################
+#
+#                     test for message_sendlater Function
+#
+##########################################################################
+# Xingyu TAN working on message_test.py for message_sendlater function
+# 05 Nov. 2020
+
+##########################################################################
+#
+#    message_sendlater()
+#    Send a message from authorised_user to the channel specified
+#    by channel_id automatically at a specified time in the future
+#    Args:
+#        token: the token of the people who edit it.
+#        channel_id: the channel which is the target of message.
+#        message: the new message.
+#        time_sent: when the msg would be sent
+#    RETURNS:
+#    return {
+#        'message_id': new_msg_id,
+#    }
+#
+#
+#   THEREFORE, TEST EVERYTHING BELOW:
+#    1. inputError
+#    - Channel ID is not a valid channel
+#    - Message is more than 1000 characters
+#    - Time sent is a time in the past
+#
+#    2. accessError
+#    when:  the authorised user has not joined the channel they are trying to post to
+#
+##########################################################################
+
+########################################################################
+
+#######################  test for input error  #########################
+def test_message_send_later_input_error1():
+    '''
+    this test using for check if the message_send function
+    send the message which is more than 1000 characters
+    '''
+    # create 2 users
+    other.clear()
+    user1 = auth_register("test1@test.com", "check_test", "Xingyu", "TAN")
+    user1 = auth_login("test1@test.com", "check_test")
+    u_token1 = user1['token']
+
+    # create channel for testing
+    channel_test_id = channels_create(u_token1, "channel_test", True)
+
+    # create a message which is more than 1000 characters
+    message_test = "aaaaa"
+    message_test = 3000 * message_test
+
+    # create the new time
+    now = datetime.utcnow()
+    timestamp = int(now.replace(tzinfo=timezone.utc).timestamp())
+    time_furture = timestamp + 5
+
+    # testing for channel invite function for length more than 1000 words
+    with pytest.raises(InputError):
+        message_sendlater(u_token1, channel_test_id, message_test, time_furture)
+
+    auth_logout(u_token1)
+
+#########################################################################
+#
+#                     test for message_react Function
+#
+##########################################################################
+
+
+#########################################################################
+#
+#                     test for message_unreact Function
+#
+##########################################################################
+
+
+#########################################################################
+#
+#                     test for message_pin Function
+#
+##########################################################################
+
+
+
+#########################################################################
+#
+#                     test for message_unpin Function
+#
+##########################################################################

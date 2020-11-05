@@ -19,6 +19,14 @@ import time
 ##      - message_remove(token, message_id);
 ##      - message_edit(token, message_id, message);
 ##      - and all tests for these functions.
+##    Xingyu TAN's work:
+##    05 NOV., 2020
+##
+##      - some helper functions;
+##      - message_sendlater
+##      - message_pin
+##      - message_unpin
+##      - and all tests, http file and http tests for these functions.
 ##
 ################################################################################
 ################################################################################
@@ -144,6 +152,7 @@ def find_one_in_channel(channel, u_id):
 
 ############################################################
 #       message_send(token, channel_id, message)
+#       written by Xingyu TAN
 ############################################################
 def message_send(token, channel_id, message):
     """
@@ -213,6 +222,7 @@ def message_send(token, channel_id, message):
     }
 ############################################################
 #       message_remove(token, message_id)
+#       written by Xingyu TAN
 ############################################################
 def message_remove(token, message_id):
     """
@@ -259,6 +269,7 @@ def message_remove(token, message_id):
     }
 ############################################################
 #       message_edit(token, message_id, message)
+#       written by Xingyu TAN
 ############################################################
 def message_edit(token, message_id, message):
     '''
@@ -303,10 +314,13 @@ def message_edit(token, message_id, message):
         edit_msg_in_list(message_using, message)
     return {
     }
-
+############################################################
+#       message_sendlater(token, channel_id, message, time_sent)
+#       written by Xingyu TAN
+############################################################
 def message_sendlater(token, channel_id, message, time_sent):
     '''
-    message_edit()
+    message_sendlater()
     Send a message from authorised_user to the channel specified
     by channel_id automatically at a specified time in the future
     Args:
@@ -370,6 +384,10 @@ def message_sendlater(token, channel_id, message, time_sent):
     # insert the message in the top of messages in the channel.
     t = threading.Timer(time_sent - timestamp, adding_message(return_message, channel_id))
     t.start()
+
+    return {
+        'message_id': new_msg_id,
+    }
 
 '''
 def message_react(token, message_id, react_id):

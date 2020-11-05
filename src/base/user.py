@@ -145,12 +145,12 @@ def user_profile_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     # check whether the image is real
     if r.status_code != 200:
         raise InputError('Image did not return correctly')
-    if r.headers.get('content-type') != 'image/gif':
-        raise InputError('Input is not an image')
 
     # open image
-    img = Image.open(r.raw)
-
+    try:
+        img = Image.open(r.raw)
+    except Exception as e:
+        raise InputError('Input is not an image') from e
     # check if img is jpeg
     if img.format != 'JPEG':
         raise InputError('Please Input a JPEG as your Profile Picture')

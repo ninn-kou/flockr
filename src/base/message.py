@@ -5,6 +5,8 @@ from datetime import timezone, datetime
 import data.data as data
 from base.auth import decode_token
 from base.error import InputError, AccessError
+import threading
+import time
 
 ################################################################################
 ################################################################################
@@ -301,3 +303,63 @@ def message_edit(token, message_id, message):
         edit_msg_in_list(message_using, message)
     return {
     }
+
+def message_sendlater(token, channel_id, message, time_sent):
+    '''
+    message_edit()
+    Send a message from authorised_user to the channel specified
+    by channel_id automatically at a specified time in the future
+    Args:
+        token: the token of the people who edit it.
+        channel_id: the channel which is the target of message.
+        message: the new message.
+        time_sent: when the msg would be sent
+    RETURNS:
+    return {
+        'message_id': new_msg_id,
+    }
+
+
+    THEREFORE, TEST EVERYTHING BELOW:
+    1. inputError
+    - Channel ID is not a valid channel
+    - Message is more than 1000 characters
+    - Time sent is a time in the past
+    2. accessError
+    when:  the authorised user has not joined the channel they are trying to post to
+    '''
+    # InputError 1: invalid token.
+    auth_id = token_into_user_id(token)
+    if auth_id == -1:
+        raise InputError(description='invalid token.')
+
+    # InputError 2: Message is more than 1000 characters.
+    if len(message) > 1000:
+        raise InputError(description='Message is more than 1000 characters.')
+
+    # AccessError 3: invalid channel_id.
+    channel_got = find_channel(channel_id)
+    if channel_got is None:
+        raise AccessError(description='invalid channel_id.')
+
+    # AccessError 4: if the auth not in channel.
+    if not find_one_in_channel(channel_got, auth_id):
+        raise AccessError(description='auth not in channel')
+
+
+'''
+def message_react(token, message_id, react_id):
+    return
+
+
+def message_unreact(token, message_id, react_id):
+    return
+
+
+def message_pin(token, message_id):
+    return
+
+
+def message_unpin(token, message_id):
+    return
+'''

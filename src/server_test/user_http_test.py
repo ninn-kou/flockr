@@ -258,6 +258,6 @@ def test_uploadphoto_two(url, example):
         'y_end': 800
     }, stream=True )
     saved_image = Image.open(r.raw)
-    sleep(2)
+
     # check that image was cropped correctly
     assert compare_images(test_image, saved_image) == True

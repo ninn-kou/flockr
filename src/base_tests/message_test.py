@@ -801,7 +801,7 @@ def test_message_send_later_input_error1():
 
 
 #######################  test for access error  #########################
-def test_message_sendlater_access_error_wrong_token():
+def test_message_sendlater_access_error_token_people_wrong():
     '''
     this test using for check if the authorised user
     has not joined the channel they are trying to post to

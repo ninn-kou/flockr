@@ -9,4 +9,4 @@ omit =
     *_test.py
     src/server.py
     src/server/*
-    clear_database.py
+    src/clear.py

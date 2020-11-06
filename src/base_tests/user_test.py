@@ -214,7 +214,7 @@ def test_user_profile_uploadphoto(url):
     token = registration['token']
     u_id = registration['u_id']
 
-    url_test = url + '/one'
+    url_test = url + 'one'
     url_cropped = url_test + '/crop'
 
     # get the first already cropped image from the test server
@@ -251,7 +251,7 @@ def test_user_profile_uploadphoto_two(url):
     token = registration['token']
     u_id = registration['u_id']
 
-    url_test = url + '/two'
+    url_test = url + 'two'
     url_cropped = url_test + '/crop'
 
     # get the first already cropped image from the test server
@@ -276,7 +276,7 @@ def test_user_profile_uploadphoto_big(url):
     token = registration['token']    
 
     # test InputError when index is out of picture
-    url_test = url + '/one/crop'
+    url_test = url + 'one/crop'
     with pytest.raises(InputError):
         user.user_profile_uploadphoto(token, url_test, 0,0, 1000,1000)
     

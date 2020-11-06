@@ -7,6 +7,7 @@ from flask import Flask, send_file
 from flask_cors import CORS
 
 from pathlib import Path
+import os
 
 def default_handler(err):
     ''' system error handler '''

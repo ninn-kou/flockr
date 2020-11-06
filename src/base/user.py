@@ -165,9 +165,7 @@ def user_profile_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
         raise InputError('Invalid Dimensions')
     
     # crop the image
-    img.load()
     cropped = img.crop((x_start, y_start, x_end, y_end))
-    cropped.load()
 
     # save image to directory
     data.save_image(cropped, user['u_id'])

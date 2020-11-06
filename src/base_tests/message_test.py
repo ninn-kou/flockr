@@ -1247,6 +1247,7 @@ def test_message_unpin_wrong_msg_id():
         message_unpin(u_token1, message_test_id + 0xf)
 
     auth_logout(u_token1)
+
 ######################   INPUT ERROR 2   #################
 def test_message_unpin_already_pin():
     '''
@@ -1274,6 +1275,7 @@ def test_message_unpin_already_pin():
         message_unpin(u_token1, message_test_id)
 
     auth_logout(u_token1)
+
 ##################################################################
 def test_message_unpin_wrong_token_id():
     '''
@@ -1299,7 +1301,6 @@ def test_message_unpin_wrong_token_id():
         message_unpin(u_token1 + 'abc', message_test_id)
 
     auth_logout(u_token1)
-
 
 #######################  test for access error  #########################
 def test_message_unpin_non_channel_member():
@@ -1362,7 +1363,6 @@ def test_message_unpin_non_channel_owner():
 
     auth_logout(u_token1)
     auth_logout(u_token2)
-
 
 ##############################  test for normal running ###################################
 def test_message_unpin_works_normally_for_channel_owner_only():

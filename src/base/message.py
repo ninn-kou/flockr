@@ -204,7 +204,11 @@ def message_send(token, channel_id, message):
     # record the time rightnow
     now = datetime.utcnow()
     timestamp = int(now.replace(tzinfo=timezone.utc).timestamp())
-
+    new_react = {
+        'react_id': 1,
+        'u_ids':[],
+        'is_this_user_reacted': False
+    }
     # create the message struct
     return_message = {
         'message_id': new_msg_id,
@@ -212,10 +216,7 @@ def message_send(token, channel_id, message):
         'u_id': auth_id,
         'message': message,
         'time_created': timestamp,
-        'reacts': [{'react_id': 1,
-            'u_ids':[],
-            'is_this_user_reacted': False
-        },],
+        'reacts': [new_react,],
         'is_pinned': False
     }
 
@@ -376,7 +377,11 @@ def message_sendlater(token, channel_id, message, time_sent):
     new_msg_id = 1
     if len(data.return_messages()) != 0:
         new_msg_id = data.return_messages()[0]['message_id'] + 1
-
+    new_react = {
+        'react_id': 1,
+        'u_ids':[],
+        'is_this_user_reacted': False
+    }
     # create the message struct
     return_message = {
         'message_id': new_msg_id,
@@ -384,10 +389,7 @@ def message_sendlater(token, channel_id, message, time_sent):
         'u_id': auth_id,
         'message': message,
         'time_created': time_sent,
-        'reacts': [{'react_id': 1,
-            'u_ids':[],
-            'is_this_user_reacted': False
-        },],
+        'reacts': [new_react,],
         'is_pinned': False
 
     }

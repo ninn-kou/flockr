@@ -55,6 +55,18 @@ def sendlater():
     )
     return jsonify(output)
 
+@MESSAGEHTTP.route("/react", methods=['POST'])
+def react():
+    input_obj = request.json
+
+    output=message.message_react(
+        input_obj.get('token'),
+        input_obj.get('message_id'),
+        input_obj.get('react_id')
+    )
+
+    return output
+
 @MESSAGEHTTP.route("/pin", methods=['POST'])
 def message_pin():
     input_obj = request.json

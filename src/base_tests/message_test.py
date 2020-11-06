@@ -1156,6 +1156,7 @@ def test_message_pin_non_channel_owner():
 
     auth_logout(u_token1)
     auth_logout(u_token2)
+
 ##############################  test for normal running ###################################
 def test_message_pin_works_normally_for_channel_owner_only():
     '''

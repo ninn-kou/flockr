@@ -8,7 +8,7 @@ import signal
 from time import sleep
 import json
 import requests
-
+from datetime import timezone, datetime
 import pytest
 
 import data.data as data
@@ -268,3 +268,44 @@ def test_message_edit(url):
     assert resp['messages'][0]['message'] == "test edit msg"
     assert resp['messages'][1]['message'] == "test_msg_02"
     assert resp['messages'][2]['message'] == "test_msg_01"
+
+###################################################################
+def test_message_sendlater_works(url):
+    '''
+    test for message_send
+    Test whether the msg can be sent normally
+    '''
+    # clear out the databases
+    requests.delete(url + 'clear', json={})
+
+    # register a new user and create a new channel
+    user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
+    channels = create_channels(url, user1.get('token'), True, 1)
+
+    # invite second user to invite
+    user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
+    invite_user(url, user1, channels[0].get('channel_id'), user2)
+
+    # create the new time
+    now = datetime.utcnow()
+    timestamp = int(now.replace(tzinfo=timezone.utc).timestamp())
+    time_furture = timestamp + 5
+    # get the sent messages in channel
+    check_id = send_request('POST', url, 'message/sendlater', {
+        'token': user1.get('token'),
+        'channel_id': channels[0].get('channel_id'),
+        'message': "test_msg_01",
+        'time_sent':time_furture
+    })
+    # get the sent messages in channel
+
+    resp = send_request_params('GET', url, 'channel/messages', {
+        'token': user1.get('token'),
+        'channel_id': channels[0].get('channel_id'),
+        'start': 0
+    })
+
+    # make sure the messages are the same
+    assert resp['messages'][0]['message'] == "test_msg_01"
+    assert resp['messages'][0]['time_created'] == time_furture
+    assert resp['messages'][0]['message_id'] == check_id['message_id']

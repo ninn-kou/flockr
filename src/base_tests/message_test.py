@@ -5,8 +5,8 @@ from base.channel import channel_invite, channel_messages, channel_addowner
 from base.channels import channels_create
 from base.auth import auth_login, auth_register, auth_logout
 from base.message import message_send, message_remove, message_edit
-from base.message import message_sendlater, message_pin
-#, message_unpin, message_react, message_unreact
+from base.message import message_sendlater, message_pin, message_unpin
+#, message_react, message_unreact
 from base.error import InputError, AccessError
 import base.other as other
 
@@ -1266,10 +1266,10 @@ def test_message_unpin_already_pin():
     message_send(u_token1, channel_test_id, "msg test 01")
     message_send(u_token1, channel_test_id, "msg test 02")
     message_test_id = message_send(u_token1, channel_test_id, "msg test 03")['message_id']
-    # pin the msg
-    message_pin(u_token1, message_test_id)
+    # unpin the msg
+    message_unpin(u_token1, message_test_id)
 
-    # testing for already pin inputError
+    # testing for already unpin inputError
     with pytest.raises(InputError):
         message_unpin(u_token1, message_test_id)
 
@@ -1299,3 +1299,67 @@ def test_message_unpin_wrong_token_id():
         message_unpin(u_token1 + 'abc', message_test_id)
 
     auth_logout(u_token1)
+
+
+#######################  test for access error  #########################
+def test_message_unpin_non_channel_member():
+    '''
+    this test using for check when the auth people is not a channel member
+    '''
+    # create 2 users
+    other.clear()
+    user1 = auth_register("test1@test.com", "check_test", "Xingyu", "TAN")
+    user1 = auth_login("test1@test.com", "check_test")
+    u_token1 = user1['token']
+
+    user2 = auth_register("test2@test.com", "check_test", "steve", "TAN")
+    user2 = auth_login("test2@test.com", "check_test")
+    u_token2 = user2['token']
+
+    # create channel for testing
+    channel_test_id = channels_create(u_token1, "channel_test", True).get('channel_id')
+
+    #create test message we needed
+    message_send(u_token1, channel_test_id, "msg test 01")
+    message_send(u_token1, channel_test_id, "msg test 02")
+    message_test_id = message_send(u_token1, channel_test_id, "msg test 03")['message_id']
+
+    # testing when the auth people is not a channel member
+    with pytest.raises(AccessError):
+        message_unpin(u_token2, message_test_id)
+
+    auth_logout(u_token1)
+    auth_logout(u_token2)
+
+#######################  test for access error  #########################
+def test_message_unpin_non_channel_owner():
+    '''
+    this test using for check when the auth people is not a channel member
+    '''
+    # create 2 users
+    other.clear()
+    user1 = auth_register("test1@test.com", "check_test", "Xingyu", "TAN")
+    user1 = auth_login("test1@test.com", "check_test")
+    u_token1 = user1['token']
+
+    user2 = auth_register("test2@test.com", "check_test", "steve", "TAN")
+    user2 = auth_login("test2@test.com", "check_test")
+    u_id2 = user2['u_id']
+    u_token2 = user2['token']
+
+    # create channel for testing
+    channel_test_id = channels_create(u_token1, "channel_test", True).get('channel_id')
+    channel_invite(u_token1, channel_test_id, u_id2)
+
+    #create test message we needed
+    message_send(u_token1, channel_test_id, "msg test 01")
+    message_send(u_token1, channel_test_id, "msg test 02")
+    message_test_id = message_send(u_token1, channel_test_id, "msg test 03")['message_id']
+
+    # testing when the auth people is not a channel owner
+    with pytest.raises(AccessError):
+        message_unpin(u_token2, message_test_id)
+
+    auth_logout(u_token1)
+    auth_logout(u_token2)
+

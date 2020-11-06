@@ -2,11 +2,12 @@
     messages.py written by Xingyu Tan.
 '''
 from datetime import timezone, datetime
+import threading
+import time
 import data.data as data
 from base.auth import decode_token
 from base.error import InputError, AccessError
-import threading
-import time
+
 
 ################################################################################
 ################################################################################
@@ -305,8 +306,7 @@ def message_remove(token, message_id):
 
     # Case 4: no error, delete the message
     delete_msg_in_list(message_using)
-    return {
-    }
+    return {}
 ############################################################
 #       message_edit(token, message_id, message)
 #       written by Xingyu TAN
@@ -352,8 +352,7 @@ def message_edit(token, message_id, message):
     # Case 3: no error, edit the message
     else:
         edit_msg_in_list(message_using, message)
-    return {
-    }
+    return {}
 ############################################################
 #       message_sendlater(token, channel_id, message, time_sent)
 #       written by Xingyu TAN

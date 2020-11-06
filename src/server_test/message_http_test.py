@@ -706,7 +706,6 @@ def test_message_unpin_works_normally_for_channel_owner_only(url):
         'message_id': check_id,
     })
     # get the sent messages in channel
-
     resp = send_request_params('GET', url, 'channel/messages', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
@@ -743,7 +742,12 @@ def test_message_unpin_wrong_msg_id(url):
         'channel_id': channels[0].get('channel_id'),
         'message': "test_msg_01",
     })['message_id']
-    #unpin the message which already show unpin
+    # pin the msg
+    requests.post(f"{url}message/pin", json={
+        'token': user1.get('token'),
+        'message_id': check_id,
+    })
+    #unpin the message which has wrong msg_id
     response = requests.post(f"{url}message/unpin", json={
         'token': user1.get('token'),
         'message_id': check_id + 0xf,
@@ -776,11 +780,7 @@ def test_message_unpin_already_unpin(url):
         'channel_id': channels[0].get('channel_id'),
         'message': "test_msg_01",
     })['message_id']
-    # pin the message first time
-    requests.post(f"{url}message/pin", json={
-        'token': user1.get('token'),
-        'message_id': check_id,
-    })
+
     # pin the second time
     response = requests.post(f"{url}message/unpin", json={
         'token': user1.get('token'),

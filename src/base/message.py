@@ -2,11 +2,12 @@
     messages.py written by Xingyu Tan.
 '''
 from datetime import timezone, datetime
+import threading
+import time
 import data.data as data
 from base.auth import decode_token
 from base.error import InputError, AccessError
-import threading
-import time
+
 
 ################################################################################
 ################################################################################
@@ -56,6 +57,27 @@ def edit_msg_in_list(msg, text):
     data.replace_channels(channels)
     data.replace_messages(messages)
 
+def change_msg_pin(msg, sign):
+    """Interate the messages list by its id, return the message after edit."""
+    # get the channels
+    channels = data.return_channels()
+    messages = data.return_messages()
+
+    # deleting message from memory
+    for i in channels:
+        if i['channel_id'] == msg['channel_id']:
+            for temp in i['message']:
+                if temp['message_id'] == msg['message_id']:
+                    temp['is_pinned'] = sign
+
+    for temp in messages:
+        if temp['message_id'] == msg['message_id']:
+            temp['is_pinned'] = sign
+
+    # add it to memory
+    data.replace_channels(channels)
+    data.replace_messages(messages)
+
 def if_auth_owner(u_id, channel_id):
     """
     check if the u_id is the owner of the channel
@@ -66,6 +88,19 @@ def if_auth_owner(u_id, channel_id):
     if check_permission(u_id) == 1:
         test = True
         return test
+    # check if it is the owener of channel
+    channel_got = find_channel(channel_id)
+    for i in channel_got['owner_members']:
+        if i['u_id'] == u_id:
+            test = True
+
+    return test
+
+def if_auth_is_message_channel_owner(u_id, channel_id):
+    """
+    check if the u_id is the owner of the channel
+    """
+    test = False
     # check if it is the owener of channel
     channel_got = find_channel(channel_id)
     for i in channel_got['owner_members']:
@@ -271,8 +306,7 @@ def message_remove(token, message_id):
 
     # Case 4: no error, delete the message
     delete_msg_in_list(message_using)
-    return {
-    }
+    return {}
 ############################################################
 #       message_edit(token, message_id, message)
 #       written by Xingyu TAN
@@ -318,8 +352,7 @@ def message_edit(token, message_id, message):
     # Case 3: no error, edit the message
     else:
         edit_msg_in_list(message_using, message)
-    return {
-    }
+    return {}
 ############################################################
 #       message_sendlater(token, channel_id, message, time_sent)
 #       written by Xingyu TAN
@@ -410,11 +443,73 @@ def message_react(token, message_id, react_id):
 def message_unreact(token, message_id, react_id):
     return
 
-
+'''
 def message_pin(token, message_id):
-    return
+    '''
+    message_pin()
+    Given a message within a channel, mark it as "pinned"
+    to be given special display treatment by the frontend
+    Args:
+        token: the token of the people who edit it.
+        message_id: the new message.
+
+    RETURNS:
+    return {}
+
+    THEREFORE, TEST EVERYTHING BELOW:
+    1. inputError
+    - message_id is not a valid message
+    - message is already pinned
+    - token invalid
+    2. accessError
+    - The authorised user is not a member of the channel that the message is within
+    - The authorised user is not an owner
+    '''
+    # InputError 1: invalid token.
+    auth_id = token_into_user_id(token)
+    if auth_id == -1:
+        raise InputError(description='invalid token.')
+
+    # InputError 2: Message id is not exist
+    message_using = find_message(message_id)
+    if message_using is None:
+        raise InputError(description='invalid message id.')
+
+    # InputError 3: Message already pin
+    message_using = find_message(message_id)
+    if message_using['is_pinned']:
+        raise InputError(description='Message already pin')
+
+    # AccessError 4: token peroson is not owner
+    test_owener = if_auth_is_message_channel_owner(auth_id, message_using['channel_id'])
+    # if it is neither channel owner nor messager sender
+    # raise for access error
+    if test_owener is False:
+        raise AccessError(description='token peroson is not owner.')
+
+    # Case 5: no error, change the message pin
+    change_msg_pin(message_using, True)
+    return {}
+
 
 
 def message_unpin(token, message_id):
-    return
-'''
+    '''
+    message_unpin()
+    Given a message within a channel, remove it's mark as unpinned
+    Args:
+        token: the token of the people who edit it.
+        message_id: the new message.
+
+    RETURNS:
+    return {}
+
+    THEREFORE, TEST EVERYTHING BELOW:
+    1. inputError
+    - message_id is not a valid message
+    - message is already unpinned
+    2. accessError
+    - The authorised user is not a member of the channel that the message is within
+    - The authorised user is not an owner
+    '''
+    return {}

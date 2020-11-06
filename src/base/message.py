@@ -212,7 +212,10 @@ def message_send(token, channel_id, message):
         'u_id': auth_id,
         'message': message,
         'time_created': timestamp,
-        'reacts': False,
+        'reacts': [{'react_id': 1,
+            'u_ids':[],
+            'is_this_user_reacted': False
+        },],
         'is_pinned': False
     }
 
@@ -381,7 +384,10 @@ def message_sendlater(token, channel_id, message, time_sent):
         'u_id': auth_id,
         'message': message,
         'time_created': time_sent,
-        'reacts': False,
+        'reacts': [{'react_id': 1,
+            'u_ids':[],
+            'is_this_user_reacted': False
+        },],
         'is_pinned': False
 
     }

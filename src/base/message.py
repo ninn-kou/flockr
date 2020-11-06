@@ -481,6 +481,16 @@ def message_pin(token, message_id):
     if message_using['is_pinned']:
         raise InputError(description='Message already pin')
 
+    # AccessError 4: token peroson is not owner
+    test_owener = if_auth_is_message_channel_owner(auth_id, message_using['channel_id'])
+    # if it is neither channel owner nor messager sender
+    # raise for access error
+    if test_owener is False:
+        raise AccessError(description='token peroson is not owner.')
+
+    # Case 5: no error, change the message pin
+    change_msg_pin(message_using, True)
+    return {}
 
 
 

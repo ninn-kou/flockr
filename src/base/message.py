@@ -410,11 +410,47 @@ def message_react(token, message_id, react_id):
 def message_unreact(token, message_id, react_id):
     return
 
-
+'''
 def message_pin(token, message_id):
-    return
+    '''
+    message_pin()
+    Given a message within a channel, mark it as "pinned"
+    to be given special display treatment by the frontend
+    Args:
+        token: the token of the people who edit it.
+        message_id: the new message.
+
+    RETURNS:
+    return {}
+
+    THEREFORE, TEST EVERYTHING BELOW:
+    1. inputError
+    - message_id is not a valid message
+    - message is already pinned
+    2. accessError
+    - The authorised user is not a member of the channel that the message is within
+    - The authorised user is not an owner
+    '''
+    return {}
 
 
 def message_unpin(token, message_id):
-    return
-'''
+    '''
+    message_unpin()
+    Given a message within a channel, remove it's mark as unpinned
+    Args:
+        token: the token of the people who edit it.
+        message_id: the new message.
+
+    RETURNS:
+    return {}
+
+    THEREFORE, TEST EVERYTHING BELOW:
+    1. inputError
+    - message_id is not a valid message
+    - message is already unpinned
+    2. accessError
+    - The authorised user is not a member of the channel that the message is within
+    - The authorised user is not an owner
+    '''
+    return {}

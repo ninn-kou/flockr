@@ -442,6 +442,47 @@ def test_message_sendlater_access_error_token_people_wrong(url):
 #              test for pin
 #
 ####################################################################
+######################  check working normally ##################
+def test_message_pin_works_normally_for_channel_owner_only(url):
+    '''
+    test for message_send
+    Test whether the msg can be sent normally
+    '''
+    # clear out the databases
+    requests.delete(url + 'clear', json={})
+
+    # register a new user and create a new channel
+    user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
+    channels = create_channels(url, user1.get('token'), True, 1)
+
+    # invite second user to invite
+    user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
+    invite_user(url, user1, channels[0].get('channel_id'), user2)
+
+    # create the new time
+    now = datetime.utcnow()
+    timestamp = int(now.replace(tzinfo=timezone.utc).timestamp())
+    time_furture = timestamp + 5
+    # get the sent messages in channel
+    check_id = send_request('POST', url, 'message/sendlater', {
+        'token': user1.get('token'),
+        'channel_id': channels[0].get('channel_id'),
+        'message': "test_msg_01",
+        'time_sent':time_furture
+    })
+    # get the sent messages in channel
+
+    resp = send_request_params('GET', url, 'channel/messages', {
+        'token': user1.get('token'),
+        'channel_id': channels[0].get('channel_id'),
+        'start': 0
+    })
+
+    # make sure the messages are the same
+    assert resp['messages'][0]['message'] == "test_msg_01"
+    assert resp['messages'][0]['time_created'] == time_furture
+    assert resp['messages'][0]['message_id'] == check_id['message_id']
+
 
 ###################################################################
 def test_message_pin_wrong_msg_id(url):
@@ -472,6 +513,139 @@ def test_message_pin_wrong_msg_id(url):
     response = requests.post(f"{url}message/pin", json={
         'token': user1.get('token'),
         'message_id': check_id + 0xf,
+    })
+
+    assert response.status_code == 400
+
+
+###################################################################
+def test_message_pin_already_pin(url):
+    '''
+    test for message_send
+    Test whether the msg can be sent normally
+    when the sent time is in the past
+    '''
+    # clear out the databases
+    requests.delete(url + 'clear', json={})
+
+    # register a new user and create a new channel
+    user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
+    channels = create_channels(url, user1.get('token'), True, 1)
+
+    # invite second user to invite
+    user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
+    invite_user(url, user1, channels[0].get('channel_id'), user2)
+
+    # get the sent messages in channel
+    check_id = send_request('POST', url, 'message/send', {
+        'token': user1.get('token'),
+        'channel_id': channels[0].get('channel_id'),
+        'message': "test_msg_01",
+    })['message_id']
+    # pin the message first time
+    requests.post(f"{url}message/pin", json={
+        'token': user1.get('token'),
+        'message_id': check_id,
+    })
+    # pin the second time
+    response = requests.post(f"{url}message/pin", json={
+        'token': user1.get('token'),
+        'message_id': check_id,
+    })
+    assert response.status_code == 400
+
+###################################################################
+def test_message_pin_wrong_token_id(url):
+    '''
+    test for message_send
+    Test whether the msg can be sent normally
+    when the sent time is in the past
+    '''
+    # clear out the databases
+    requests.delete(url + 'clear', json={})
+
+    # register a new user and create a new channel
+    user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
+    channels = create_channels(url, user1.get('token'), True, 1)
+
+    # get the sent messages in channel
+    check_id = send_request('POST', url, 'message/send', {
+        'token': user1.get('token'),
+        'channel_id': channels[0].get('channel_id'),
+        'message': "test_msg_01",
+    })['message_id']
+    # get the sent messages in channel
+
+    response = requests.post(f"{url}message/pin", json={
+        'token': user1.get('token') + 'abc',
+        'message_id': check_id,
+    })
+
+    assert response.status_code == 400
+
+
+###################################################################
+def test_message_pin_non_channel_member(url):
+    '''
+    test for message_send
+    Test whether the msg can be sent normally
+    when the sent time is in the past
+    '''
+    # clear out the databases
+    requests.delete(url + 'clear', json={})
+
+    # register a new user and create a new channel
+    user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
+    channels = create_channels(url, user1.get('token'), True, 1)
+
+    # invite second user to invite
+    user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
+
+    # get the sent messages in channel
+    check_id = send_request('POST', url, 'message/send', {
+        'token': user1.get('token'),
+        'channel_id': channels[0].get('channel_id'),
+        'message': "test_msg_01",
+    })['message_id']
+    # get the sent messages in channel
+
+    response = requests.post(f"{url}message/pin", json={
+        'token': user2.get('token') + 'abc',
+        'message_id': check_id,
+    })
+
+    assert response.status_code == 400
+
+
+###################################################################
+def test_message_pin_non_channel_member(url):
+    '''
+    test for message_send
+    Test whether the msg can be sent normally
+    when the sent time is in the past
+    '''
+    # clear out the databases
+    requests.delete(url + 'clear', json={})
+
+    # register a new user and create a new channel
+    user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
+    channels = create_channels(url, user1.get('token'), True, 1)
+
+    # invite second user to invite
+    user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
+    invite_user(url, user1, channels[0].get('channel_id'), user2)
+
+    # get the sent messages in channel
+    check_id = send_request('POST', url, 'message/send', {
+        'token': user1.get('token'),
+        'channel_id': channels[0].get('channel_id'),
+        'message': "test_msg_01",
+    })['message_id']
+    # get the sent messages in channel
+
+    response = requests.post(f"{url}message/pin", json={
+        'token': user2.get('token') + 'abc',
+        'message_id': check_id,
     })
 
     assert response.status_code == 400

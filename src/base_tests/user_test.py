@@ -190,20 +190,11 @@ def url():
 def compare_images(input_image, output_image):
     ''' image comparison function '''
     # compare image dimensions
-    if input_image.size != output_image.size:
-        return False
-
-    rows, cols = input_image.size
-
-    # compare image pixels
-    for row in range(rows):
-        for col in range(cols):
-            input_pixel = input_image.getpixel((row, col))
-            output_pixel = output_image.getpixel((row, col))
-            if input_pixel != output_pixel:
-                return False
-
-    return True
+    # if input_image.size != output_image.size:
+    #     return False
+    if list(input_image.getdata()) == list(output_image.getdata()):
+        return True
+    return False
 
 def test_user_profile_uploadphoto(url):
     '''

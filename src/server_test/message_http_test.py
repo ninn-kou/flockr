@@ -427,8 +427,8 @@ def test_message_sendlater_access_error_token_people_wrong(url):
     time_furture = timestamp + 10
     # get the sent messages in channel
     response = requests.post(f"{url}message/sendlater", json={
-        'token': user1.get('token'),
-        'channel_id': channels[0].get('channel_id') + 0xf,
+        'token': user2.get('token'),
+        'channel_id': channels[0].get('channel_id'),
         'message': "test_msg_01",
         'time_sent':time_furture
     })

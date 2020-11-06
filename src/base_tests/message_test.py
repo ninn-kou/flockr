@@ -1241,6 +1241,7 @@ def test_message_unpin_wrong_msg_id():
     message_send(u_token1, channel_test_id, "msg test 01")
     message_send(u_token1, channel_test_id, "msg test 02")
     message_test_id = message_send(u_token1, channel_test_id, "msg test 03")['message_id']
+    message_pin(u_token1, message_test_id)
 
     # testing for invalid message id inputError
     with pytest.raises(InputError):
@@ -1268,6 +1269,7 @@ def test_message_unpin_already_pin():
     message_send(u_token1, channel_test_id, "msg test 02")
     message_test_id = message_send(u_token1, channel_test_id, "msg test 03")['message_id']
     # unpin the msg
+    message_pin(u_token1, message_test_id)
     message_unpin(u_token1, message_test_id)
 
     # testing for already unpin inputError
@@ -1295,6 +1297,7 @@ def test_message_unpin_wrong_token_id():
     message_send(u_token1, channel_test_id, "msg test 01")
     message_send(u_token1, channel_test_id, "msg test 02")
     message_test_id = message_send(u_token1, channel_test_id, "msg test 03")['message_id']
+    message_pin(u_token1, message_test_id)
 
     # testing for channel message function for invalid token inputError
     with pytest.raises(InputError):
@@ -1324,6 +1327,7 @@ def test_message_unpin_non_channel_member():
     message_send(u_token1, channel_test_id, "msg test 01")
     message_send(u_token1, channel_test_id, "msg test 02")
     message_test_id = message_send(u_token1, channel_test_id, "msg test 03")['message_id']
+    message_pin(u_token1, message_test_id)
 
     # testing when the auth people is not a channel member
     with pytest.raises(AccessError):
@@ -1356,6 +1360,7 @@ def test_message_unpin_non_channel_owner():
     message_send(u_token1, channel_test_id, "msg test 01")
     message_send(u_token1, channel_test_id, "msg test 02")
     message_test_id = message_send(u_token1, channel_test_id, "msg test 03")['message_id']
+    message_pin(u_token1, message_test_id)
 
     # testing when the auth people is not a channel owner
     with pytest.raises(AccessError):
@@ -1389,6 +1394,8 @@ def test_message_unpin_works_normally_for_channel_owner_only():
     message_send(u_token1, channel_test_id, "msg test 02")
     message_test_id = message_send(u_token2, channel_test_id, "msg test 03")['message_id']
     channel_addowner(u_token1, channel_test_id, u_id2)
+    message_pin(u_token2, message_test_id)
+
     # pin the message we need
     message_unpin(u_token2, message_test_id)
 

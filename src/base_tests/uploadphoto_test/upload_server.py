@@ -8,6 +8,7 @@ from flask_cors import CORS
 
 from pathlib import Path
 import os
+from PIL import Image
 
 def default_handler(err):
     ''' system error handler '''
@@ -36,8 +37,18 @@ def jpg_one():
 @APP.route('/one/crop', methods = ['GET'])
 def jpg_one_crop():
     '''lists all channels that exist'''
-    path = 'test_one_cropped.jpg'
-    return send_file(path, mimetype='image/gif')
+    with open('test.log', 'a') as file:
+        file.write('\n')
+        path = os.getcwd() + '/src/base_tests/uploadphoto_test/test_one.jpg'
+        path = r'{}'.format(path)
+        file.write(path)
+        img = Image.load(path)
+        file.write(img)
+        cropped = img.crop((0,0,10,10))
+        path = os.getcwd() + '/src/base_tests/uploadphoto_test/test_one_cropped.jpg'
+        cropped.save(path)
+
+        return send_file(path, mimetype='image/gif')
 
 @APP.route('/two', methods = ['GET'])
 def jpg_two():

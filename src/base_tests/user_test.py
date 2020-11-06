@@ -219,6 +219,7 @@ def test_user_profile_uploadphoto(url):
 
     # get the first already cropped image from the test server
     r = requests.get(url_cropped, stream=True)
+    print(r)
     test_image = Image.open(r.raw)
 
     # test that the function doesn't crash

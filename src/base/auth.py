@@ -223,7 +223,9 @@ def auth_register(email, password, name_first, name_last):
         'handle_str': handle,
         'password': password,
         'permission_id': permission_id,
-        'session_secret': session_secret
+        'session_secret': session_secret,
+        'profile_img_url': '',
+
     }
     data.append_users(user)
 

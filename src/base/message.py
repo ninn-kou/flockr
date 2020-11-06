@@ -5,6 +5,8 @@ from datetime import timezone, datetime
 import data.data as data
 from base.auth import decode_token
 from base.error import InputError, AccessError
+import threading
+import time
 
 ################################################################################
 ################################################################################
@@ -17,6 +19,14 @@ from base.error import InputError, AccessError
 ##      - message_remove(token, message_id);
 ##      - message_edit(token, message_id, message);
 ##      - and all tests for these functions.
+##    Xingyu TAN's work:
+##    05 NOV., 2020
+##
+##      - some helper functions;
+##      - message_sendlater
+##      - message_pin
+##      - message_unpin
+##      - and all tests, http file and http tests for these functions.
 ##
 ################################################################################
 ################################################################################
@@ -142,6 +152,7 @@ def find_one_in_channel(channel, u_id):
 
 ############################################################
 #       message_send(token, channel_id, message)
+#       written by Xingyu TAN
 ############################################################
 def message_send(token, channel_id, message):
     """
@@ -193,7 +204,11 @@ def message_send(token, channel_id, message):
     # record the time rightnow
     now = datetime.utcnow()
     timestamp = int(now.replace(tzinfo=timezone.utc).timestamp())
-
+    new_react = {
+        'react_id': 1,
+        'u_ids':[],
+        'is_this_user_reacted': False
+    }
     # create the message struct
     return_message = {
         'message_id': new_msg_id,
@@ -201,6 +216,8 @@ def message_send(token, channel_id, message):
         'u_id': auth_id,
         'message': message,
         'time_created': timestamp,
+        'reacts': [new_react,],
+        'is_pinned': False
     }
 
     # insert the message in the top of messages in the channel.
@@ -211,6 +228,7 @@ def message_send(token, channel_id, message):
     }
 ############################################################
 #       message_remove(token, message_id)
+#       written by Xingyu TAN
 ############################################################
 def message_remove(token, message_id):
     """
@@ -257,6 +275,7 @@ def message_remove(token, message_id):
     }
 ############################################################
 #       message_edit(token, message_id, message)
+#       written by Xingyu TAN
 ############################################################
 def message_edit(token, message_id, message):
     '''
@@ -301,3 +320,101 @@ def message_edit(token, message_id, message):
         edit_msg_in_list(message_using, message)
     return {
     }
+############################################################
+#       message_sendlater(token, channel_id, message, time_sent)
+#       written by Xingyu TAN
+############################################################
+def message_sendlater(token, channel_id, message, time_sent):
+    '''
+    message_sendlater()
+    Send a message from authorised_user to the channel specified
+    by channel_id automatically at a specified time in the future
+    Args:
+        token: the token of the people who edit it.
+        channel_id: the channel which is the target of message.
+        message: the new message.
+        time_sent: when the msg would be sent
+    RETURNS:
+    return {
+        'message_id': new_msg_id,
+    }
+
+
+    THEREFORE, TEST EVERYTHING BELOW:
+    1. inputError
+    - Channel ID is not a valid channel
+    - Message is more than 1000 characters
+    - Time sent is a time in the past
+    2. accessError
+    when:  the authorised user has not joined the channel they are trying to post to
+    '''
+    # InputError 1: invalid token.
+    auth_id = token_into_user_id(token)
+    if auth_id == -1:
+        raise InputError(description='invalid token.')
+
+    # InputError 2: Message is more than 1000 characters.
+    if len(message) > 1000:
+        raise InputError(description='Message is more than 1000 characters.')
+
+    # AccessError 3: invalid channel_id.
+    channel_got = find_channel(channel_id)
+    if channel_got is None:
+        raise AccessError(description='invalid channel_id.')
+
+    # AccessError 4: if the auth not in channel.
+    if not find_one_in_channel(channel_got, auth_id):
+        raise AccessError(description='auth not in channel')
+
+    #Input error 5: the time is in the past
+    # record the time rightnow
+    now = datetime.utcnow()
+    timestamp = int(now.replace(tzinfo=timezone.utc).timestamp())
+    if (time_sent < timestamp):
+        raise InputError(description='The time is in the past')
+
+    # Case 5: no error, add the message
+    new_msg_id = 1
+    if len(data.return_messages()) != 0:
+        new_msg_id = data.return_messages()[0]['message_id'] + 1
+    new_react = {
+        'react_id': 1,
+        'u_ids':[],
+        'is_this_user_reacted': False
+    }
+    # create the message struct
+    return_message = {
+        'message_id': new_msg_id,
+        'channel_id': channel_id,
+        'u_id': auth_id,
+        'message': message,
+        'time_created': time_sent,
+        'reacts': [new_react,],
+        'is_pinned': False
+
+    }
+
+    # insert the message in the top of messages in the channel.
+    t = threading.Timer(time_sent - timestamp, adding_message(return_message, channel_id))
+    t.start()
+
+    return {
+        'message_id': new_msg_id,
+    }
+
+'''
+def message_react(token, message_id, react_id):
+    return
+
+
+def message_unreact(token, message_id, react_id):
+    return
+
+
+def message_pin(token, message_id):
+    return
+
+
+def message_unpin(token, message_id):
+    return
+'''

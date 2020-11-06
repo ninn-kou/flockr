@@ -1197,3 +1197,105 @@ def test_message_pin_works_normally_for_channel_owner_only():
 #                     test for message_unpin Function
 #
 ##########################################################################
+# Xingyu TAN working on message_test.py for message_pin function
+# 06 Nov. 2020
+
+##########################################################################
+#
+#    message_unpin()
+#    Given a message within a channel, mark it as "pinned"
+#    to be given special display treatment by the frontend
+#    Args:
+#        token: the token of the people who edit it.
+#        message_id: the new message.
+#
+#    RETURNS:
+#    return {}
+#
+#   THEREFORE, TEST EVERYTHING BELOW:
+#    1. inputError
+#    - message_id is not a valid message
+#    - message is already unpinned
+#    - token id incorrect
+#    2. accessError
+#    - The authorised user is not a member of the channel that the message is within
+#    - The authorised user is not an owner
+#
+##########################################################################
+######################   INPUT ERROR    #################
+def test_message_unpin_wrong_msg_id():
+    '''
+    this test using for check if the message id given is valid
+    '''
+    # create 1 users
+    other.clear()
+    user1 = auth_register("test1@test.com", "check_test", "Xingyu", "TAN")
+    user1 = auth_login("test1@test.com", "check_test")
+    u_token1 = user1['token']
+
+
+    # create channel for testing
+    channel_test_id = channels_create(u_token1, "channel_test", True).get('channel_id')
+
+    #create test message we needed
+    message_send(u_token1, channel_test_id, "msg test 01")
+    message_send(u_token1, channel_test_id, "msg test 02")
+    message_test_id = message_send(u_token1, channel_test_id, "msg test 03")['message_id']
+
+    # testing for invalid message id inputError
+    with pytest.raises(InputError):
+        message_unpin(u_token1, message_test_id + 0xf)
+
+    auth_logout(u_token1)
+######################   INPUT ERROR 2   #################
+def test_message_unpin_already_pin():
+    '''
+    this test using for check when the message already pin
+    '''
+    # create 2 users
+    other.clear()
+    user1 = auth_register("test1@test.com", "check_test", "Xingyu", "TAN")
+    user1 = auth_login("test1@test.com", "check_test")
+    u_token1 = user1['token']
+
+
+    # create channel for testing
+    channel_test_id = channels_create(u_token1, "channel_test", True).get('channel_id')
+
+    #create test message we needed
+    message_send(u_token1, channel_test_id, "msg test 01")
+    message_send(u_token1, channel_test_id, "msg test 02")
+    message_test_id = message_send(u_token1, channel_test_id, "msg test 03")['message_id']
+    # pin the msg
+    message_pin(u_token1, message_test_id)
+
+    # testing for already pin inputError
+    with pytest.raises(InputError):
+        message_unpin(u_token1, message_test_id)
+
+    auth_logout(u_token1)
+##################################################################
+def test_message_unpin_wrong_token_id():
+    '''
+    this test using for check if the token given is valid
+    '''
+    # create 2 users
+    other.clear()
+    user1 = auth_register("test1@test.com", "check_test", "Xingyu", "TAN")
+    user1 = auth_login("test1@test.com", "check_test")
+    u_token1 = user1['token']
+
+
+    # create channel for testing
+    channel_test_id = channels_create(u_token1, "channel_test", True).get('channel_id')
+
+    #create test message we needed
+    message_send(u_token1, channel_test_id, "msg test 01")
+    message_send(u_token1, channel_test_id, "msg test 02")
+    message_test_id = message_send(u_token1, channel_test_id, "msg test 03")['message_id']
+
+    # testing for channel message function for invalid token inputError
+    with pytest.raises(InputError):
+        message_unpin(u_token1 + 'abc', message_test_id)
+
+    auth_logout(u_token1)

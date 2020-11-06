@@ -1181,14 +1181,14 @@ def test_message_pin_works_normally_for_channel_owner_only():
     message_send(u_token1, channel_test_id, "msg test 01")
     message_send(u_token1, channel_test_id, "msg test 02")
     message_test_id = message_send(u_token2, channel_test_id, "msg test 03")['message_id']
-    channel_addowner(u_token1, channel_test_id,u_id2)
+    channel_addowner(u_token1, channel_test_id, u_id2)
     # pin the message we need
     message_pin(u_token2, message_test_id)
 
     # 2. check the function can return the message correctly.
     check_work_msg = channel_messages(u_token2, channel_test_id, 0)
     assert check_work_msg['messages'][0]['message'] == 'msg test 03'
-    assert check_work_msg['messages'][0]['is_pinned'] == True
+    assert check_work_msg['messages'][0]['is_pinned'] is True
 
     auth_logout(u_token1)
     auth_logout(u_token2)

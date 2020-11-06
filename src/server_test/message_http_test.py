@@ -445,8 +445,8 @@ def test_message_sendlater_access_error_token_people_wrong(url):
 ######################  check working normally ##################
 def test_message_pin_works_normally_for_channel_owner_only(url):
     '''
-    test for message_send
-    Test whether the msg can be sent normally
+    test for message_pin
+    Test whether the msg can be pinned normally
     '''
     # clear out the databases
     requests.delete(url + 'clear', json={})
@@ -459,16 +459,18 @@ def test_message_pin_works_normally_for_channel_owner_only(url):
     user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
     invite_user(url, user1, channels[0].get('channel_id'), user2)
 
-    # create the new time
-    now = datetime.utcnow()
-    timestamp = int(now.replace(tzinfo=timezone.utc).timestamp())
-    time_furture = timestamp + 5
+
     # get the sent messages in channel
-    check_id = send_request('POST', url, 'message/sendlater', {
+    check_id = send_request('POST', url, 'message/send', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'message': "test_msg_01",
-        'time_sent':time_furture
+    })['message_id']
+
+    # pin the message
+    requests.post(f"{url}message/pin", json={
+        'token': user1.get('token'),
+        'message_id': check_id,
     })
     # get the sent messages in channel
 
@@ -480,8 +482,8 @@ def test_message_pin_works_normally_for_channel_owner_only(url):
 
     # make sure the messages are the same
     assert resp['messages'][0]['message'] == "test_msg_01"
-    assert resp['messages'][0]['time_created'] == time_furture
-    assert resp['messages'][0]['message_id'] == check_id['message_id']
+    assert resp['messages'][0]['is_pinned'] is True
+    assert resp['messages'][0]['message_id'] == check_id
 
 
 ###################################################################
@@ -618,7 +620,7 @@ def test_message_pin_non_channel_member(url):
 
 
 ###################################################################
-def test_message_pin_non_channel_member(url):
+def test_message_pin_token_incorrect(url):
     '''
     test for message_send
     Test whether the msg can be sent normally

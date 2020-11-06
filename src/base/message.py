@@ -434,12 +434,46 @@ def message_sendlater(token, channel_id, message, time_sent):
     return {
         'message_id': new_msg_id,
     }
+############################################################
+#       mhelper function for react features
+############################################################
+def find_one_in_message(message, u_id):
+    reacts=message["reacts"][0]
+    print(u_id)
+    if u_id in reacts['u_ids']:
+        return True
+    return False
 
-'''
+############################################################
+#       message_react(token, message_id, react_id)
+#       written by Yuhan Yan
+############################################################
 def message_react(token, message_id, react_id):
-    return
+    # InputError 1: invalid token.
+    auth_id = token_into_user_id(token)
+    if auth_id == -1:
+        raise InputError(description='invalid token.')
 
+    if react_id !=1:
+        raise InputError(description='invalid react_id.')
 
+    # AccessError 3: invalid channel_id.
+    message_got = find_message(message_id)
+    if message_got is None:
+        raise InputError(description='invalid message_id.')
+
+    if find_one_in_message(message_got, auth_id):
+        raise AccessError(description='')
+
+    message_list=data.return_messages()
+    for i in message_list:
+        if i['message_id'] == message_got['message_id']:
+            i['reacts'][0]["u_ids"].append(auth_id)
+            i['reacts'][0]["is_this_user_reacted"]=True
+
+    data.replace_messages(message_list)
+    return {}
+'''
 def message_unreact(token, message_id, react_id):
     return
 

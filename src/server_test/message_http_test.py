@@ -717,3 +717,106 @@ def test_message_unpin_works_normally_for_channel_owner_only(url):
     assert resp['messages'][0]['message'] == "test_msg_01"
     assert resp['messages'][0]['is_pinned'] is False
     assert resp['messages'][0]['message_id'] == check_id
+
+
+###################################################################
+def test_message_unpin_wrong_msg_id(url):
+    '''
+    test for message_send
+    Test whether the msg can be sent normally
+    when the sent time is in the past
+    '''
+    # clear out the databases
+    requests.delete(url + 'clear', json={})
+
+    # register a new user and create a new channel
+    user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
+    channels = create_channels(url, user1.get('token'), True, 1)
+
+    # invite second user to invite
+    user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
+    invite_user(url, user1, channels[0].get('channel_id'), user2)
+
+    # get the sent messages in channel
+    check_id = send_request('POST', url, 'message/send', {
+        'token': user1.get('token'),
+        'channel_id': channels[0].get('channel_id'),
+        'message': "test_msg_01",
+    })['message_id']
+    #unpin the message which already show unpin
+    response = requests.post(f"{url}message/unpin", json={
+        'token': user1.get('token'),
+        'message_id': check_id + 0xf,
+    })
+
+    assert response.status_code == 400
+
+
+###################################################################
+def test_message_unpin_already_unpin(url):
+    '''
+    test for message_send
+    Test whether the msg can be sent normally
+    when the sent time is in the past
+    '''
+    # clear out the databases
+    requests.delete(url + 'clear', json={})
+
+    # register a new user and create a new channel
+    user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
+    channels = create_channels(url, user1.get('token'), True, 1)
+
+    # invite second user to invite
+    user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
+    invite_user(url, user1, channels[0].get('channel_id'), user2)
+
+    # get the sent messages in channel
+    check_id = send_request('POST', url, 'message/send', {
+        'token': user1.get('token'),
+        'channel_id': channels[0].get('channel_id'),
+        'message': "test_msg_01",
+    })['message_id']
+    # pin the message first time
+    requests.post(f"{url}message/pin", json={
+        'token': user1.get('token'),
+        'message_id': check_id,
+    })
+    # pin the second time
+    response = requests.post(f"{url}message/unpin", json={
+        'token': user1.get('token'),
+        'message_id': check_id,
+    })
+    assert response.status_code == 400
+
+###################################################################
+def test_message_unpin_wrong_token_id(url):
+    '''
+    test for message_send
+    Test whether the msg can be sent normally
+    when the sent time is in the past
+    '''
+    # clear out the databases
+    requests.delete(url + 'clear', json={})
+
+    # register a new user and create a new channel
+    user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
+    channels = create_channels(url, user1.get('token'), True, 1)
+
+    # get the sent messages in channel
+    check_id = send_request('POST', url, 'message/send', {
+        'token': user1.get('token'),
+        'channel_id': channels[0].get('channel_id'),
+        'message': "test_msg_01",
+    })['message_id']
+    # pin the msg
+    requests.post(f"{url}message/pin", json={
+        'token': user1.get('token'),
+        'message_id': check_id,
+    })
+    # unpin the msg
+    response = requests.post(f"{url}message/unpin", json={
+        'token': user1.get('token') + 'abc',
+        'message_id': check_id,
+    })
+
+    assert response.status_code == 400

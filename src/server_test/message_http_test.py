@@ -437,6 +437,17 @@ def test_message_sendlater_access_error_token_people_wrong(url):
         'time_sent':time_furture
     })
     assert response.status_code == 400
+
+###################################################################
+#
+#              test for react
+#
+####################################################################
+###################################################################
+#
+#              test for unreact
+#
+####################################################################
 ###################################################################
 #
 #              test for pin
@@ -651,3 +662,4 @@ def test_message_pin_token_incorrect(url):
     })
 
     assert response.status_code == 400
+

@@ -512,4 +512,28 @@ def message_unpin(token, message_id):
     - The authorised user is not a member of the channel that the message is within
     - The authorised user is not an owner
     '''
+    # InputError 1: invalid token.
+    auth_id = token_into_user_id(token)
+    if auth_id == -1:
+        raise InputError(description='invalid token.')
+
+    # InputError 2: Message id is not exist
+    message_using = find_message(message_id)
+    if message_using is None:
+        raise InputError(description='invalid message id.')
+
+    # InputError 3: Message already pin
+    message_using = find_message(message_id)
+    if message_using['is_pinned'] is False:
+        raise InputError(description='Message already unpin')
+
+    # AccessError 4: token peroson is not owner
+    test_owener = if_auth_is_message_channel_owner(auth_id, message_using['channel_id'])
+    # if it is neither channel owner nor messager sender
+    # raise for access error
+    if test_owener is False:
+        raise AccessError(description='token peroson is not owner.')
+
+    # Case 5: no error, change the message pin to
+    change_msg_pin(message_using, False)
     return {}

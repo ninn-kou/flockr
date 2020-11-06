@@ -48,17 +48,12 @@ def edit():
 @MESSAGEHTTP.route("/sendlater", methods=['POST'])
 def sendlater():
     input_obj = request.json
-    now = datetime.utcnow()
-    timestamp = int(now.replace(tzinfo=timezone.utc).timestamp())
-    t = threading.Timer(time_sent - timestamp,
     output = message.message_sendlater(
-    input_obj.get('token'),
-    input_obj.get('channel_id'),
-    input_obj.get('message'),
-    input_obj.get('time_sent')
-    ))
-    t.start()
-
+        input_obj.get('token'),
+        input_obj.get('channel_id'),
+        input_obj.get('message'),
+        input_obj.get('time_sent')
+    )
 
     return jsonify(output)
 

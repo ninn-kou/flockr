@@ -1,12 +1,12 @@
 ''' this file is using for pytest of base/message.py .'''
 from datetime import timezone, datetime
 import pytest
-from base.channel import channel_invite, channel_messages
+from base.channel import channel_invite, channel_messages, channel_addowner
 from base.channels import channels_create
 from base.auth import auth_login, auth_register, auth_logout
 from base.message import message_send, message_remove, message_edit
-from base.message import message_sendlater
-, message_pin#, message_unpin, message_react, message_unreact
+from base.message import message_sendlater, message_pin
+#, message_unpin, message_react, message_unreact
 from base.error import InputError, AccessError
 import base.other as other
 
@@ -1137,7 +1137,7 @@ def test_message_pin_non_channel_owner():
     u_token1 = user1['token']
 
     user2 = auth_register("test2@test.com", "check_test", "steve", "TAN")
-    user2 = auth_login("test2@test.com", "check_test")\
+    user2 = auth_login("test2@test.com", "check_test")
     u_id2 = user2['u_id']
     u_token2 = user2['token']
 
@@ -1181,7 +1181,7 @@ def test_message_pin_works_normally_for_channel_owner_only():
     message_send(u_token1, channel_test_id, "msg test 01")
     message_send(u_token1, channel_test_id, "msg test 02")
     message_test_id = message_send(u_token2, channel_test_id, "msg test 03")['message_id']
-
+    channel_addowner(u_token1, channel_test_id,u_id2)
     # pin the message we need
     message_pin(u_token2, message_test_id)
 

@@ -998,7 +998,7 @@ def test_react_invalid_react():
     message_test_id_01 = message_send(u_token1, channel_test_id, "msg test 02")['message_id']
 
     with pytest.raises(InputError):
-        message_react(u_token1,message_test_id_01,2)
+        message_react(u_token1, message_test_id_01, 2)
 
     auth_logout(u_token1)
 
@@ -1019,9 +1019,9 @@ def test_react_invalid_message_id():
     # create a message which is more than 1000 characters
 
     # testing for channel invite function for length more than 1000 words
-    message_test_id_01 = message_send(u_token1, channel_test_id, "msg test 02")['message_id']
+    message_send(u_token1, channel_test_id, "msg test 02")['message_id']
     with pytest.raises(InputError):
-        message_react(u_token1,46858,1)
+        message_react(u_token1, 46858, 1)
 
     auth_logout(u_token1)
 

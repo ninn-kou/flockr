@@ -469,7 +469,7 @@ def message_react(token, message_id, react_id):
     for i in message_list:
         if i['message_id'] == message_got['message_id']:
             i['reacts'][0]["u_ids"].append(auth_id)
-            i['reacts'][0]["is_this_user_reacted"]=True
+            i['reacts'][0]["is_this_user_reacted"] = True
 
     data.replace_messages(message_list)
     return {}

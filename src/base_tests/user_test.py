@@ -190,8 +190,6 @@ def url():
 def compare_images(input_image, output_image):
     ''' image comparison function '''
     # compare image dimensions
-    # if input_image.size != output_image.size:
-    #     return False
     if list(input_image.getdata()) == list(output_image.getdata()):
         return True
     return False

@@ -34,8 +34,14 @@ def test_channels_create():
     assert data.return_channels()[-1]['name'] == 'team'
     assert data.return_channels()[-1]['channel_id'] == channel_1_id
     assert data.return_channels()[-1]['is_public'] == True
-    assert data.return_channels()[-1]['owner_members'] == [{'u_id':u1_id,'name_first':'FirstN','name_last':'LastN'}]
-    assert data.return_channels()[-1]['all_members'] == [{'u_id':u1_id,'name_first':'FirstN','name_last':'LastN'}]
+    assert data.return_channels()[-1]['owner_members'][0]['u_id'] == u1_id
+    assert data.return_channels()[-1]['owner_members'][0]['name_first'] == 'FirstN'
+    assert data.return_channels()[-1]['owner_members'][0]['name_last'] == 'LastN'
+
+    assert data.return_channels()[-1]['all_members'][0]['u_id'] == u1_id
+    assert data.return_channels()[-1]['all_members'][0]['name_first'] == 'FirstN'
+    assert data.return_channels()[-1]['all_members'][0]['name_last'] == 'LastN'
+
 
 def test_channels_listall():
     clear()
@@ -66,7 +72,7 @@ def test_channels_listall():
 def test_channels_list():
     '''
     channels_list rewritten by Joseph to make it match spec
-    
+
     Needs to return all channels where user1 is a member
     '''
     clear()
@@ -100,7 +106,7 @@ def test_channels_list():
 
     # user 2 should have 3 channels visible
     assert len(auth_channels2) == (len(user2_channels) + len(public_channels))
-    
+
     # authorised channels for user3
     auth_channels3 = channels.channels_list(token3).get('channels')
 

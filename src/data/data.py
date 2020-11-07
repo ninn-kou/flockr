@@ -249,5 +249,5 @@ def clear_profiles():
 
 def save_image(image, u_id):
     ''' save an image in the profiles directory'''
-    path = 'src/data/profiles/' + str(u_id) + '.jpg'
+    path = os.getcwd() + '/src/data/profiles/' + str(u_id) + '.jpg'
     image.save(path)

@@ -34,6 +34,7 @@ def users_all(token):
             'name_first': i['name_first'],
             'name_last': i['name_last'],
             'handle_str': i['handle_str'],
+            'profile_img_url': i['profile_img_url'],
         }
 
         list_users.append(user)
@@ -79,7 +80,7 @@ def search(token, query_str):
         for j in i['all_members']:
             if id_from == j['u_id']:
                 chan_list.append(i['channel_id'])
-    
+
     messages = data.return_messages()
     for i in messages:
         if i['channel_id'] in chan_list:   # focus on the channels which is joinned by the user
@@ -89,6 +90,8 @@ def search(token, query_str):
                     "u_id" : i['u_id'],
                     "message" : i['message'],
                     "time_created" : i['time_created'],
+                    'reacts': i['reacts'],
+                    'is_pinned': i['is_pinned'],
                 }
                 mes_list.append(added_message)
     return {

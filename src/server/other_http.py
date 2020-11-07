@@ -12,7 +12,8 @@ OTHERHTTP = Blueprint('other', __name__)
 
 @OTHERHTTP.route("/clear", methods=['DELETE'])
 def clear():
-    other.clear()
+
+    return jsonify(other.clear())
 
 @OTHERHTTP.route("/users/all", methods=['GET'])
 def users_all():
@@ -28,11 +29,13 @@ def users_all():
 def userpermission_change():
     input_obj = request.json
 
-    other.admin_userpermission_change(
+    output = other.admin_userpermission_change(
         input_obj.get('token'),
         input_obj.get('u_id'),
         input_obj.get('permission_id')
     )
+    return jsonify(output)
+
 
 @OTHERHTTP.route("/search", methods=['GET'])
 def search():

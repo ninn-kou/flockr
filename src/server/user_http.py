@@ -87,7 +87,7 @@ def uploadphoto():
         r.get('x_end'),
         r.get('y_end')
     )
-    
+
     # get the cropped photo path and return it
     cropped = 'data/profiles/' + u_id + '.jpg'
     return send_file(cropped, mimetype='image/gif')

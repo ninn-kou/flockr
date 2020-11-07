@@ -53,7 +53,7 @@ def user_profile(token, u_id):
             'name_first': user['name_first'],
             'name_last': user['name_last'],
             'handle_str': user['handle_str'],
-            'profile_img_url': i['profile_img_url'],
+            'profile_img_url': data.get_profile_photo_url(u_id),
 
         },
     }
@@ -166,7 +166,7 @@ def user_profile_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     width, height = img.size
     if width < x_end or height < y_end:
         raise InputError('Invalid Dimensions')
-    
+
     # crop the image
     cropped = img.crop((x_start, y_start, x_end, y_end))
 

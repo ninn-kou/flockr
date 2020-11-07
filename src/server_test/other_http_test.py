@@ -16,6 +16,7 @@ import data.data as data
 import base.other as other
 import server.other_http as other_http
 
+
 # copy-pasted this straight out of echo_http_test.py
 # Use this fixture to get the URL of the server. It starts the server for you,
 # so you don't need to.
@@ -214,5 +215,3 @@ def test_search(url):
     }).get('messages')
 
     assert len(resp) == 2
-
-

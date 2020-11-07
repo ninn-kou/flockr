@@ -105,3 +105,8 @@ Most recent changing log for this Markdown document here:
 ### 2.1 message_send()
 
 - for each message send, the new one always the toppest one.
+
+### uploadphoto
+
+- this function requires the pillow module
+- assumes that everything is a localhost url

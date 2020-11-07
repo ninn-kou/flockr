@@ -102,11 +102,15 @@ Most recent changing log for this Markdown document here:
 - If the user is the only one owner in the channel:
   - Remove the whole channel cause a no-owner channel is banned.
 
+## 2. Iteration 2
+
 ### 2.1 message_send()
 
 - for each message send, the new one always the toppest one.
 
-### uploadphoto
+### Upload User's Photo
 
-- this function requires the pillow module
-- assumes that everything is a localhost url
+- this function requires the pillow module.
+- assumes that everything is a localhost url.
+
+## 3. Iteration 3

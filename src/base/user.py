@@ -1,5 +1,6 @@
 """Yuhan Yan has done all the user.py and the related tests."""
 import requests
+import os
 from PIL import Image
 
 import data.data as data
@@ -167,7 +168,10 @@ def user_profile_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     # crop the image
     cropped = img.crop((x_start, y_start, x_end, y_end))
 
-    # save image to directory
-    data.save_image(cropped, user['u_id'])
+    path = os.getcwd() + '/src/data/profiles/' + str(user['u_id']) + '.jpg'
+    cropped.save(path)
+
+    # # save image to directory
+    # data.save_image(cropped, user['u_id'])
 
     return {}

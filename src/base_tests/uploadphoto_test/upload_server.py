@@ -1,5 +1,7 @@
 '''
 Test Server to deliver cropped and uncropped images
+
+This does not contribute to the 
 '''
 
 from json import dumps
@@ -37,18 +39,19 @@ def jpg_one():
 @APP.route('/one/crop', methods = ['GET'])
 def jpg_one_crop():
     '''lists all channels that exist'''
-    with open('test.log', 'a') as file:
-        file.write('\n')
-        path = os.getcwd() + '/src/base_tests/uploadphoto_test/test_one.jpg'
-        path = r'{}'.format(path)
-        file.write(path)
-        img = Image.load(path)
-        file.write(img)
-        cropped = img.crop((0,0,10,10))
-        path = os.getcwd() + '/src/base_tests/uploadphoto_test/test_one_cropped.jpg'
-        cropped.save(path)
+    # open the saved file
+    path = os.getcwd() + '/src/base_tests/uploadphoto_test/test_one.jpg'
+    img = Image.open(path)
 
-        return send_file(path, mimetype='image/gif')
+    # crop the file for the test
+    cropped = img.crop((0,0,10,10))
+
+    # save the file to test directory
+    path = os.getcwd() + '/src/base_tests/uploadphoto_test/test_one_cropped.jpg'
+    cropped.save(path)
+
+    # send file back to test file
+    return send_file(path, mimetype='image/gif')
 
 @APP.route('/two', methods = ['GET'])
 def jpg_two():
@@ -59,7 +62,18 @@ def jpg_two():
 @APP.route('/two/crop', methods = ['GET'])
 def jpg_two_crop():
     '''lists all channels that exist'''
-    path = 'test_two_cropped.jpg'
+    # open the saved file
+    path = os.getcwd() + '/src/base_tests/uploadphoto_test/test_two.jpg'
+    img = Image.open(path)
+
+    # crop the file for the test
+    cropped = img.crop((400,400, 800,800))
+
+    # save the file to test directory
+    path = os.getcwd() + '/src/base_tests/uploadphoto_test/test_two_cropped.jpg'
+    cropped.save(path)
+
+    # send file back to test file
     return send_file(path, mimetype='image/gif')
 
 @APP.route('/png')

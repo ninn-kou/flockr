@@ -10,3 +10,4 @@ omit =
     src/server.py
     src/server/*
     src/clear.py
+    src/base_tests/uploadphoto_test/upload_server.py

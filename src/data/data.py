@@ -294,17 +294,7 @@ def get_profile_photo_url(u_id):
         U_id = u_id
     )
     path = os.getcwd() + '/src/data/profiles/' + str(u_id) + '.jpg'
-    if os.path.isfile(path):
-        return url
-    return ''
-
-    '''
-    path = os.getcwd() + '/src/data/profiles/' + str(u_id) + '.jpg'
-
-    try:
-        Image.open(path)
-    except:
+    if not os.path.isfile(path):
         return ''
     return url
-    '''
-    
+

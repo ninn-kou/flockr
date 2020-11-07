@@ -293,8 +293,8 @@ def get_profile_photo_url(u_id):
         Port = get_port(),
         U_id = u_id
     )
-    #path = os.getcwd() + '/src/data/profiles/' + str(u_id) + '.jpg'
-    #if not os.path.isfile(path):
-    #    return ''
+    path = os.getcwd() + '/src/data/profiles/' + str(u_id) + '.jpg'
+    if not os.path.isfile(path):
+        return ''
     return url
 

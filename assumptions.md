@@ -109,3 +109,4 @@ Most recent changing log for this Markdown document here:
 ### uploadphoto
 
 - this function requires the pillow module
+- assumes that everything is a localhost url

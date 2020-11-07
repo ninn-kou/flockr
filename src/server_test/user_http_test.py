@@ -6,8 +6,9 @@ from time import sleep
 import json
 import requests
 import pytest
-from server_test.channel_http_test import send_request, send_request_json
+from server_test.channel_http_test import send_request_json
 from base_tests.user_test import compare_images
+import data.data as data
 
 from PIL import Image
 
@@ -261,3 +262,31 @@ def test_uploadphoto_two(url, example):
 
     # check that image was cropped correctly
     assert compare_images(test_image, saved_image) == True
+
+def test_return_photo(url, example):
+    ''' test that the photos returned are correct '''
+    clear(url)
+
+    user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
+    u_id = user1['u_id']
+
+    # get the url for the image from local image server
+    url_test = example + 'two'
+
+    # get the first image cropped
+    r = requests.post(url + 'user/profile/uploadphoto', json = {
+        'token': user1.get('token'),
+        'img_url': url_test,
+        'x_start': 400,
+        'y_start': 400,
+        'x_end': 800,
+        'y_end': 800
+    }, stream=True )
+    saved_image = Image.open(r.raw)
+
+    image_url = data.get_profile_photo_url(str(u_id))
+    r = requests.get(image_url, stream=True)
+    returned_image = Image.open(r.raw)
+
+    # check that image was saved correctly
+    assert compare_images(returned_image, saved_image) == True

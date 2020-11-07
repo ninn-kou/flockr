@@ -2,10 +2,10 @@
 from os import path
 from flask import Blueprint, request, jsonify
 from flask.helpers import send_file
-from PIL import Image
 
 import base.user as userB
 from base.auth import decode_token
+import data.data as data
 
 USERHTTP = Blueprint('user', __name__)
 
@@ -91,3 +91,13 @@ def uploadphoto():
     # get the cropped photo path and return it
     cropped = 'data/profiles/' + u_id + '.jpg'
     return send_file(cropped, mimetype='image/gif')
+
+@USERHTTP.route('/photo/<u_id>', methods = ['GET'])
+def photo(u_id):
+    ''' return the photo involved '''
+
+    # check the photo path
+    path = data.get_profile_photo_path(u_id)
+
+    # send the path
+    return send_file(path, mimetype='image/gif')

@@ -333,3 +333,37 @@ def test_user_profile_uploadphoto_invalid_url(url):
     url_test = url + '/thisdoesntexist'
     with pytest.raises(InputError):
         user.user_profile_uploadphoto(token, url_test, 0,0, 10,10)
+
+def test_currect_u_id_for_photo(url):
+    ''' test that photos with correct u_ids are saved '''
+    clear()
+
+    # register a new user
+    registration = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old')
+    token = registration['token']
+    u_id = registration['u_id']
+
+    url_test = url + 'one'
+    url_cropped = url_test + '/crop'
+
+    # get the first already cropped image from the test server
+    r = requests.get(url_cropped, stream=True)
+    test_image = Image.open(r.raw)
+
+    # test that the function doesn't crash
+    assert user.user_profile_uploadphoto(token, url_test, 0,0, 10,10) == {}
+
+    # get the saved image from saved path
+    path = data.get_profile_photo_path(str(u_id))
+    saved_image = Image.open(path)
+
+    # check that image was cropped correctly
+    assert compare_images(test_image, saved_image) == True
+
+def test_incorrect_u_id_for_photo():
+    ''' test that photos with incorrect u_ids are not returned '''
+    clear()
+
+    # no u_id registered so no possible photo exists
+    with pytest.raises(InputError):
+        data.get_profile_photo_path('0')

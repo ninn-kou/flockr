@@ -6,8 +6,11 @@ from time import sleep
 import json
 import requests
 import pytest
-from server_test.channel_http_test import send_request
+from server_test.channel_http_test import send_request_json
+from base_tests.user_test import compare_images
+import data.data as data
 
+from PIL import Image
 
 # copy-pasted this straight out of echo_http_test.py
 # Use this fixture to get the URL of the server. It starts the server for you,
@@ -32,6 +35,18 @@ def url():
     else:
         server.kill()
         raise Exception("Couldn't get URL from local server")
+
+def clear(url):
+    send_request_json('DELETE', url, 'clear', {})
+
+def register_user(url, email, password, name_first, name_last):
+    ''' register a new user '''
+    return send_request_json('POST', url, 'auth/register', {
+        'email': email,
+        'password': password,
+        'name_first': name_first,
+        'name_last': name_last
+    })
 
 def test_profile(url):
     '''
@@ -131,7 +146,7 @@ def test_setprofile_name(url):
 
     result = requests.get(url + 'user/profile/?token='+token+"&u_id="+str(u_id))
     user=json.loads(result.text)
-    print(user)
+
     assert user['user']["name_first"]=="Morb"
     assert user['user']["name_last"]=="Old"
 
@@ -170,3 +185,108 @@ def test_setprofile_handle(url):
     assert user["handle_str"]=="ege64ydegehg"
     # clear out the databases
     requests.delete(url + 'clear', json={})
+
+@pytest.fixture
+def example():
+    ''' start server and create url'''
+    url_re = re.compile(r' \* Running on ([^ ]*)')
+    server = Popen(["python3", "src/base_tests/uploadphoto_test/upload_server.py"], stderr=PIPE, stdout=PIPE)
+    line = server.stderr.readline()
+    local_url = url_re.match(line.decode())
+    if local_url:
+        yield local_url.group(1)
+        # Terminate the server
+        server.send_signal(signal.SIGINT)
+        waited = 0
+        while server.poll() is None and waited < 5:
+            sleep(0.1)
+            waited += 0.1
+        if server.poll() is None:
+            server.kill()
+    else:
+        server.kill()
+        raise Exception("Couldn't get URL from local server")
+
+def test_uploadphoto(url, example):
+    ''' test to see if uploaded crop is correct '''
+    clear(url)
+
+    user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
+
+    # get the url for the image from local image server
+    url_test = example + 'one'
+    url_cropped = url_test + '/crop'
+
+    # get the first already cropped image from the test server
+    r = requests.get(url_cropped, stream=True)
+    test_image = Image.open(r.raw)
+
+    # get the first image cropped
+    r = requests.post(url + 'user/profile/uploadphoto', json = {
+        'token': user1.get('token'),
+        'img_url': url_test,
+        'x_start': 0,
+        'y_start': 0,
+        'x_end': 10,
+        'y_end': 10
+    }, stream=True )
+    saved_image = Image.open(r.raw)
+
+    # check that image was cropped correctly
+    assert compare_images(test_image, saved_image) == True
+
+def test_uploadphoto_two(url, example):
+    ''' test to see if uploaded crop is correct '''
+    clear(url)
+
+    user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
+
+    # get the url for the image from local image server
+    url_test = example + 'two'
+    url_cropped = url_test + '/crop'
+
+    # get the first already cropped image from the test server
+    r = requests.get(url_cropped, stream=True)
+    test_image = Image.open(r.raw)
+
+    # get the first image cropped
+    r = requests.post(url + 'user/profile/uploadphoto', json = {
+        'token': user1.get('token'),
+        'img_url': url_test,
+        'x_start': 400,
+        'y_start': 400,
+        'x_end': 800,
+        'y_end': 800
+    }, stream=True )
+    saved_image = Image.open(r.raw)
+
+    # check that image was cropped correctly
+    assert compare_images(test_image, saved_image) == True
+
+def test_return_photo(url, example):
+    ''' test that the photos returned are correct '''
+    clear(url)
+
+    user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
+    u_id = user1['u_id']
+
+    # get the url for the image from local image server
+    url_test = example + 'two'
+
+    # get the first image cropped
+    r = requests.post(url + 'user/profile/uploadphoto', json = {
+        'token': user1.get('token'),
+        'img_url': url_test,
+        'x_start': 400,
+        'y_start': 400,
+        'x_end': 800,
+        'y_end': 800
+    }, stream=True )
+    saved_image = Image.open(r.raw)
+
+    image_url = data.get_profile_photo_url(str(u_id))
+    r = requests.get(image_url, stream=True)
+    returned_image = Image.open(r.raw)
+
+    # check that image was saved correctly
+    assert compare_images(returned_image, saved_image) == True

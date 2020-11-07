@@ -8,6 +8,11 @@ However, it allows for basic persistent storage
 '''
 
 import json
+import os
+import glob
+from PIL import Image
+
+from base.error import InputError
 
 def users_notes():
     '''
@@ -25,7 +30,6 @@ def users_notes():
             'password': '',
             'session_secret': '',
             'permission_id': '',
-            'profile_img_url':'',
         }
     ]
 
@@ -245,3 +249,49 @@ def clear_messages():
     # write json to file
     with open('src/data/messages.json', 'w') as file:
         json.dump([], file)
+
+def clear_profiles():
+    ''' delete user profile pictures '''
+    files = glob.glob('src/data/profiles/*')
+    for f in files:
+        os.remove(f)
+
+def save_image(image, u_id):
+    ''' save an image in the profiles directory'''
+    path = os.getcwd() + '/src/data/profiles/' + str(u_id) + '.jpg'
+    image.save(path)
+
+def get_profile_photo_path(u_id):
+    ''' returns a profile picture path, and url from the u_id '''
+
+    path = os.getcwd() + '/src/data/profiles/' + u_id + '.jpg'
+
+    # make sure path is valid
+    try:
+        Image.open(path)
+    except Exception as e:
+        raise InputError("You don't have a profile picture") from e
+    return path
+
+def save_port(port):
+    ''' saves the port that the server is currently running on '''
+    with open('src/data/port.json', 'w') as file:
+        json.dump({'port': port}, file)
+
+def get_port():
+    ''' gets the current port that the server is running on '''
+    with open('src/data/port.json', 'r') as file:
+        port = json.load(file)['port']
+    return port
+
+def get_profile_photo_url(u_id):
+    ''' returns the profile photo url '''
+
+    # get the url route
+    # assumes we're working with a localhost url
+    url = 'http://127.0.0.1:{Port}/user/profile/photo/{U_id}'.format(
+        Port = get_port(),
+        U_id = u_id
+    )
+
+    return url

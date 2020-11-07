@@ -52,7 +52,6 @@ def regex_email_check(email):
     actual email is not a real email
     """
 
-
     regex = r"\"?([-a-zA-Z0-9.`?{}]+@\w+\.\w+)\"?"  
     # regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 

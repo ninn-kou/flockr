@@ -258,7 +258,10 @@ def clear_profiles():
 
 def save_image(image, u_id):
     ''' save an image in the profiles directory'''
-    path = os.getcwd() + '/src/data/profiles/' + str(u_id) + '.jpg'
+    path = os.getcwd() + '/src/data/profiles/' 
+    if not os.path.exists(path):
+        os.mkdir(path)
+    path = path + + str(u_id) + '.jpg'
     image.save(path)
 
 def get_profile_photo_path(u_id):
@@ -272,11 +275,6 @@ def get_profile_photo_path(u_id):
     except Exception as e:
         raise InputError("You don't have a profile picture") from e
     return path
-
-def save_port(port):
-    ''' saves the port that the server is currently running on '''
-    with open('src/data/port.json', 'w') as file:
-        json.dump({'port': port}, file)
 
 def get_port():
     ''' gets the current port that the server is running on '''

@@ -297,4 +297,3 @@ def get_profile_photo_url(u_id):
     if not os.path.isfile(path):
         return ''
     return url
-

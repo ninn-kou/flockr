@@ -479,6 +479,24 @@ def edit_msg_react_in_list(msg, uid, method):
 #       written by Yuhan Yan
 ############################################################
 def message_react(token, message_id, react_id):
+    '''
+    message_react()
+    Given a message within a channel the authorised user is part of, 
+    add a "react" to that particular message
+    Args:
+        token: the token of the people who edit it.
+        channel_id: the channel which is the target of message.
+        message_id: the specific message.
+        react_id: the react_id is always 1 for thumbs up
+    RETURNS:
+    return {}
+
+    THEREFORE, TEST EVERYTHING BELOW:
+    1. inputError
+    - message_id is not a valid message within a channel that the authorised user has joined
+    - react_id is not a valid React ID. The only valid react ID the frontend has is 1
+    - TMessage with ID message_id already contains an active React with ID react_id from the authorised user
+    '''
     # InputError 1: invalid token.
     auth_id = token_into_user_id(token)
     if auth_id == -1:
@@ -494,14 +512,6 @@ def message_react(token, message_id, react_id):
 
     if find_one_in_message(message_got, auth_id):
         raise AccessError(description='the auth already exist.')
-
-    #message_list=data.return_messages()
-    #for i in message_list:
-        #if i['message_id'] == message_got['message_id']:
-            #i['reacts'][0]["u_ids"].append(auth_id)
-            #i['reacts'][0]["is_this_user_reacted"] = True
-
-    #data.replace_messages(message_list)
 
     edit_msg_react_in_list(message_got, auth_id, 'add')
     return {}

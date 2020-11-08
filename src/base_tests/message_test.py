@@ -972,6 +972,32 @@ def test_channel_message_sendlater_correct_message_infors():
 
 
     auth_logout(u_token1)
+#########################################################################
+#
+#                     test for message_send Function
+#
+##########################################################################
+# Xingyu TAN working on message_test.py for message_send function
+# 22 Oct. 2020
+
+##########################################################################
+#   message_react()
+#   Given a message within a channel the authorised user is part of, 
+#   add a "react" to that particular message
+#   Args:
+#       token: the token of the people who edit it.
+#       channel_id: the channel which is the target of message.
+#       message_id: the specific message.
+#       react_id: the react_id is always 1 for thumbs up
+#   RETURNS:
+#   return {}
+#
+#   THEREFORE, TEST EVERYTHING BELOW:
+#   1. inputError
+#   - message_id is not a valid message within a channel that the authorised user has joined
+#   - react_id is not a valid React ID. The only valid react ID the frontend has is 1
+#   - TMessage with ID message_id already contains an active React with ID react_id from the authorised user
+############################################################################
 
 #########################################################################
 #
@@ -979,6 +1005,7 @@ def test_channel_message_sendlater_correct_message_infors():
 #
 ##########################################################################
 
+#######################      TEST NORMALLY    ##############################
 def test_react_true():
     '''
     this test using for check if the message_send function
@@ -1002,6 +1029,7 @@ def test_react_true():
 
     assert result=={}
 
+#######################      TEST invalid_token   ##############################
 def test_react_invalid_token():
     '''
     this test using for check if the message_send function
@@ -1025,6 +1053,7 @@ def test_react_invalid_token():
 
     auth_logout(u_token1)
 
+#######################      TEST invalid_react  ##############################
 def test_react_invalid_react():
     '''
     this test using for check if the message_send function
@@ -1048,6 +1077,7 @@ def test_react_invalid_react():
 
     auth_logout(u_token1)
 
+#######################      TEST invalid message_id  ##############################
 def test_react_invalid_message_id():
     '''
     this test using for check if the message_send function
@@ -1071,6 +1101,7 @@ def test_react_invalid_message_id():
 
     auth_logout(u_token1)
 
+#######################      TEST react contain user_id  ##############################
 def test_react_contain_user_id():
     '''
     this test using for check if the message_send function

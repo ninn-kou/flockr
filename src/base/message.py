@@ -432,12 +432,90 @@ def message_sendlater(token, channel_id, message, time_sent):
     return {
         'message_id': new_msg_id,
     }
+############################################################
+#       helper function for react features
+############################################################
+def find_one_in_message(message, u_id):
+    reacts=message["reacts"][0]
+    print(u_id)
+    if u_id in reacts['u_ids']:
+        return True
+    return False
 
-'''
+def edit_msg_react_in_list(msg, uid, method):
+    """Interate the messages list by its id, return the message after edit."""
+    # get the channels
+    channels = data.return_channels()
+    messages = data.return_messages()
+
+    # deleting message from memory
+    for i in channels:
+        if i['channel_id'] == msg['channel_id']:
+            for temp in i['message']:
+                if temp['message_id'] == msg['message_id']:
+                    if method == 'add':
+                        temp['reacts'][0]["u_ids"].append(uid)
+                        temp['reacts'][0]["is_this_user_reacted"] = True
+                    elif method == 'delete':
+                        temp['reacts'][0]["u_ids"].remove(uid)
+                        temp['reacts'][0]["is_this_user_reacted"] = False
+
+
+    for temp in messages:
+        if temp['message_id'] == msg['message_id']:
+            if method == 'add':
+                temp['reacts'][0]["u_ids"].append(uid)
+                temp['reacts'][0]["is_this_user_reacted"] = True
+            elif method == 'delete':
+                temp['reacts'][0]["u_ids"].remove(uid)
+                temp['reacts'][0]["is_this_user_reacted"] = False
+
+    # add it to memory
+    data.replace_channels(channels)
+    data.replace_messages(messages)
+
+############################################################
+#       message_react(token, message_id, react_id)
+#       written by Yuhan Yan
+############################################################
 def message_react(token, message_id, react_id):
-    return
+    '''
+    message_react()
+    Given a message within a channel the authorised user is part of, 
+    add a "react" to that particular message
+    Args:
+        token: the token of the people who edit it.
+        channel_id: the channel which is the target of message.
+        message_id: the specific message.
+        react_id: the react_id is always 1 for thumbs up
+    RETURNS:
+    return {}
 
+    THEREFORE, TEST EVERYTHING BELOW:
+    1. inputError
+    - message_id is not a valid message within a channel that the authorised user has joined
+    - react_id is not a valid React ID. The only valid react ID the frontend has is 1
+    - TMessage with ID message_id already contains an active React with ID react_id from the authorised user
+    '''
+    # InputError 1: invalid token.
+    auth_id = token_into_user_id(token)
+    if auth_id == -1:
+        raise InputError(description='invalid token.')
 
+    if react_id !=1:
+        raise InputError(description='invalid react_id.')
+
+    # AccessError 3: invalid channel_id.
+    message_got = find_message(message_id)
+    if message_got is None:
+        raise InputError(description='invalid message_id.')
+
+    if find_one_in_message(message_got, auth_id):
+        raise AccessError(description='the auth already exist.')
+
+    edit_msg_react_in_list(message_got, auth_id, 'add')
+    return {}
+'''
 def message_unreact(token, message_id, react_id):
     return
 

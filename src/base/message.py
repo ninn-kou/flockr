@@ -56,6 +56,33 @@ def edit_msg_in_list(msg, text):
     # add it to memory
     data.replace_channels(channels)
     data.replace_messages(messages)
+def edit_msg_react_in_list(msg, uid, method):
+    """Interate the messages list by its id, return the message after edit."""
+    # get the channels
+    channels = data.return_channels()
+    messages = data.return_messages()
+
+    # deleting message from memory
+    for i in channels:
+        if i['channel_id'] == msg['channel_id']:
+            for temp in i['message']:
+                if temp['message_id'] == msg['message_id']:
+                    if method == 'add':
+                        temp['reacts'][0]["u_ids"].append(uid)
+                    elif method == 'delete':
+                        temp['reacts'][0]["u_ids"].remove(uid)
+
+
+    for temp in messages:
+        if temp['message_id'] == msg['message_id']:
+            if method == 'add':
+                temp['reacts'][0]["u_ids"].append(uid)
+            elif method == 'delete':
+                temp['reacts'][0]["u_ids"].remove(uid)
+
+    # add it to memory
+    data.replace_channels(channels)
+    data.replace_messages(messages)
 
 def change_msg_pin(msg, sign):
     """Interate the messages list by its id, return the message after edit."""

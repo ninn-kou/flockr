@@ -134,10 +134,11 @@ def return_channels():
                     'u_id': 1,
                     'message': 'Hello world',
                     'time_created': 1582426789,
-                    'reacts': [{'react_id': 1,
-                    'u_ids':[],
-                    'is_this_user_reacted': False
-                },],
+                    'reacts': [{
+                        'react_id': 1,
+                        'u_ids':[],
+                        'is_this_user_reacted': False
+                    },],
                     'is_pinned': false
                     ''
                 },

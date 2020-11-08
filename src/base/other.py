@@ -35,7 +35,7 @@ def users_all(token):
             'name_first': i['name_first'],
             'name_last': i['name_last'],
             'handle_str': i['handle_str'],
-            'profile_img_url': data.get_profile_photo_url(i['u_id']),
+            'profile_img_url': data.get_profile_photo_url(i['u_id'])
         }
 
         list_users.append(user)

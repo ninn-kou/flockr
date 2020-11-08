@@ -6,13 +6,8 @@ __pycache__/
 # persistent data storage
 *.json
 src/data/JWT_SECRET.p
-src/data/profiles/*
-!src/data/profiles/permanent.txt
+src/data/profiles
 src/base_tests/uploadphoto_test/*_cropped.jpg
-
-# legacy secret storage
-src/data/JWT_SECRET.txt
-temp.py
 
 # C extensions
 *.so

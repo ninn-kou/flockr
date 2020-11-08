@@ -515,11 +515,11 @@ def message_react(token, message_id, react_id):
 
     edit_msg_react_in_list(message_got, auth_id, 'add')
     return {}
-'''
-def message_unreact(token, message_id, react_id):
-    return
 
-'''
+def message_unreact(token, message_id, react_id):
+    return {}
+
+
 def message_pin(token, message_id):
     '''
     message_pin()

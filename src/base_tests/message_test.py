@@ -5,8 +5,7 @@ from base.channel import channel_invite, channel_messages, channel_addowner
 from base.channels import channels_create
 from base.auth import auth_login, auth_register, auth_logout
 from base.message import message_send, message_remove, message_edit
-from base.message import message_sendlater, message_pin, message_unpin,  message_react
-#, message_react, message_unreact
+from base.message import message_sendlater, message_pin, message_unpin,  message_react, message_unreact
 from base.error import InputError, AccessError
 import base.other as other
 
@@ -1129,6 +1128,122 @@ def test_react_contain_user_id():
 #
 ##########################################################################
 
+def test_unreact_true():
+    '''
+    this test using for check if the message_send function
+    send the message which is more than 1000 characters
+    '''
+    # create 2 users
+    other.clear()
+    user1 = auth_register("test1@test.com", "check_test", "Xiaoming", "TAN")
+    user1 = auth_login("test1@test.com", "check_test")
+    u_token1 = user1['token']
+
+    # create channel for testing
+    channel_test_id = channels_create(u_token1, "channel_test", True)['channel_id']
+    # create a message which is more than 1000 characters
+
+    # testing for channel invite function for length more than 1000 words
+    message_test_id_01 = message_send(u_token1, channel_test_id, "msg test 02")['message_id']
+
+    result = message_react(u_token1, message_test_id_01, 1)
+    result = message_unreact(u_token1, message_test_id_01, 1)
+
+    assert result == {}
+    
+def test_unreact_invalid_token():
+    '''
+    this test using for check if the message_send function
+    send the message which is more than 1000 characters
+    '''
+    # create 2 users
+    other.clear()
+    user1 = auth_register("test1@test.com", "check_test", "Xiaoming", "TAN")
+    user1 = auth_login("test1@test.com", "check_test")
+    u_token1 = user1['token']
+
+    # create channel for testing
+    channel_test_id = channels_create(u_token1, "channel_test", True)['channel_id']
+    # create a message which is more than 1000 characters
+
+    # testing for channel invite function for length more than 1000 words
+    message_test_id_01 = message_send(u_token1, channel_test_id, "msg test 02")['message_id']
+
+    message_react(u_token1, message_test_id_01, 1)
+
+    with pytest.raises(InputError):
+        message_unreact("475685", message_test_id_01, 1)
+
+    auth_logout(u_token1)
+
+def test_unreact_invalid_react():
+    '''
+    this test using for check if the message_send function
+    send the message which is more than 1000 characters
+    '''
+    # create 2 users
+    other.clear()
+    user1 = auth_register("test1@test.com", "check_test", "Xiaoming", "TAN")
+    user1 = auth_login("test1@test.com", "check_test")
+    u_token1 = user1['token']
+
+    # create channel for testing
+    channel_test_id = channels_create(u_token1, "channel_test", True)['channel_id']
+    # create a message which is more than 1000 characters
+
+    # testing for channel invite function for length more than 1000 words
+    message_test_id_01 = message_send(u_token1, channel_test_id, "msg test 02")['message_id']
+    message_react(u_token1, message_test_id_01, 1)
+
+    with pytest.raises(InputError):
+        message_unreact(u_token1,message_test_id_01,2)
+
+    auth_logout(u_token1)
+
+def test_unreact_invalid_message_id():
+    '''
+    this test using for check if the message_send function
+    send the message which is more than 1000 characters
+    '''
+    # create 2 users
+    other.clear()
+    user1 = auth_register("test1@test.com", "check_test", "Xiaoming", "TAN")
+    user1 = auth_login("test1@test.com", "check_test")
+    u_token1 = user1['token']
+
+    # create channel for testing
+    channel_test_id = channels_create(u_token1, "channel_test", True)['channel_id']
+    print(channel_test_id)
+    # create a message which is more than 1000 characters
+
+    # testing for channel invite function for length more than 1000 words
+    message_test_id_01 = message_send(u_token1, channel_test_id, "msg test 02")['message_id']
+    message_react(u_token1, message_test_id_01, 1)
+
+    with pytest.raises(InputError):
+        message_unreact(u_token1,46858,1)
+
+    auth_logout(u_token1)
+#
+def test_unreact_not_contrain_user_id():
+    '''
+    this test using for check if the message_send function
+    send the message which is more than 1000 characters
+    '''
+    # create 2 users
+    other.clear()
+    user1 = auth_register("test1@test.com", "check_test", "Xiaoming", "TAN")
+    user1 = auth_login("test1@test.com", "check_test")
+    u_token1 = user1['token']
+
+    # create channel for testing
+    channel_test_id = channels_create(u_token1, "channel_test", True)['channel_id']
+    # create a message which is more than 1000 characters
+    # testing for channel invite function for length more than 1000 words
+    message_test_id_01 = message_send(u_token1, channel_test_id, "msg test 02")['message_id']
+    with pytest.raises(AccessError):
+        message_unreact(u_token1, message_test_id_01, 1)
+    auth_logout(u_token1)
 
 #########################################################################
 #

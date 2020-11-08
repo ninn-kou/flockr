@@ -97,14 +97,14 @@ def channels_create(token, name, is_public):
             {
                 'u_id': owner_id,
                 'name_first': owner_fn,
-                'name_last': owner_ln,
+                'name_last': owner_ln
             }
         ],
         'all_members': [
             {
                 'u_id': owner_id,
                 'name_first': owner_fn,
-                'name_last': owner_ln,
+                'name_last': owner_ln
             }
         ],
         'is_public': is_public,

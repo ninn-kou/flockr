@@ -2,7 +2,11 @@
 Main file to run in order to run backend server
 '''
 
-from json import dumps
+import os
+import socket
+from contextlib import closing
+
+from json import dumps, dump
 from flask import Flask
 from flask_cors import CORS
 
@@ -13,6 +17,7 @@ import server.echo_http as echo_http
 import server.message_http as message_http
 import server.other_http as other_http
 import server.user_http as user_http
+import data.data as data
 
 def default_handler(err):
     ''' system error handler '''
@@ -25,6 +30,26 @@ def default_handler(err):
     })
     response.content_type = 'application/json'
     return response
+
+def find_free_port():
+    with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
+        s.bind(('', 0))
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        return s.getsockname()[1]
+
+def save_port(port):
+    ''' saves the port that the server is currently running on '''
+
+    # check if the file already exists
+    # if not, create it
+    path = os.getcwd() + '/src/data/port.json'
+    # if not os.path.exists(path):
+    #     f = open(path, 'w')
+    #     f.close()
+
+    # dump port into it
+    with open(path, 'w') as file:
+        dump({'port': port}, file)
 
 APP = Flask(__name__)
 CORS(APP)
@@ -44,4 +69,8 @@ APP.register_blueprint(other_http.OTHERHTTP)
 APP.register_blueprint(user_http.USERHTTP, url_prefix='/user/profile')
 
 if __name__ == "__main__":
-    APP.run(port=0) # Do not edit this port
+    # find a free port
+    port = find_free_port()
+    print(port)
+    save_port(port)
+    APP.run(port=port)

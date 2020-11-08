@@ -2,7 +2,6 @@
     messages.py written by Xingyu Tan.
 '''
 from datetime import timezone, datetime
-import threading
 import time
 import data.data as data
 from base.auth import decode_token
@@ -428,9 +427,8 @@ def message_sendlater(token, channel_id, message, time_sent):
     }
 
     # insert the message in the top of messages in the channel.
-    t = threading.Timer(time_sent - timestamp, adding_message(return_message, channel_id))
-    t.start()
-
+    time.sleep(time_sent - timestamp)
+    adding_message(return_message, channel_id)
     return {
         'message_id': new_msg_id,
     }

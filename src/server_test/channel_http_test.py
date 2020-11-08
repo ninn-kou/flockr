@@ -58,6 +58,8 @@ def send_request_json(method, url, url_extension, json_obj):
         resp = requests.get(url_time, json = json_obj)
     elif method == 'POST':
         resp = requests.post(url_time, json = json_obj)
+    elif method == 'DELETE':
+        resp = requests.delete(url_time, json=json_obj)
 
     return json.loads(resp.text)
 

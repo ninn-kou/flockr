@@ -1,10 +1,10 @@
 """Yuhan Yan has done all the user.py and the related tests."""
+import requests
+import os
+from PIL import Image
+
 import data.data as data
-
-import jwt
-from   jwt import DecodeError
-
-from base.auth import JWT_SECRET,check_in_users,regex_email_check, decode_token
+from base.auth import check_in_users,regex_email_check, decode_token
 from base.error import InputError
 
 ################################################################################
@@ -35,8 +35,8 @@ def user_profile(token, u_id):
     # Avoid someone put a string
     try:
         u_id = int(u_id)
-    except Exception:
-        raise InputError('terrible uid')
+    except Exception as e:
+        raise InputError('terrible uid') from e
     user = None
 
     for i in data.return_users():
@@ -53,7 +53,7 @@ def user_profile(token, u_id):
             'name_first': user['name_first'],
             'name_last': user['name_last'],
             'handle_str': user['handle_str'],
-            'profile_img_url': i['profile_img_url'],
+            'profile_img_url': data.get_profile_photo_url(u_id),
 
         },
     }
@@ -130,4 +130,47 @@ def user_profile_sethandle(token, handle_str):
     user=check_in_users("email",data.return_users(),email)
     user['handle_str']=handle_str
     data.updateByEmail(user,email)
+    return {}
+
+def user_profile_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
+    '''
+    Given a URL of an image on the internet, crops the image within bounds (x_start, y_start)
+    and (x_end, y_end). Position (0,0) is the top left.
+
+    It will save this file to be served
+    '''
+    # find the user specified
+    user = decode_token(token)
+
+    # get the profile picture
+    r = requests.get(img_url, stream=True)
+
+    # check whether the image is real
+    if r.status_code != 200:
+        raise InputError('Image did not return correctly')
+
+    # open image
+    try:
+        img = Image.open(r.raw)
+    except Exception as e:
+        raise InputError('Input is not an image') from e
+    # check if img is jpeg
+    if img.format != 'JPEG':
+        raise InputError('Please Input a JPEG as your Profile Picture')
+
+    # make sure dimensions are valid
+    if x_start < 0 or y_start < 0:
+        raise InputError('Invalid Dimensions')
+    if x_end < x_start or y_end < y_start:
+        raise InputError('Invalid Dimensions')
+    width, height = img.size
+    if width < x_end or height < y_end:
+        raise InputError('Invalid Dimensions')
+
+    # crop the image
+    cropped = img.crop((x_start, y_start, x_end, y_end))
+
+    # # save image to directory
+    data.save_image(cropped, user['u_id'])
+
     return {}

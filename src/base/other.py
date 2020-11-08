@@ -18,6 +18,7 @@ def clear():
     data.clear_channels()
     data.clear_messages()
     data.clear_users()
+    data.clear_profiles()
 
 def users_all(token):
     '''return all of the users list'''
@@ -34,7 +35,7 @@ def users_all(token):
             'name_first': i['name_first'],
             'name_last': i['name_last'],
             'handle_str': i['handle_str'],
-            'profile_img_url': i['profile_img_url'],
+            'profile_img_url': data.get_profile_photo_url(i['u_id'])
         }
 
         list_users.append(user)

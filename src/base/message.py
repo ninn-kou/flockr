@@ -508,8 +508,28 @@ def message_react(token, message_id, react_id):
 
     edit_msg_react_in_list(message_got, auth_id, 'add')
     return {}
+############################################################
+#       message_react(token, message_id, react_id)
+#       written by Yuhan Yan
+############################################################
+'''
+    message_unreact()
+    Given a message within a channel the authorised user is part of, 
+    remove a "react" to that particular message
+    Args:
+        token: the token of the people who edit it.
+        channel_id: the channel which is the target of message.
+        message_id: the specific message.
+        react_id: the react_id is always 1 for thumbs up
+    RETURNS:
+    return {}
 
-
+    THEREFORE, TEST EVERYTHING BELOW:
+    1. inputError
+    - message_id is not a valid message within a channel that the authorised user has joined
+    - react_id is not a valid React ID. The only valid react ID the frontend has is 1
+    - Message with ID message_id does not contain an active React with ID react_id
+'''
 def message_unreact(token, message_id, react_id):
     auth_id = token_into_user_id(token)
     if auth_id == -1:
@@ -529,6 +549,10 @@ def message_unreact(token, message_id, react_id):
     edit_msg_react_in_list(message_got, auth_id, 'delete')
     return {}
 
+############################################################
+#       message_pin(token, message_id)
+#       written by Xingyu TAN
+############################################################
 def message_pin(token, message_id):
     '''
     message_pin()
@@ -576,8 +600,10 @@ def message_pin(token, message_id):
     change_msg_pin(message_using, True)
     return {}
 
-
-
+############################################################
+#       message_unpin(token, message_id)
+#       written by Xingyu TAN
+############################################################
 def message_unpin(token, message_id):
     '''
     message_unpin()

@@ -481,6 +481,46 @@ def test_message_react(url):
 #              test for unreact
 #
 ####################################################################
+
+def test_message_unreact(url):
+    '''
+    test for message edit
+    Test whether the msg can be sent normally
+    '''
+    # clear out the databases
+    requests.delete(url + 'clear', json={})
+
+    # register a new user and create a new channel
+    user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
+    channels = create_channels(url, user1.get('token'), True, 1)
+
+    # invite second user to invite
+    user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
+    invite_user(url, user1, channels[0].get('channel_id'), user2)
+    message_test_id = send_request('POST', url, 'message/send', {
+        'token': user1.get('token'),
+        'channel_id': channels[0].get('channel_id'),
+        'message': "test_msg_03"
+    })['message_id']
+
+    # 1. edit the message we need
+    send_request('PUT', url, 'message/edit', {
+        'token': user1.get('token'),
+        'message_id': message_test_id,
+        'message': 'test edit msg'
+    })
+    send_request("POST",url,"message/react",{
+        'token':user1.get("token"),
+        "message_id":message_test_id,
+        "react_id":1
+    })
+    response = send_request("POST", url, "message/unreact", {
+        'token': user1.get("token"),
+        "message_id": message_test_id,
+        "react_id": 1
+    })
+    assert response=={}
+
 ###################################################################
 #
 #              test for pin

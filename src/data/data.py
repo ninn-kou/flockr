@@ -162,7 +162,20 @@ def return_channels():
 
     # return the json information
     return channels
+def find_channel(channel_id):
+    """Interate the channels list by its id, return the channel we need."""
+    # declare users outside
+    channels = None
 
+    # open the json file
+    with open('src/data/channels.json', 'r') as file:
+        channels = json.load(file)
+    answer = None
+    for i in channels:
+        if i['channel_id'] == channel_id:
+            answer = i
+            break
+    return answer
 def append_channels(channel):
     ''' append user to list '''
 

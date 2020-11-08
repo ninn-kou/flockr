@@ -233,6 +233,11 @@ def channel_messages(token, channel_id, start):
     else:                                  # Case 7: Get all messages which in (0, 50].
         return_msg = channel_got['message'][start:]
 
+    for msg in return_msg:
+        msg['reacts'][0]['is_this_user_reacted'] = False
+        if auth_id in msg['reacts'][0]['u_ids']:
+            msg['reacts'][0]['is_this_user_reacted'] = True
+
     return {                                # Return the struct.
         'messages': return_msg,
         'start': start,

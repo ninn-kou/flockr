@@ -238,11 +238,7 @@ def message_send(token, channel_id, message):
     # record the time rightnow
     now = datetime.utcnow()
     timestamp = int(now.replace(tzinfo=timezone.utc).timestamp())
-    new_react = {
-        'react_id': 1,
-        'u_ids':[],
-        'is_this_user_reacted': False
-    }
+
     # create the message struct
     return_message = {
         'message_id': new_msg_id,
@@ -250,7 +246,10 @@ def message_send(token, channel_id, message):
         'u_id': auth_id,
         'message': message,
         'time_created': timestamp,
-        'reacts': [new_react,],
+        'reacts': [{
+            'react_id': 1,
+            'u_ids':[],
+            'is_this_user_reacted': False}],
         'is_pinned': False
     }
 
@@ -409,11 +408,7 @@ def message_sendlater(token, channel_id, message, time_sent):
     new_msg_id = 1
     if len(data.return_messages()) != 0:
         new_msg_id = data.return_messages()[0]['message_id'] + 1
-    new_react = {
-        'react_id': 1,
-        'u_ids':[],
-        'is_this_user_reacted': False
-    }
+
     # create the message struct
     return_message = {
         'message_id': new_msg_id,
@@ -421,7 +416,10 @@ def message_sendlater(token, channel_id, message, time_sent):
         'u_id': auth_id,
         'message': message,
         'time_created': time_sent,
-        'reacts': [new_react,],
+        'reacts': [{
+            'react_id': 1,
+            'u_ids':[],
+            'is_this_user_reacted': False}],
         'is_pinned': False
 
     }
@@ -436,7 +434,7 @@ def message_sendlater(token, channel_id, message, time_sent):
 #       helper function for react features
 ############################################################
 def find_one_in_message(message, u_id):
-    reacts=message["reacts"][0]
+    reacts = message["reacts"][0]
     print(u_id)
     if u_id in reacts['u_ids']:
         return True
@@ -448,27 +446,22 @@ def edit_msg_react_in_list(msg, uid, method):
     channels = data.return_channels()
     messages = data.return_messages()
 
-    # deleting message from memory
+    # modify in channel
     for i in channels:
         if i['channel_id'] == msg['channel_id']:
             for temp in i['message']:
                 if temp['message_id'] == msg['message_id']:
                     if method == 'add':
-                        temp['reacts'][0]["u_ids"].append(uid)
-                        temp['reacts'][0]["is_this_user_reacted"] = True
+                        temp['reacts'][0]["u_ids"].append(int(uid))
                     elif method == 'delete':
-                        temp['reacts'][0]["u_ids"].remove(uid)
-                        temp['reacts'][0]["is_this_user_reacted"] = False
-
-
+                        temp['reacts'][0]["u_ids"].remove(int(uid))
+    # modify in msg.json
     for temp in messages:
         if temp['message_id'] == msg['message_id']:
             if method == 'add':
-                temp['reacts'][0]["u_ids"].append(uid)
-                temp['reacts'][0]["is_this_user_reacted"] = True
+                temp['reacts'][0]["u_ids"].append(int(uid))
             elif method == 'delete':
-                temp['reacts'][0]["u_ids"].remove(uid)
-                temp['reacts'][0]["is_this_user_reacted"] = False
+                temp['reacts'][0]["u_ids"].remove(int(uid))
 
     # add it to memory
     data.replace_channels(channels)
@@ -481,7 +474,7 @@ def edit_msg_react_in_list(msg, uid, method):
 def message_react(token, message_id, react_id):
     '''
     message_react()
-    Given a message within a channel the authorised user is part of, 
+    Given a message within a channel the authorised user is part of,
     add a "react" to that particular message
     Args:
         token: the token of the people who edit it.
@@ -515,11 +508,51 @@ def message_react(token, message_id, react_id):
 
     edit_msg_react_in_list(message_got, auth_id, 'add')
     return {}
+############################################################
+#       message_react(token, message_id, react_id)
+#       written by Yuhan Yan
+############################################################
+'''
+    message_unreact()
+    Given a message within a channel the authorised user is part of, 
+    remove a "react" to that particular message
+    Args:
+        token: the token of the people who edit it.
+        channel_id: the channel which is the target of message.
+        message_id: the specific message.
+        react_id: the react_id is always 1 for thumbs up
+    RETURNS:
+    return {}
+
+    THEREFORE, TEST EVERYTHING BELOW:
+    1. inputError
+    - message_id is not a valid message within a channel that the authorised user has joined
+    - react_id is not a valid React ID. The only valid react ID the frontend has is 1
+    - Message with ID message_id does not contain an active React with ID react_id
 '''
 def message_unreact(token, message_id, react_id):
-    return
+    auth_id = token_into_user_id(token)
+    if auth_id == -1:
+        raise InputError(description='invalid token.')
 
-'''
+    if react_id != 1:
+        raise InputError(description='invalid react_id.')
+
+    # AccessError 3: invalid channel_id.
+    message_got = find_message(message_id)
+    if message_got is None:
+        raise InputError(description='invalid message_id.')
+
+    if not find_one_in_message(message_got, auth_id):
+        raise AccessError(description='the auth already exist.')
+
+    edit_msg_react_in_list(message_got, auth_id, 'delete')
+    return {}
+
+############################################################
+#       message_pin(token, message_id)
+#       written by Xingyu TAN
+############################################################
 def message_pin(token, message_id):
     '''
     message_pin()
@@ -567,8 +600,10 @@ def message_pin(token, message_id):
     change_msg_pin(message_using, True)
     return {}
 
-
-
+############################################################
+#       message_unpin(token, message_id)
+#       written by Xingyu TAN
+############################################################
 def message_unpin(token, message_id):
     '''
     message_unpin()

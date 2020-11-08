@@ -2,6 +2,7 @@
 Main file to run in order to run backend server
 '''
 
+import os
 import socket
 from contextlib import closing
 
@@ -38,7 +39,16 @@ def find_free_port():
 
 def save_port(port):
     ''' saves the port that the server is currently running on '''
-    with open('src/data/port.json', 'w') as file:
+
+    # check if the file already exists
+    # if not, create it
+    path = os.getcwd() + '/src/data/port.json'
+    # if not os.path.exists(path):
+    #     f = open(path, 'w')
+    #     f.close()
+
+    # dump port into it
+    with open(path, 'w') as file:
         dump({'port': port}, file)
 
 APP = Flask(__name__)
@@ -61,5 +71,6 @@ APP.register_blueprint(user_http.USERHTTP, url_prefix='/user/profile')
 if __name__ == "__main__":
     # find a free port
     port = find_free_port()
+    print(port)
     save_port(port)
     APP.run(port=port)

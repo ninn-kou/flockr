@@ -261,7 +261,7 @@ def save_image(image, u_id):
     path = os.getcwd() + '/src/data/profiles/' 
     if not os.path.exists(path):
         os.mkdir(path)
-    path = path + + str(u_id) + '.jpg'
+    path = path + str(u_id) + '.jpg'
     image.save(path)
 
 def get_profile_photo_path(u_id):
@@ -278,8 +278,16 @@ def get_profile_photo_path(u_id):
 
 def get_port():
     ''' gets the current port that the server is running on '''
-    with open('src/data/port.json', 'r') as file:
+
+    # if the file doesn't exist
+    path = os.getcwd() + '/src/data/port.json'
+    if not os.path.exists(path):
+        with open(path, 'w') as file:
+            json.dump({'port': '0'}, file)
+
+    with open(path, 'r') as file:
         port = json.load(file)['port']
+        print(port)
     return port
 
 def get_profile_photo_url(u_id):

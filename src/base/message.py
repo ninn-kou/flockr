@@ -435,7 +435,7 @@ def message_sendlater(token, channel_id, message, time_sent):
         'message_id': new_msg_id,
     }
 ############################################################
-#       mhelper function for react features
+#       helper function for react features
 ############################################################
 def find_one_in_message(message, u_id):
     reacts=message["reacts"][0]
@@ -463,7 +463,7 @@ def message_react(token, message_id, react_id):
         raise InputError(description='invalid message_id.')
 
     if find_one_in_message(message_got, auth_id):
-        raise AccessError(description='')
+        raise AccessError(description='the auth already exist.')
 
     message_list=data.return_messages()
     for i in message_list:

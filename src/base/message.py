@@ -56,33 +56,6 @@ def edit_msg_in_list(msg, text):
     # add it to memory
     data.replace_channels(channels)
     data.replace_messages(messages)
-def edit_msg_react_in_list(msg, uid, method):
-    """Interate the messages list by its id, return the message after edit."""
-    # get the channels
-    channels = data.return_channels()
-    messages = data.return_messages()
-
-    # deleting message from memory
-    for i in channels:
-        if i['channel_id'] == msg['channel_id']:
-            for temp in i['message']:
-                if temp['message_id'] == msg['message_id']:
-                    if method == 'add':
-                        temp['reacts'][0]["u_ids"].append(uid)
-                    elif method == 'delete':
-                        temp['reacts'][0]["u_ids"].remove(uid)
-
-
-    for temp in messages:
-        if temp['message_id'] == msg['message_id']:
-            if method == 'add':
-                temp['reacts'][0]["u_ids"].append(uid)
-            elif method == 'delete':
-                temp['reacts'][0]["u_ids"].remove(uid)
-
-    # add it to memory
-    data.replace_channels(channels)
-    data.replace_messages(messages)
 
 def change_msg_pin(msg, sign):
     """Interate the messages list by its id, return the message after edit."""
@@ -471,6 +444,38 @@ def find_one_in_message(message, u_id):
         return True
     return False
 
+def edit_msg_react_in_list(msg, uid, method):
+    """Interate the messages list by its id, return the message after edit."""
+    # get the channels
+    channels = data.return_channels()
+    messages = data.return_messages()
+
+    # deleting message from memory
+    for i in channels:
+        if i['channel_id'] == msg['channel_id']:
+            for temp in i['message']:
+                if temp['message_id'] == msg['message_id']:
+                    if method == 'add':
+                        temp['reacts'][0]["u_ids"].append(uid)
+                        temp['reacts'][0]["is_this_user_reacted"] = True
+                    elif method == 'delete':
+                        temp['reacts'][0]["u_ids"].remove(uid)
+                        temp['reacts'][0]["is_this_user_reacted"] = False
+
+
+    for temp in messages:
+        if temp['message_id'] == msg['message_id']:
+            if method == 'add':
+                temp['reacts'][0]["u_ids"].append(uid)
+                temp['reacts'][0]["is_this_user_reacted"] = True
+            elif method == 'delete':
+                temp['reacts'][0]["u_ids"].remove(uid)
+                temp['reacts'][0]["is_this_user_reacted"] = False
+
+    # add it to memory
+    data.replace_channels(channels)
+    data.replace_messages(messages)
+
 ############################################################
 #       message_react(token, message_id, react_id)
 #       written by Yuhan Yan
@@ -492,13 +497,15 @@ def message_react(token, message_id, react_id):
     if find_one_in_message(message_got, auth_id):
         raise AccessError(description='the auth already exist.')
 
-    message_list=data.return_messages()
-    for i in message_list:
-        if i['message_id'] == message_got['message_id']:
-            i['reacts'][0]["u_ids"].append(auth_id)
-            i['reacts'][0]["is_this_user_reacted"] = True
+    #message_list=data.return_messages()
+    #for i in message_list:
+        #if i['message_id'] == message_got['message_id']:
+            #i['reacts'][0]["u_ids"].append(auth_id)
+            #i['reacts'][0]["is_this_user_reacted"] = True
 
-    data.replace_messages(message_list)
+    #data.replace_messages(message_list)
+
+    edit_msg_react_in_list(message_got, auth_id, 'add')
     return {}
 '''
 def message_unreact(token, message_id, react_id):

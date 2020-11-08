@@ -1,11 +1,11 @@
 '''
     channel.py written by Xingyu Tan, Yuhan Yan and Hao Ren.
 '''
-import jwt
+#import jwt, JWT_SECRET, AccessError
 
 import data.data as data
-from base.error import InputError, AccessError
-from base.auth import decode_token, JWT_SECRET
+from base.error import InputError
+from base.auth import decode_token
 
 ################################################################################
 ################################################################################

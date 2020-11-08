@@ -516,9 +516,25 @@ def message_react(token, message_id, react_id):
     edit_msg_react_in_list(message_got, auth_id, 'add')
     return {}
 
-def message_unreact(token, message_id, react_id):
-    return {}
 
+def message_unreact(token, message_id, react_id):
+    auth_id = token_into_user_id(token)
+    if auth_id == -1:
+        raise InputError(description='invalid token.')
+
+    if react_id != 1:
+        raise InputError(description='invalid react_id.')
+
+    # AccessError 3: invalid channel_id.
+    message_got = find_message(message_id)
+    if message_got is None:
+        raise InputError(description='invalid message_id.')
+
+    if not find_one_in_message(message_got, auth_id):
+        raise AccessError(description='the auth already exist.')
+
+    edit_msg_react_in_list(message_got, auth_id, 'delete')
+    return {}
 
 def message_pin(token, message_id):
     '''

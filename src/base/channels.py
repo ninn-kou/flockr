@@ -88,6 +88,8 @@ def channels_create(token, name, is_public):
     owner_id = i['u_id']
     owner_fn = i['name_first']
     owner_ln = i['name_last']
+    owner_url = i['profile_img_url']
+
 
     channel_id = create_channel_id(data.return_channels())
     channel_new = {                         # Initialize the new channel.
@@ -97,14 +99,17 @@ def channels_create(token, name, is_public):
             {
                 'u_id': owner_id,
                 'name_first': owner_fn,
-                'name_last': owner_ln
+                'name_last': owner_ln,
+                'profile_img_url':owner_url
+
             }
         ],
         'all_members': [
             {
                 'u_id': owner_id,
                 'name_first': owner_fn,
-                'name_last': owner_ln
+                'name_last': owner_ln,
+                'profile_img_url':owner_url
             }
         ],
         'is_public': is_public,

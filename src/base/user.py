@@ -53,7 +53,7 @@ def user_profile(token, u_id):
             'name_first': user['name_first'],
             'name_last': user['name_last'],
             'handle_str': user['handle_str'],
-            'profile_img_url': data.get_profile_photo_url(u_id),
+            'profile_img_url': user['profile_img_url'],
 
         },
     }
@@ -170,7 +170,14 @@ def user_profile_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     # crop the image
     cropped = img.crop((x_start, y_start, x_end, y_end))
 
-    # # save image to directory
+    #  save image to directory
     data.save_image(cropped, user['u_id'])
+
+    # updata the user profile_img_url
+    user = check_in_users('u_id', data.return_users(), user['u_id'])
+    user_email = user['email']
+    user['profile_img_url'] = data.get_profile_photo_url(user['u_id'])
+    data.updateByEmail(user, user_email)
+    data.update_channel_user(user['u_id'], 'profile_img_url', data.get_profile_photo_url(user['u_id']))
 
     return {}

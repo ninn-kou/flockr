@@ -9,7 +9,7 @@ import pytest
 from server_test.channel_http_test import send_request_json
 from base_tests.user_test import compare_images
 import data.data as data
-
+import base.auth as auth
 from PIL import Image
 
 # copy-pasted this straight out of echo_http_test.py
@@ -268,7 +268,6 @@ def test_return_photo(url, example):
     clear(url)
 
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
-    u_id = user1['u_id']
 
     # get the url for the image from local image server
     url_test = example + 'two'
@@ -284,7 +283,7 @@ def test_return_photo(url, example):
     }, stream=True )
     saved_image = Image.open(r.raw)
 
-    image_url = data.get_profile_photo_url(str(u_id))
+    image_url = auth.decode_token(user1['token'])['profile_img_url']
     r = requests.get(image_url, stream=True)
     returned_image = Image.open(r.raw)
 

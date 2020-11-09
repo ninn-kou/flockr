@@ -209,9 +209,10 @@ def test_search(url):
         'message': "If you are tired, you need go sleep."
     })
 
-    resp = send_request('GET', url, 'search', {
+    resp = json.loads(requests.get(url + '/search',
+    params = {
         'token': user1.get('token'),
         'query_str': 'tired'
-    }).get('messages')
-
+    }).text).get('messages')
     assert len(resp) == 2
+

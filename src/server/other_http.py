@@ -39,7 +39,7 @@ def userpermission_change():
 
 @OTHERHTTP.route("/search", methods=['GET'])
 def search():
-    input_obj = request.json
+    input_obj = request.args
 
     output = other.search(
         input_obj.get('token'),

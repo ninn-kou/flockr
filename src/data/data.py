@@ -66,8 +66,6 @@ def update_user(u_id, index, value):
     for user in users:
         if user.get('u_id') == u_id:
             user[index] = value
-            break
-
     # write json to file
     with open('src/data/users.json', 'w') as file:
         json.dump(users, file)
@@ -282,7 +280,7 @@ def clear_profiles():
 
 def save_image(image, u_id):
     ''' save an image in the profiles directory'''
-    path = os.getcwd() + '/src/data/profiles/' 
+    path = os.getcwd() + '/src/data/profiles/'
     if not os.path.exists(path):
         os.mkdir(path)
     path = path + str(u_id) + '.jpg'
@@ -316,17 +314,4 @@ def get_port():
 
 def get_profile_photo_url(u_id):
     ''' returns the profile photo url '''
-    '''
-    # get the url route
-    # assumes we're working with a localhost url
-    url = 'http://127.0.0.1:{Port}/user/profile/photo/{U_id}'.format(
-        Port = get_port(),
-        U_id = u_id
-    )
-    path = os.getcwd() + '/src/data/profiles/' + str(u_id) + '.jpg'
-    if not os.path.isfile(path):
-        return ''
-    return url
-    '''
     return str(request.url_root) + 'user/profile/photo/' + str(u_id)
-    #return str(request.url_root) + '/src/data/profiles/' + str(u_id) + '.jpg'

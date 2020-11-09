@@ -178,5 +178,6 @@ def user_profile_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
     user_email = user['email']
     user['profile_img_url'] = data.get_profile_photo_url(user['u_id'])
     data.updateByEmail(user, user_email)
+    data.update_channel_user(user['u_id'], 'profile_img_url', data.get_profile_photo_url(user['u_id']))
 
     return {}

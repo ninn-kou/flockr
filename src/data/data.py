@@ -164,7 +164,7 @@ def return_channels():
     # return the json information
     return channels
 
-def update_channel_user(channel_id, user_id, file, data):
+def update_channel_user(user_id, loca, data):
     ''' append user to list '''
 
     # declare users outside
@@ -175,13 +175,12 @@ def update_channel_user(channel_id, user_id, file, data):
         channels = json.load(file)
 
     for i in channels:
-        if i['channel_id'] == channel_id:
-            for owner in i['owner_members']:
-                if owner['u_id'] == user_id:
-                    owner[file] = data
-            for member in i['all_members']:
-                if member['u_id'] == user_id:
-                    member[file] = data
+        for owner in i['owner_members']:
+            if owner['u_id'] == user_id:
+                owner[loca] = data
+        for member in i['all_members']:
+            if member['u_id'] == user_id:
+                member[loca] = data
 
     # write json to file
     with open('src/data/channels.json', 'w') as file:

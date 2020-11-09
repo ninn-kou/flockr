@@ -177,6 +177,7 @@ def test_standup_active_http(url):
     }).text)    
     assert resp2['is_active'] == True
     sleep(2)
+    
 def test_standup_send_http(url):
     '''test for the is_active funtion of the standup'''
     # clear out the databases

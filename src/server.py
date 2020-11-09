@@ -18,6 +18,7 @@ import server.message_http as message_http
 import server.other_http as other_http
 import server.user_http as user_http
 import data.data as data
+import server.standup_http as standup_http
 
 def default_handler(err):
     ''' system error handler '''
@@ -67,6 +68,7 @@ APP.register_blueprint(channels_http.CHANNELSHTTP, url_prefix='/channels')
 APP.register_blueprint(message_http.MESSAGEHTTP, url_prefix='/message')
 APP.register_blueprint(other_http.OTHERHTTP)
 APP.register_blueprint(user_http.USERHTTP, url_prefix='/user/profile')
+APP.register_blueprint(standup_http.STANDUPHTTP, url_prefix='/standup')
 
 if __name__ == "__main__":
     # find a free port

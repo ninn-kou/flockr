@@ -90,6 +90,10 @@ def channels_create(token, name, is_public):
     owner_ln = i['name_last']
     owner_url = i['profile_img_url']
 
+    standup = {
+        'finish_time':-1,
+        'message_package':'',
+    }
 
     channel_id = create_channel_id(data.return_channels())
     channel_new = {                         # Initialize the new channel.
@@ -113,7 +117,8 @@ def channels_create(token, name, is_public):
             }
         ],
         'is_public': is_public,
-        'message':[]
+        'message':[],
+        'standup': standup
     }
 
     data.append_channels(channel_new)       # Add this new channel into data.

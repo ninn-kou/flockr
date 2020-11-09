@@ -11,6 +11,7 @@ import json
 import os
 import glob
 from PIL import Image
+from flask import request
 
 from base.error import InputError
 
@@ -163,6 +164,29 @@ def return_channels():
     # return the json information
     return channels
 
+def update_channel_user(channel_id, user_id, file, data):
+    ''' append user to list '''
+
+    # declare users outside
+    channels = None
+
+    # open current json file
+    with open('src/data/channels.json', 'r') as file:
+        channels = json.load(file)
+
+    for i in channels:
+        if i['channel_id'] == channel_id:
+            for owner in i['owner_members']:
+                if owner['u_id'] == user_id:
+                    owner[file] = data
+            for member in i['all_members']:
+                if member['u_id'] == user_id:
+                    member[file] = data
+
+    # write json to file
+    with open('src/data/channels.json', 'w') as file:
+        json.dump(channels, file)
+
 def append_channels(channel):
     ''' append user to list '''
 
@@ -293,7 +317,7 @@ def get_port():
 
 def get_profile_photo_url(u_id):
     ''' returns the profile photo url '''
-
+    '''
     # get the url route
     # assumes we're working with a localhost url
     url = 'http://127.0.0.1:{Port}/user/profile/photo/{U_id}'.format(
@@ -304,3 +328,6 @@ def get_profile_photo_url(u_id):
     if not os.path.isfile(path):
         return ''
     return url
+    '''
+    return str(request.url_root) + 'user/profile/photo/' + str(u_id)
+    #return str(request.url_root) + '/src/data/profiles/' + str(u_id) + '.jpg'

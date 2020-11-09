@@ -289,3 +289,4 @@ def test_return_photo(url, example):
 
     # check that image was saved correctly
     assert compare_images(returned_image, saved_image) == True
+    clear(url)

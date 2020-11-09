@@ -4,7 +4,6 @@ import time
 import datetime
 import threading
 import data.data as data
-from data.data import find_channel
 import base.channel as channel_addowner
 import base.message as message
 from base.auth import decode_token
@@ -28,6 +27,14 @@ def token_into_name(token):
     au_fname = user.get('name_first')
 
     return au_fname
+def find_channel(channel_id):
+    """Interate the channels list by its id, return the channel we need."""
+    answer = None
+    for i in data.return_channels():
+        if i['channel_id'] == channel_id:
+            answer = i
+            break
+    return answer
 def time_difference(timeint1, timeint2):
     '''find the difference between two timestr'''
     return int(timeint1 - timeint2)

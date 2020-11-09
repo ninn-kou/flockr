@@ -139,3 +139,49 @@ def test_standup_start():
     
     time.sleep(2)
 
+def test_standup_active_invalid_channel_id():
+    '''test for error that the channel_id is invalid'''
+    clear()
+
+    #create a user and take their id and token
+    user1 = auth.auth_register('1234@test.com', 'password', 'FirstN', 'LastN')
+    user1 = auth.auth_login('1234@test.com', 'password')
+    u1_token = user1['token']
+
+    #create a channel by user1 in channels and return its channel id
+    channel_1_id = channels.channels_create(u1_token,'team',True).get('channel_id')
+    
+    #start a standup
+    standup.standup_start(u1_token, channel_1_id, 1)
+    
+    channel_tem = channel_1_id + 1
+    with pytest.raises(InputError):
+        standup.standup_active(u1_token, channel_tem)
+        
+    time.sleep(2)
+        
+def test_standup_active():
+    '''test for the active function'''
+    clear()
+
+    #create a user and take their id and token
+    user1 = auth.auth_register('1234@test.com', 'password', 'FirstN', 'LastN')
+    user1 = auth.auth_login('1234@test.com', 'password')
+    u1_token = user1['token']
+
+    #create two channels by user1 in channels and return their channel id
+    channel_1_id = channels.channels_create(u1_token,'team',True).get('channel_id')
+    channel_2_id = channels.channels_create(u1_token,'team1',True).get('channel_id')
+    
+    standup_1 = standup.standup_start(u1_token, channel_1_id, 2)      #start a standup in channel_1 but not in channel_2_id
+    
+    res1 = standup.standup_active(u1_token, channel_1_id)
+    assert res1['is_active'] == True
+    assert res1['time_finish'] == standup_1['time_finish']
+    
+    res2 = standup.standup_active(u1_token, channel_2_id)
+    assert res2['is_active'] == False
+    assert res2['time_finish'] == None
+    
+    time.sleep(2.5)
+

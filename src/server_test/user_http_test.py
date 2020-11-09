@@ -268,7 +268,6 @@ def test_return_photo(url, example):
     clear(url)
 
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
-    u_id = user1['u_id']
 
     # get the url for the image from local image server
     url_test = example + 'two'

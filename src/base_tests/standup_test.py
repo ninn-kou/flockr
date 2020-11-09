@@ -185,3 +185,120 @@ def test_standup_active():
     
     time.sleep(2.5)
 
+def test_send_invalid_channel_id():
+    '''test for checking the error when the channel_id is invalid'''
+    clear()
+
+    #create a user and take their id and token
+    user1 = auth.auth_register('1234@test.com', 'password', 'FirstN', 'LastN')
+    user1 = auth.auth_login('1234@test.com', 'password')
+    u1_token = user1['token']
+
+    #create a channel by user1 in channels and return its channel id
+    channel_1_id = channels.channels_create(u1_token,'team',True).get('channel_id')
+    
+    #start a standup
+    standup.standup_start(u1_token, channel_1_id, 1)
+    
+    channel_tem = channel_1_id + 1
+    with pytest.raises(InputError):
+        standup.standup_send(u1_token, channel_tem,'')
+        
+    time.sleep(2)
+        
+def test_send_no_active_standup():
+    '''test for checking the error when there is no standup running in the channel now'''
+    clear()
+
+    #create a user and take their id and token
+    user1 = auth.auth_register('1234@test.com', 'password', 'FirstN', 'LastN')
+    user1 = auth.auth_login('1234@test.com', 'password')
+    u1_token = user1['token']
+
+    #create a channel by user1 in channels and return its channel id
+    channel_1_id = channels.channels_create(u1_token,'team',True).get('channel_id')
+
+    with pytest.raises(InputError):
+        standup.standup_send(u1_token, channel_1_id,'')
+        
+def test_send_not_member():
+    '''test for accessing the error when the user is not the member in the channel'''
+    clear()
+
+    #create two users and take their id and token
+    user1 = auth.auth_register('1234@test.com', 'password', 'FirstN', 'LastN')
+    user1 = auth.auth_login('1234@test.com', 'password')
+    u1_token = user1['token']
+    user2 = auth.auth_register('234@test.com', 'password', 'FirstN2', 'LastN2')
+    user2 = auth.auth_login('234@test.com', 'password')
+    u2_token = user2['token']
+    
+    #create a channel by user1 in channels and return its channel id
+    channel_1_id = channels.channels_create(u1_token,'team',True).get('channel_id')
+    
+    #start a standup
+    standup.standup_start(u1_token, channel_1_id, 1)
+    
+    with pytest.raises(AccessError):
+        standup.standup_send(u2_token, channel_1_id,'')
+    
+    time.sleep(1.5)
+    
+def test_standup_long_message():
+    '''test for inputing the error that the message is more than 1000 words'''
+    clear()
+
+    #create a user and take its id and token
+    user1 = auth.auth_register('1234@test.com', 'password', 'FirstN', 'LastN')
+    user1 = auth.auth_login('1234@test.com', 'password')
+    u1_token = user1['token']
+   
+    #create a channel by user1 in channels and return its channel id
+    channel_1_id = channels.channels_create(u1_token,'team',True).get('channel_id')
+    
+    #start a standup
+    standup.standup_start(u1_token, channel_1_id, 1)
+    
+    #create a string with more than 1000 words
+    message_test = "aaaaa"
+    message_test = 3000 * message_test
+    with pytest.raises(InputError):
+        standup.standup_send(u1_token, channel_1_id, message_test)
+        
+    time.sleep(1.5)
+    
+def test_standup_send():
+    '''test for the send function'''
+    clear()
+
+    #create three user and take their id and token
+    user1 = auth.auth_register('1234@test.com', 'password', 'FirstN1', 'LastN1')
+    user1 = auth.auth_login('1234@test.com', 'password')
+    u1_token = user1['token']
+    user2 = auth.auth_register('234@test.com', 'password', 'FirstN2', 'LastN2')
+    user2 = auth.auth_login('234@test.com', 'password')
+    u2_token = user2['token']
+    u2_id = user2['u_id']
+    user3 = auth.auth_register('34@test.com', 'password', 'FirstN3', 'LastN3')
+    user3 = auth.auth_login('34@test.com', 'password')
+    u3_token = user3['token']
+    u3_id = user3['u_id']
+   
+    #create a channel by user1 in channels and invite other two users
+    channel_1_id = channels.channels_create(u1_token,'team',True).get('channel_id')
+    channel.channel_invite(u1_token, channel_1_id, u2_id)
+    channel.channel_invite(u1_token, channel_1_id, u3_id)
+    #start a standup
+    standup.standup_start(u1_token, channel_1_id, 1)
+    
+    standup.standup_send(u1_token, channel_1_id, 'WE')
+    standup.standup_send(u2_token, channel_1_id, 'ARE')
+    standup.standup_send(u3_token, channel_1_id, 'FRIENDS')
+    
+    channels_t = data.return_channels()
+    m_l = channels_t[0]['standup']['message_package']
+    
+    assert m_l == 'FirstN1: WE\nFirstN2: ARE\nFirstN3: FRIENDS\n'
+    
+    time.sleep(2)
+

@@ -315,3 +315,50 @@ def get_port():
 def get_profile_photo_url(u_id):
     ''' returns the profile photo url '''
     return str(request.url_root) + 'user/profile/photo/' + str(u_id)
+    
+def change_finish_time(channel_id, time_int):
+    '''change the finich time of the channel'''
+
+    with open('src/data/channels.json', 'r') as file:
+        channels = json.load(file)
+
+    #find the channel_id
+    for i in channels:
+        if i['channel_id'] == channel_id:
+            #change the value
+            i['standup']['finish_time'] = time_int
+
+    # write json to file
+    with open('src/data/channels.json', 'w') as file:
+        json.dump(channels, file)
+
+def message_package_add(channel_id, message):
+    '''add the message in the message_package'''
+
+    with open('src/data/channels.json', 'r') as file:
+        channels = json.load(file)
+
+    #find the channel_id
+    for i in channels:
+        if i['channel_id'] == channel_id:
+            i['standup']['message_package'] += message
+
+    # write json to file
+    with open('src/data/channels.json', 'w') as file:
+        json.dump(channels, file)
+
+def message_package_empty(channel_id):
+    '''empty the message of the specific channel'''
+
+    with open('src/data/channels.json', 'r') as file:
+        channels = json.load(file)
+
+    #find the channel_id
+    for i in channels:
+        if i['channel_id'] == channel_id:
+            i['standup']['message_package'] = ''
+
+    # write json to file
+    with open('src/data/channels.json', 'w') as file:
+        json.dump(channels, file)
+

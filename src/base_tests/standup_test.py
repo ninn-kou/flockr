@@ -302,3 +302,92 @@ def test_standup_send():
     
     time.sleep(2)
 
+def test_standup_all_message_sent_out():
+    '''check if the message in message package has been sent out after ending'''
+    clear()
+
+    #create three user and take their id and token
+    user1 = auth.auth_register('1234@test.com', 'password', 'FirstN1', 'LastN1')
+    user1 = auth.auth_login('1234@test.com', 'password')
+    u1_token = user1['token']
+    u1_id = user1['u_id']
+    user2 = auth.auth_register('234@test.com', 'password', 'FirstN2', 'LastN2')
+    user2 = auth.auth_login('234@test.com', 'password')
+    u2_token = user2['token']
+    u2_id = user2['u_id']
+    user3 = auth.auth_register('34@test.com', 'password', 'FirstN3', 'LastN3')
+    user3 = auth.auth_login('34@test.com', 'password')
+    u3_token = user3['token']
+    u3_id = user3['u_id']
+   
+    #create a channel by user1 in channels and invite other two users
+    channel_1_id = channels.channels_create(u1_token,'team',True).get('channel_id')
+    channel.channel_invite(u1_token, channel_1_id, u2_id)
+    channel.channel_invite(u1_token, channel_1_id, u3_id)
+    #start a standup
+    standup.standup_start(u1_token, channel_1_id, 3)
+    
+    standup.standup_send(u1_token, channel_1_id, 'WE')
+    standup.standup_send(u2_token, channel_1_id, 'ARE')
+    standup.standup_send(u3_token, channel_1_id, 'FRIENDS')
+    #sleep until the standup ending
+    time.sleep(5)
+    channels_t = data.return_channels()
+
+    m_c = channels_t[0]['message'][0]
+    #check the message has been sent
+    assert m_c['u_id'] == u1_id
+    assert m_c['message'] == 'FirstN1: WE\nFirstN2: ARE\nFirstN3: FRIENDS\n'
+    
+def test_standup_all_message_sent_out_twice():
+    '''check if the message in message package has been sent out after ending'''
+    clear()
+
+    #create three user and take their id and token
+    user1 = auth.auth_register('1234@test.com', 'password', 'FirstN1', 'LastN1')
+    user1 = auth.auth_login('1234@test.com', 'password')
+    u1_token = user1['token']
+    u1_id = user1['u_id']
+    user2 = auth.auth_register('234@test.com', 'password', 'FirstN2', 'LastN2')
+    user2 = auth.auth_login('234@test.com', 'password')
+    u2_token = user2['token']
+    u2_id = user2['u_id']
+    user3 = auth.auth_register('34@test.com', 'password', 'FirstN3', 'LastN3')
+    user3 = auth.auth_login('34@test.com', 'password')
+    u3_token = user3['token']
+    u3_id = user3['u_id']
+   
+    #create a channel by user1 in channels and invite other two users
+    channel_1_id = channels.channels_create(u1_token,'team',True).get('channel_id')
+    channel.channel_invite(u1_token, channel_1_id, u2_id)
+    channel.channel_invite(u1_token, channel_1_id, u3_id)
+    #start a standup by u1
+    standup.standup_start(u1_token, channel_1_id, 3)
+    
+    standup.standup_send(u1_token, channel_1_id, 'WE')
+    standup.standup_send(u2_token, channel_1_id, 'ARE')
+    standup.standup_send(u3_token, channel_1_id, 'FRIENDS')
+    #sleep until the standup ending
+    time.sleep(4)
+    
+    #start another standup by u2
+    standup.standup_start(u2_token, channel_1_id, 3)
+    
+    standup.standup_send(u1_token, channel_1_id, 'SHE')
+    standup.standup_send(u2_token, channel_1_id, 'HE')
+    standup.standup_send(u3_token, channel_1_id, 'THEY')
+    
+    #sleep until the standup ending
+    time.sleep(4)
+    channels_t = data.return_channels()    
+    m_c_1 = channels_t[0]['message'][1]
+    m_c_2 = channels_t[0]['message'][0]
+    #check the message has been sent
+    assert m_c_1['u_id'] == u1_id
+    assert m_c_2['u_id'] == u2_id
+    assert m_c_1['message'] == 'FirstN1: WE\nFirstN2: ARE\nFirstN3: FRIENDS\n'
+    assert m_c_2['message'] == 'FirstN1: SHE\nFirstN2: HE\nFirstN3: THEY\n'
+    
+    #check the message package
+    assert channels_t[0]['standup']['message_package'] == 'FirstN1: SHE\nFirstN2: HE\nFirstN3: THEY\n'
+

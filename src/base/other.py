@@ -95,6 +95,11 @@ def search(token, query_str):
                     'is_pinned': i['is_pinned'],
                 }
                 mes_list.append(added_message)
+    for msg in mes_list:
+        msg['reacts'][0]['is_this_user_reacted'] = False
+        if id_from in msg['reacts'][0]['u_ids']:
+            msg['reacts'][0]['is_this_user_reacted'] = True
+
     return {
         'messages': mes_list
     }

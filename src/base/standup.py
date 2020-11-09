@@ -127,3 +127,4 @@ def standup_send(token, channel_id, message):
     data.message_package_add(channel_id, mess_send)
 
     return {}
+    

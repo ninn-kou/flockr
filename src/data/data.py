@@ -127,6 +127,7 @@ def return_channels():
                     'u_id': 1,
                     'name_first': 'Hayden',
                     'name_last': 'Jacobs',
+                    'profile_img_url'
                 }
             ],
             'is_public': True,
@@ -161,28 +162,6 @@ def return_channels():
 
     # return the json information
     return channels
-
-def update_channel_user(user_id, loca, data):
-    ''' append user to list '''
-
-    # declare users outside
-    channels = None
-
-    # open current json file
-    with open('src/data/channels.json', 'r') as file:
-        channels = json.load(file)
-
-    for i in channels:
-        for owner in i['owner_members']:
-            if owner['u_id'] == user_id:
-                owner[loca] = data
-        for member in i['all_members']:
-            if member['u_id'] == user_id:
-                member[loca] = data
-
-    # write json to file
-    with open('src/data/channels.json', 'w') as file:
-        json.dump(channels, file)
 
 def append_channels(channel):
     ''' append user to list '''
@@ -298,24 +277,13 @@ def get_profile_photo_path(u_id):
         raise InputError("You don't have a profile picture") from e
     return path
 
-def get_port():
-    ''' gets the current port that the server is running on '''
-
-    # if the file doesn't exist
-    path = os.getcwd() + '/src/data/port.json'
-    if not os.path.exists(path):
-        with open(path, 'w') as file:
-            json.dump({'port': '0'}, file)
-
-    with open(path, 'r') as file:
-        port = json.load(file)['port']
-        print(port)
-    return port
-
 def get_profile_photo_url(u_id):
     ''' returns the profile photo url '''
+    path = os.getcwd() + '/src/data/profiles/' + str(u_id) + '.jpg'
+    if not os.path.isfile(path):
+        return ''
     return str(request.url_root) + 'user/profile/photo/' + str(u_id)
-    
+
 def change_finish_time(channel_id, time_int):
     '''change the finich time of the channel'''
 

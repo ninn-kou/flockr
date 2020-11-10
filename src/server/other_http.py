@@ -7,6 +7,7 @@ All URL appends are prepended with "other/"
 
 from flask import Blueprint, request, jsonify
 import base.other as other
+import data.data as data
 
 OTHERHTTP = Blueprint('other', __name__)
 
@@ -22,7 +23,8 @@ def users_all():
     output = other.users_all(
         input_obj.get('token')
     )
-
+    for i in output['users']:
+        i['profile_img_url'] = data.get_profile_photo_url(i['u_id'])
     return jsonify(output)
 
 @OTHERHTTP.route("/admin/userpermission/change", methods=['POST'])

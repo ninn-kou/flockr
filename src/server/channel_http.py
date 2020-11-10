@@ -8,6 +8,7 @@ All url appends are prepended with auth/
 from flask import Blueprint, request, jsonify
 
 import base.channel as channel
+import data.data as data
 
 CHANNELHTTP = Blueprint('channel', __name__)
 
@@ -35,6 +36,11 @@ def details():
         input_obj.get('token'),
         int(input_obj.get('channel_id'))
     )
+    for i in output['owner_members']:
+        i['profile_img_url'] = data.get_profile_photo_url(i['u_id'])
+    for i in output['all_members']:
+        i['profile_img_url'] = data.get_profile_photo_url(i['u_id'])
+
 
     return jsonify(output)
 

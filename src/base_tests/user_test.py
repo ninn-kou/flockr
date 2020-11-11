@@ -267,7 +267,7 @@ def test_incorrect_u_id_for_photo():
     with pytest.raises(InputError):
         data.get_profile_photo_path('0')
 
-"""
+
 def test_currect_u_id_for_photo(url):
     ''' test that photos with correct u_ids are saved '''
     clear()
@@ -288,7 +288,7 @@ def test_currect_u_id_for_photo(url):
     assert user.user_profile_uploadphoto(token, url_test, 0,0, 10,10) == {}
 
     # get the saved image from saved path
-    path = auth.decode_token(registration['token'])['profile_img_url']
+    path = 'src/data/profiles/{u_id}.jpg'.format(u_id = str(u_id))
     saved_image = Image.open(path)
 
     # check that image was cropped correctly
@@ -367,4 +367,3 @@ def test_user_profile_uploadphoto_two(url):
 
     # check that image was cropped correctly
     assert compare_images(test_image, saved_image) == True
-"""

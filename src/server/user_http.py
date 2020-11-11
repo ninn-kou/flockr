@@ -21,7 +21,7 @@ def profile():
         token,
         u_id
     )
-
+    success['user']['profile_img_url'] = data.get_profile_photo_url(u_id)
     return jsonify(success)
 
 @USERHTTP.route('/setname', methods = ['PUT'])
@@ -90,6 +90,12 @@ def uploadphoto():
 
     # get the cropped photo path and return it
     cropped = 'data/profiles/' + u_id + '.jpg'
+
+    # updata the user profile_img_url
+    user = decode_token(r.get('token'))
+    user['profile_img_url'] = data.get_profile_photo_url(user['u_id'])
+    data.updateByEmail(user, user['email'])
+
     return send_file(cropped, mimetype='image/gif')
 
 @USERHTTP.route('/photo/<u_id>', methods = ['GET'])

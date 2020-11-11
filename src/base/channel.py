@@ -136,7 +136,7 @@ def channel_invite(token, channel_id, u_id):
         'u_id': u_id,
         'name_first': user_struct['name_first'],
         'name_last': user_struct['name_last'],
-        'profile_img_url':user_struct['profile_img_url']
+        'profile_img_url':''
     }
     add_one_in_channel(channel_id, user)     # Add the above struct into channel.
 
@@ -392,7 +392,7 @@ def channel_join(token, channel_id):
         'u_id': auth_id,
         'name_first': new_member_struct['name_first'],
         'name_last': new_member_struct['name_last'],
-        'profile_img_url':new_member_struct['profile_img_url'],
+        'profile_img_url':''
     }
 
     add_one_in_channel(channel_id, user)
@@ -492,7 +492,7 @@ def channel_addowner(token, channel_id, u_id):
         'u_id': u_id,
         'name_first': owner_detail['name_first'],
         'name_last': owner_detail['name_last'],
-        'profile_img_url':owner_detail['profile_img_url'],
+        'profile_img_url':''
     }
     add_owner_in_channel(channel_id, owners)
     return {

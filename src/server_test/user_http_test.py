@@ -283,7 +283,7 @@ def test_return_photo(url, example):
     }, stream=True )
     saved_image = Image.open(r.raw)
 
-    image_url = auth.decode_token(user1['token'])['profile_img_url']
+    image_url = auth.decode_token(user1.get('token'))['profile_img_url']
     r = requests.get(image_url, stream=True)
     returned_image = Image.open(r.raw)
 

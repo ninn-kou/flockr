@@ -18,7 +18,7 @@ def token_into_user_id(token):
     au_id = user.get('u_id')
 
     return au_id
-    
+
 def token_into_name(token):
     """Transfer the token into the first name"""
 
@@ -28,7 +28,7 @@ def token_into_name(token):
     au_fname = user.get('name_first')
 
     return au_fname
-    
+
 def find_channel(channel_id):
     """Interate the channels list by its id, return the channel we need."""
     answer = None
@@ -37,16 +37,16 @@ def find_channel(channel_id):
             answer = i
             break
     return answer
-    
+
 def time_difference(timeint1, timeint2):
     '''find the difference between two timestr'''
     return int(timeint1 - timeint2)
-    
+
 def send_message_package(token, channel_id):
 
     m = find_channel(channel_id)['standup']['message_package']
     message.message_send(token, channel_id, m)
-    
+
 def standup_start(token, channel_id, length):
     auth_id = token_into_user_id(token)     # invalid token.
     if auth_id == -1:
@@ -55,7 +55,7 @@ def standup_start(token, channel_id, length):
     c1 = find_channel(channel_id)  #  invalid channel_id.
     if c1 is None:
         raise InputError(description='invalid channel_id')
-    
+
     now = datetime.datetime.utcnow()
     timestamp = int(now.replace(tzinfo=datetime.timezone.utc).timestamp())
     '''
@@ -65,7 +65,7 @@ def standup_start(token, channel_id, length):
     is_act = standup_active(token, channel_id).get('is_active')
     if is_act == True:
         raise InputError(description='An active standup is currently running in this channel')
-    
+
     #Firstly, empty the message package
     data.message_package_empty(channel_id)
 
@@ -80,7 +80,7 @@ def standup_start(token, channel_id, length):
     return {
         'time_finish': next_time,
     }
-    
+
 def standup_active(token, channel_id):
 
     channel_got = find_channel(channel_id)  #  invalid channel_id.
@@ -100,7 +100,7 @@ def standup_active(token, channel_id):
         'is_active': is_active,
         'time_finish': time_finish,
     }
-    
+
 def standup_send(token, channel_id, message):
     c = find_channel(channel_id)
     if c is None:          #  invalid channel_id.
@@ -127,4 +127,4 @@ def standup_send(token, channel_id, message):
     data.message_package_add(channel_id, mess_send)
 
     return {}
-    
+

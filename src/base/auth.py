@@ -8,13 +8,19 @@ import hashlib
 import os.path
 import pickle
 import jwt
+import datetime
 from jwt import DecodeError
-from email.utils import parseaddr
+
+import base64
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
+from googleapiclient.discovery import build
 
 import data.data as data
 from base.error import InputError
 
-def create_secret(token_length, whitespace = False):
+def create_secret(token_length, whitespace = True):
     """Create a specified length character long ascii string for token."""
     # Create list of random characters and length of token.
     valid_characters = string.ascii_letters + string.digits
@@ -280,9 +286,98 @@ def auth_logout(token):
     # the process worked 100%
     return {'is_success': True}
 
+def create_message(sender, to, subject, message_text):
+    """Create a message for an email.
+
+    Args:
+    sender: Email address of the sender.
+    to: Email address of the receiver.
+    subject: The subject of the email message.
+    message_text: The text of the email message.
+
+    Returns:
+    An object containing a base64url encoded email object.
+    """
+
+    message = MIMEMultipart()
+    message['to'] = to
+    message['from'] = sender
+    message['subject'] = subject
+    msg = MIMEText(message_text, 'html')
+    message.attach(msg)
+
+    return {'raw': base64.urlsafe_b64encode(message.as_string().encode()).decode()}
+
+def send_message(service, user_id, message):
+    """Send an email message.
+
+    Args:
+    service: Authorized Gmail API service instance.
+    user_id: User's email address. The special value "me"
+    can be used to indicate the authenticated user.
+    message: Message to be sent.
+
+    Returns:
+    Sent Message.
+    """
+    try:
+        message = (service.users().messages().send(userId=user_id, body=message)
+                .execute())
+        return message
+    except : #errors.HttpError, error
+        print ('An error occurred: %s' % error)
+
+def send_email(email, html):
+    
+    # authorise gmail
+    with open('src/data/gmail_token.p', 'rb') as auth_token:
+        creds = pickle.load(auth_token)
+    
+    gmail = build('gmail', 'v1', credentials=creds)
+
+    # create the email
+    msg = create_message(
+        'joseph@josephjeo.ng',
+        email,    # the person receiving email
+        'Your Flockr Password Reset Code',
+        html
+    )
+
+    # send the email
+    send_message(gmail, 'me', msg)
 
 def passwordreset_request(email):
-    pass
+    ''' password reseting '''
+
+    # find the user in question
+    focus_user = None
+    for user in data.return_users():
+        if user['email'] == email:
+            focus_user = user
+            break
+    if focus_user is None:
+        raise InputError('This is an incorrect email')
+
+    # create the secret code
+    code = create_secret(10, whitespace=False)
+
+    # store the code
+    u_id = focus_user['u_id']
+    data.update_user(u_id, 'password_reset', {
+        'origin': datetime.datetime.utcnow(),
+        'code': code
+    })
+
+    # get the html formatted
+    html = data.return_password_reset_email().format(
+        PREVIEWTEXT = 'This is your password reset code',
+        FIRSTNAME = focus_user.get('name_first'),
+        CODE = code
+    )
+
+    # send the email
+    send_email(email, html)
+    return {}
 
 def passwordreset_reset(reset_code, new_password):
     pass

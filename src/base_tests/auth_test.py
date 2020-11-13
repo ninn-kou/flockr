@@ -318,6 +318,13 @@ def test_auth_logout_wrong_session():
     # try logging out with the second token
     assert auth.auth_logout(token2)['is_success']
 
+def get_reset_code(u_id):
+    ''' helper function to get the password code '''
+    
+    for user in data.return_users():
+        if user['u_id'] == u_id:
+            return user.get('password_reset')
+
 def test_passwordreset_not_real_user():
     '''
     Given an email address, if the user is a registered user, 
@@ -340,16 +347,17 @@ def test_passwordreset_real_user():
     clear()
 
     # register a user
-    auth.auth_register('valid@example.com', 'password', 'Mate', 'Old')
-
-    code = auth.passwordreset_request('valid@example.com')
+    u_id = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old').get('u_id')
+    
+    auth.passwordreset_request('valid@example.com')
+    code = get_reset_code(u_id).get('code')
     now = datetime.datetime.utcnow()
 
     # check that the code stored was the same as given code
     valid = False
     for user in data.return_users():
-        if (user.get('password_reset').get('code') == code 
-        and abs(datetime.datetime.timedelta(now, user.get('password_reset').get('origin'))) < 5000):
+        if (user.get('password_reset').get('code') == code):
+        # and abs(datetime.datetime.timedelta(now, user.get('password_reset').get('origin'))) < 5000):
             valid = True
             break
     # if code wasn't stored, or it was an incorrect code, it's not valid
@@ -363,11 +371,11 @@ def test_passwordreset_reset_invalid_code():
     clear()
 
     # register a user
-    auth.auth_register('valid@example.com', 'password', 'Mate', 'Old')
+    u_id = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old').get('u_id')
 
     # send the password reset
-    code = auth.passwordreset_request('valid@example.com')
-    now = datetime.datetime.utcnow()
+    auth.passwordreset_request('valid@example.com')
+    code = get_reset_code(u_id).get('code')
 
     # make sure new code is incorrect
     new_code = 'hahagetcooked'
@@ -376,7 +384,7 @@ def test_passwordreset_reset_invalid_code():
 
     with pytest.raises(InputError):
         auth.passwordreset_reset(new_code, 'passwordTime')
-    
+
 def test_passwordreset_reset_invalid_new_password():
     '''
     Given a reset code for a user, set that user's new password to the password provided
@@ -384,10 +392,11 @@ def test_passwordreset_reset_invalid_new_password():
     clear()
 
     # register a user
-    auth.auth_register('valid@example.com', 'password', 'Mate', 'Old')
+    u_id = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old').get('u_id')
 
     # send the password reset
-    code = auth.passwordreset_request('valid@example.com')
+    auth.passwordreset_request('valid@example.com')
+    code = get_reset_code(u_id).get('code') 
 
     # if password doesn't pass new password checks
     with pytest.raises(InputError):
@@ -403,7 +412,8 @@ def test_passwordreset_reset_invalid_time():
     u_id = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old').get('u_id')
 
     # send the password reset
-    code = auth.passwordreset_request('valid@example.com')
+    auth.passwordreset_request('valid@example.com')
+    code = get_reset_code(u_id).get('code') 
 
     # make the time an hour before
     now = datetime.datetime.utcnow()
@@ -422,10 +432,11 @@ def test_passwordreset_reset_valid_code():
     clear()
 
     # register a user
-    u_id = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old').get('u_id')
+    u_id = auth.auth_register('joe.b.jeong@gmail.com', 'password', 'Mate', 'Old').get('u_id')
 
     # send the password reset
-    code = auth.passwordreset_request('valid@example.com')
+    auth.passwordreset_request('valid@example.com')
+    code = get_reset_code(u_id).get('code')
     now = datetime.datetime.utcnow()
 
     # reset the password

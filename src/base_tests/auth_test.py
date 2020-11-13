@@ -432,7 +432,7 @@ def test_passwordreset_reset_valid_code():
     clear()
 
     # register a user
-    u_id = auth.auth_register('joe.b.jeong@gmail.com', 'password', 'Mate', 'Old').get('u_id')
+    u_id = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old').get('u_id')
 
     # send the password reset
     auth.passwordreset_request('valid@example.com')
@@ -442,11 +442,13 @@ def test_passwordreset_reset_valid_code():
     # reset the password
     assert auth.passwordreset_reset(code, 'passwordTime') is not None
 
+    new_hash = auth.hash_('passwordTime')
+
     # check the password
     valid = False
     for user in data.return_users():
-        if (user.get('password') == 'passwordTime' 
-        and abs(datetime.datetime.timedelta(now, user.get('password_reset').get('origin'))) < 5000):
+        if (user.get('password') == new_hash
+        and abs((now - user.get('password_reset').get('origin')).total_seconds()) < 500):
             valid = True
             break
     # if new password wasn't stored, assert

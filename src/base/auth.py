@@ -381,4 +381,24 @@ def passwordreset_request(email):
 
 def passwordreset_reset(reset_code, new_password):
     ''' check if reset_code is correct '''
-    
+
+    # check that password is valid length
+    if len(new_password) < 6:
+        raise InputError('Password Too Short')
+    now = datetime.datetime.utcnow()
+
+    # check that the code stored was the same as given code
+    focus_user = None
+    for user in data.return_users():
+        if (user.get('password_reset').get('code') == reset_code
+        and abs((now - user.get('password_reset').get('origin')).total_seconds()) < 500):
+            focus_user = user
+            break
+    # raise input error if person is faulty
+    if focus_user is None:
+        raise InputError('Invalid Reset Code')
+
+    # store the new password
+    data.update_user(focus_user['u_id'], 'password', hash_(new_password))
+
+    return {}

@@ -380,4 +380,5 @@ def passwordreset_request(email):
     return {}
 
 def passwordreset_reset(reset_code, new_password):
-    pass
+    ''' check if reset_code is correct '''
+    

@@ -356,8 +356,8 @@ def test_passwordreset_real_user():
     # check that the code stored was the same as given code
     valid = False
     for user in data.return_users():
-        if (user.get('password_reset').get('code') == code):
-        # and abs(datetime.datetime.timedelta(now, user.get('password_reset').get('origin'))) < 5000):
+        if (user.get('password_reset').get('code') == code
+        and abs((now - user.get('password_reset').get('origin')).total_seconds()) < 500):
             valid = True
             break
     # if code wasn't stored, or it was an incorrect code, it's not valid

@@ -16,7 +16,6 @@ import requests
 import pytest
 
 import data.data as data
-from base.other import clear
 
 # copy-pasted this straight out of echo_http_test.py
 # Use this fixture to get the URL of the server. It starts the server for you,
@@ -169,7 +168,7 @@ def test_passwordreset_reset(url):
 
     # find the code
     code = get_reset_code(json.loads(user.text).get('u_id')).get('code')
-    print(code)
+
     # reset the code
     r = requests.post(url + 'auth/passwordreset/reset',
     json = {

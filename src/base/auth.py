@@ -320,12 +320,9 @@ def send_message(service, user_id, message):
     Returns:
     Sent Message.
     """
-    try:
-        message = (service.users().messages().send(userId=user_id, body=message)
-                .execute())
-        return message
-    except : #errors.HttpError, error
-        print ('An error occurred: %s' % error)
+    message = (service.users().messages().send(userId=user_id, body=message)
+            .execute())
+    return message
 
 def send_email(email, html):
     
@@ -337,7 +334,7 @@ def send_email(email, html):
 
     # create the email
     msg = create_message(
-        'joseph@josephjeo.ng',
+        'joseph@josephjeo.ng', # hi, please don't destroy me
         email,    # the person receiving email
         'Your Flockr Password Reset Code',
         html

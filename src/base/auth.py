@@ -14,11 +14,12 @@ from email.utils import parseaddr
 import data.data as data
 from base.error import InputError
 
-def create_secret():
-    """Create a 50 character long ascii string for token."""
+def create_secret(token_length, whitespace = False):
+    """Create a specified length character long ascii string for token."""
     # Create list of random characters and length of token.
-    valid_characters = string.ascii_letters + string.digits + string.punctuation + string.whitespace
-    token_length = 50
+    valid_characters = string.ascii_letters + string.digits
+    if whitespace:
+        valid_characters += string.punctuation + string.whitespace
 
     # create token of that length and with specified characters
     return "".join(random.choices(valid_characters, k = token_length))
@@ -30,9 +31,7 @@ def read_jwt_secret():
     # create a new one if it doesn't
     if os.path.isfile('src/data/JWT_SECRET.p') is False:
         with open('src/data/JWT_SECRET.p', 'wb') as file:
-            new_token = ''
-            for _ in range(50):
-                new_token += create_secret()
+            new_token = create_secret(10000)
             pickle.dump(new_token, file)
 
     # read token_secret from file
@@ -208,7 +207,7 @@ def auth_register(email, password, name_first, name_last):
 
     # Create variables for new user
     u_id = create_u_id(data.return_users())
-    session_secret = create_secret()
+    session_secret = create_secret(50)
     token = create_token(u_id, session_secret)
     handle = handle_generator(name_first, name_last, u_id)
     password = hash_(password)
@@ -253,7 +252,7 @@ def auth_login(email, password):
 
     # Creates a token
     u_id = focus_user['u_id']
-    session_secret = create_secret()
+    session_secret = create_secret(50)
     token = create_token(u_id, session_secret)
 
     # update the session_secret in stored users
@@ -280,3 +279,10 @@ def auth_logout(token):
     # if user has been found while decoding the token,
     # the process worked 100%
     return {'is_success': True}
+
+
+def passwordreset_request(email):
+    pass
+
+def passwordreset_reset(reset_code, new_password):
+    pass

@@ -31,6 +31,10 @@ def users_notes():
             'password': '',
             'session_secret': '',
             'permission_id': '',
+            'password_reset': {
+                'origin': datetime object,
+                'code': ''
+            }
         }
     ]
 
@@ -104,6 +108,10 @@ def updateByEmail(user, email):
         newusers.append(i)
     with open('src/data/users.json', 'w') as file:
         json.dump(newusers, file)
+
+def add_password_reset(u_id):
+    pass
+
 
 ##########################################################################################
 

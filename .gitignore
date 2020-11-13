@@ -6,6 +6,7 @@ __pycache__/
 # persistent data storage
 *.json
 users.p
+quickstart.py
 src/data/JWT_SECRET.p
 src/data/JWT_SECRET.txt
 src/data/profiles

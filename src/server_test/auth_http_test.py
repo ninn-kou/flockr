@@ -169,7 +169,7 @@ def test_passwordreset_reset(url):
 
     # find the code
     code = get_reset_code(json.loads(user.text).get('u_id')).get('code')
-
+    print(code)
     # reset the code
     r = requests.post(url + 'auth/passwordreset/reset',
     json = {

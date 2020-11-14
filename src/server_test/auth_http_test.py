@@ -16,7 +16,6 @@ import requests
 import pytest
 
 import data.data as data
-from base.other import clear
 
 # copy-pasted this straight out of echo_http_test.py
 # Use this fixture to get the URL of the server. It starts the server for you,
@@ -119,3 +118,62 @@ def test_logout(url):
 
     # make sure logging out user was successful
     assert json.loads(token.text).get('is_success')
+
+def test_passwordreset_request(url):
+    ''' test whether the request is sent '''
+    # clear out the databases
+    requests.delete(url + 'clear', json={})
+
+    # register the user
+    requests.post(url + 'auth/register',
+    json = {
+        'email': 'test@example.com',
+        'password': 'emilyisshort',
+        'name_first': 'Emily',
+        'name_last': 'Luo?'
+    })
+
+    r = requests.post(url + 'auth/passwordreset/request',
+    json = {
+        'email': 'test@example.com'
+    })
+
+    assert r.status_code == 200
+
+def get_reset_code(u_id):
+    ''' helper function to get the password code '''
+    
+    for user in data.return_users():
+        if user['u_id'] == u_id:
+            return user.get('password_reset')
+
+def test_passwordreset_reset(url):
+     # clear out the databases
+    requests.delete(url + 'clear', json={})
+
+    # register the user
+    user = requests.post(url + 'auth/register',
+    json = {
+        'email': 'test@example.com',
+        'password': 'emilyisshort',
+        'name_first': 'Emily',
+        'name_last': 'Luo?'
+    })
+
+    # ask for the code
+    requests.post(url + 'auth/passwordreset/request',
+    json = {
+        'email': 'test@example.com'
+    })
+
+    # find the code
+    code = get_reset_code(json.loads(user.text).get('u_id')).get('code')
+
+    # reset the code
+    r = requests.post(url + 'auth/passwordreset/reset',
+    json = {
+        'reset_code': code,
+        'new_password': 'validpassword'
+    })
+
+    assert r.status_code == 200

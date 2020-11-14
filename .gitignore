@@ -5,6 +5,9 @@ __pycache__/
 
 # persistent data storage
 *.json
+*.p
+!gmail_token.p
+quickstart.py
 src/data/JWT_SECRET.p
 src/data/JWT_SECRET.txt
 src/data/profiles

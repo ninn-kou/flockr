@@ -435,7 +435,6 @@ def message_sendlater(token, channel_id, message, time_sent):
 ############################################################
 def find_one_in_message(message, u_id):
     reacts = message["reacts"][0]
-    print(u_id)
     if u_id in reacts['u_ids']:
         return True
     return False

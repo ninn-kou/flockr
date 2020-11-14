@@ -10,6 +10,7 @@ However, it allows for basic persistent storage
 import json
 import os
 import glob
+import pickle
 from PIL import Image
 from flask import request
 
@@ -31,6 +32,10 @@ def users_notes():
             'password': '',
             'session_secret': '',
             'permission_id': '',
+            'password_reset': {
+                'origin': datetime object,
+                'code': ''
+            }
         }
     ]
 
@@ -46,9 +51,9 @@ def return_users():
     # declare users outside
     users = None
 
-    # open the json file
-    with open('src/data/users.json', 'r') as file:
-        users = json.load(file)
+    # open the pickle file
+    with open('src/data/users.p', 'rb') as file:
+        users = pickle.load(file)
 
     # return the json information
     return users
@@ -59,16 +64,16 @@ def update_user(u_id, index, value):
     # declare users outside
     users = None
 
-    # open current json file
-    with open('src/data/users.json', 'r') as file:
-        users = json.load(file)
+    # open current pickle file
+    with open('src/data/users.p', 'rb') as file:
+        users = pickle.load(file)
 
     for user in users:
         if user.get('u_id') == u_id:
             user[index] = value
-    # write json to file
-    with open('src/data/users.json', 'w') as file:
-        json.dump(users, file)
+    # write pickle to file
+    with open('src/data/users.p', 'wb') as file:
+        pickle.dump(users, file)
 
 def append_users(user):
     ''' append user to list '''
@@ -76,34 +81,42 @@ def append_users(user):
     # declare users outside
     users = None
 
-    # open current json file
-    with open('src/data/users.json', 'r') as file:
-        users = json.load(file)
+    # open current pickle file
+    with open('src/data/users.p', 'rb') as file:
+        users = pickle.load(file)
 
     # append the user
     users.append(user)
 
     # write json to file
-    with open('src/data/users.json', 'w') as file:
-        json.dump(users, file)
+    with open('src/data/users.p', 'wb') as file:
+        pickle.dump(users, file)
 
 def clear_users():
     ''' clear out users file '''
 
     # write json to file
-    with open('src/data/users.json', 'w') as file:
-        json.dump([], file)
+    with open('src/data/users.p', 'wb') as file:
+        pickle.dump([], file)
 
 def updateByEmail(user, email):
-    with open('src/data/users.json', 'r') as file:
-        users = json.load(file)
+    ''' update users by email '''
+
+    with open('src/data/users.p', 'rb') as file:
+        users = pickle.load(file)
+
     newusers = []
     for i in users:
         if i['email'] == email:
             i = user
         newusers.append(i)
-    with open('src/data/users.json', 'w') as file:
-        json.dump(newusers, file)
+
+    with open('src/data/users.p', 'wb') as file:
+        pickle.dump(newusers, file)
+
+def add_password_reset(u_id):
+    pass
+
 
 ##########################################################################################
 
@@ -330,3 +343,10 @@ def message_package_empty(channel_id):
     with open('src/data/channels.json', 'w') as file:
         json.dump(channels, file)
 
+def return_password_reset_email():
+    ''' returns the text of the password_reset_email.txt '''
+
+    with open('src/data/password_reset_email.txt', 'r') as file:
+        email = file.read()
+        return email
+    

@@ -1,8 +1,9 @@
 '''
 Joseph Jeong made auth_test.py
 '''
+from datetime import timedelta
 import pytest
-import os
+import datetime
 
 import data.data as data
 import base.auth as auth
@@ -316,3 +317,139 @@ def test_auth_logout_wrong_session():
 
     # try logging out with the second token
     assert auth.auth_logout(token2)['is_success']
+
+def get_reset_code(u_id):
+    ''' helper function to get the password code '''
+    
+    for user in data.return_users():
+        if user['u_id'] == u_id:
+            return user.get('password_reset')
+
+def test_passwordreset_not_real_user():
+    '''
+    Given an email address, if the user is a registered user, 
+    send's them a an email containing a specific secret code, that 
+    when entered in auth_passwordreset_reset, shows that the user 
+    trying to reset the password is the one who got sent this email.
+
+    This will test what happens when user is not real
+    '''
+    clear()
+
+    # no users registered
+    with pytest.raises(InputError):
+        auth.passwordreset_request('invalidemail@google.com')
+
+def test_passwordreset_real_user():
+    '''
+    This will test what happens when user is real
+    '''
+    clear()
+
+    # register a user
+    u_id = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old').get('u_id')
+    
+    auth.passwordreset_request('valid@example.com')
+    code = get_reset_code(u_id).get('code')
+    now = datetime.datetime.utcnow()
+
+    # check that the code stored was the same as given code
+    valid = False
+    for user in data.return_users():
+        if (user.get('password_reset').get('code') == code
+        and abs((now - user.get('password_reset').get('origin')).total_seconds()) < 500):
+            valid = True
+            break
+    # if code wasn't stored, or it was an incorrect code, it's not valid
+    # if password_reset doesn't have an acceptable time delta, it is not valid
+    assert valid
+
+def test_passwordreset_reset_invalid_code():
+    '''
+    Given a reset code for a user, set that user's new password to the password provided
+    '''
+    clear()
+
+    # register a user
+    u_id = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old').get('u_id')
+
+    # send the password reset
+    auth.passwordreset_request('valid@example.com')
+    code = get_reset_code(u_id).get('code')
+
+    # make sure new code is incorrect
+    new_code = 'hahagetcooked'
+    if code == new_code:
+        raise Exception('This is the same code coincidentally')
+
+    with pytest.raises(InputError):
+        auth.passwordreset_reset(new_code, 'passwordTime')
+
+def test_passwordreset_reset_invalid_new_password():
+    '''
+    Given a reset code for a user, set that user's new password to the password provided
+    '''
+    clear()
+
+    # register a user
+    u_id = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old').get('u_id')
+
+    # send the password reset
+    auth.passwordreset_request('valid@example.com')
+    code = get_reset_code(u_id).get('code') 
+
+    # if password doesn't pass new password checks
+    with pytest.raises(InputError):
+        auth.passwordreset_reset(code, 'f')
+
+def test_passwordreset_reset_invalid_time():
+    '''
+    Given a reset code for a user, set that user's new password to the password provided
+    '''
+    clear()
+
+    # register a user
+    u_id = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old').get('u_id')
+
+    # send the password reset
+    auth.passwordreset_request('valid@example.com')
+    code = get_reset_code(u_id).get('code') 
+
+    # make the time an hour before
+    now = datetime.datetime.utcnow()
+    before = now - datetime.timedelta(hours=2)
+    data.update_user(u_id, 'password_reset', {
+        'origin': before,
+        'code': code
+    })
+    
+    # check there's an inputerror
+    with pytest.raises(InputError):
+        auth.passwordreset_reset(code, 'passwordTime')
+
+def test_passwordreset_reset_valid_code():
+    ''' test passwordreset with a valid code '''
+    clear()
+
+    # register a user
+    u_id = auth.auth_register('valid@example.com', 'password', 'Mate', 'Old').get('u_id')
+
+    # send the password reset
+    auth.passwordreset_request('valid@example.com')
+    code = get_reset_code(u_id).get('code')
+    now = datetime.datetime.utcnow()
+
+    # reset the password
+    assert auth.passwordreset_reset(code, 'passwordTime') is not None
+
+    new_hash = auth.hash_('passwordTime')
+
+    # check the password
+    valid = False
+    for user in data.return_users():
+        if (user.get('password') == new_hash
+        and abs((now - user.get('password_reset').get('origin')).total_seconds()) < 500):
+            valid = True
+            break
+    # if new password wasn't stored, assert
+    assert valid

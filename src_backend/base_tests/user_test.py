@@ -2,6 +2,7 @@ from subprocess import Popen, PIPE
 from time import sleep
 import signal
 import re
+import os
 
 from PIL import Image
 import pytest
@@ -170,7 +171,8 @@ def test_user_profile_handle_input_error_invalid_handle():
 def url():
     ''' start server and create url'''
     url_re = re.compile(r' \* Running on ([^ ]*)')
-    server = Popen(["python3", "src_backend/base_tests/uploadphoto_test/upload_server.py"], stderr=PIPE, stdout=PIPE)
+    path = os.getcwd() + "src_backend/base_tests/uploadphoto_test/upload_server.py"
+    server = Popen(["python3", path], stderr=PIPE, stdout=PIPE)
     line = server.stderr.readline()
     local_url = url_re.match(line.decode())
     if local_url:

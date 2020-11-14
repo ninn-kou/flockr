@@ -35,14 +35,15 @@ def read_jwt_secret():
 
     # check if token file exists
     # create a new one if it doesn't
-    if os.path.isfile('src_backend/data/JWT_SECRET.p') is False:
-        with open('src_backend/data/JWT_SECRET.p', 'wb') as file:
+    jwt_path = os.getcwd() + '/src_backend/data/JWT_SECRET.p'
+    if os.path.isfile(jwt_path) is False:
+        with open(jwt_path, 'wb') as file:
             new_token = create_secret(10000)
             pickle.dump(new_token, file)
 
     # read token_secret from file
     # stored in pickle so user can't read it *dab*
-    with open('src_backend/data/JWT_SECRET.p', 'rb') as file:
+    with open(jwt_path, 'rb') as file:
         token_secret = pickle.load(file)
 
     return token_secret
@@ -327,7 +328,8 @@ def send_message(service, user_id, message):
 def send_email(email, html):
     
     # authorise gmail
-    with open('src_backend/data/gmail_token.p', 'rb') as auth_token:
+    path = os.getcwd() + '/src_backend/data/gmail_token.p'
+    with open(path, 'rb') as auth_token:
         creds = pickle.load(auth_token)
     
     gmail = build('gmail', 'v1', credentials=creds)

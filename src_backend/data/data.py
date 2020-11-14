@@ -52,7 +52,8 @@ def return_users():
     users = None
 
     # open the pickle file
-    with open('src_backend/data/users.p', 'rb') as file:
+    path = os.getcwd() + '/src_backend/data/users.p'
+    with open(path, 'rb') as file:
         users = pickle.load(file)
 
     # return the json information
@@ -65,14 +66,15 @@ def update_user(u_id, index, value):
     users = None
 
     # open current pickle file
-    with open('src_backend/data/users.p', 'rb') as file:
+    path = os.getcwd() + '/src_backend/data/users.p'
+    with open(path, 'rb') as file:
         users = pickle.load(file)
 
     for user in users:
         if user.get('u_id') == u_id:
             user[index] = value
     # write pickle to file
-    with open('src_backend/data/users.p', 'wb') as file:
+    with open(path, 'wb') as file:
         pickle.dump(users, file)
 
 def append_users(user):
@@ -82,27 +84,30 @@ def append_users(user):
     users = None
 
     # open current pickle file
-    with open('src_backend/data/users.p', 'rb') as file:
+    path = os.getcwd() + '/src_backend/data/users.p'
+    with open(path, 'rb') as file:
         users = pickle.load(file)
 
     # append the user
     users.append(user)
 
     # write json to file
-    with open('src_backend/data/users.p', 'wb') as file:
+    with open(path, 'wb') as file:
         pickle.dump(users, file)
 
 def clear_users():
     ''' clear out users file '''
 
     # write json to file
-    with open('src_backend/data/users.p', 'wb') as file:
+    path = os.getcwd() + '/src_backend/data/users.p'
+    with open(path, 'wb') as file:
         pickle.dump([], file)
 
 def updateByEmail(user, email):
     ''' update users by email '''
 
-    with open('src_backend/data/users.p', 'rb') as file:
+    path = os.getcwd() + '/src_backend/data/users.p'
+    with open(path, 'rb') as file:
         users = pickle.load(file)
 
     newusers = []
@@ -111,12 +116,8 @@ def updateByEmail(user, email):
             i = user
         newusers.append(i)
 
-    with open('src_backend/data/users.p', 'wb') as file:
+    with open(path, 'wb') as file:
         pickle.dump(newusers, file)
-
-def add_password_reset(u_id):
-    pass
-
 
 ##########################################################################################
 

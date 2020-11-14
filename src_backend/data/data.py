@@ -176,8 +176,14 @@ def return_channels():
     # declare users outside
     channels = None
 
+    # if file doesn't exist, create it
+    path = os.getcwd() + 'src_backend/data/channels.json'
+    if not os.path.exists(path):
+        with open(path, 'w') as file:
+            json.dump([], file)
+
     # open the json file
-    with open('src_backend/data/channels.json', 'r') as file:
+    with open(path, 'r') as file:
         channels = json.load(file)
 
     # return the json information
@@ -233,8 +239,14 @@ def return_messages():
     # declare messages outside
     messages = None
 
+    # if file doesn't exist, create it
+    path = os.getcwd() + 'src_backend/data/channels.json'
+    if not os.path.exists(path):
+        with open(path, 'w') as file:
+            json.dump([], file)
+
     # open the json file
-    with open('src_backend/data/messages.json', 'r') as file:
+    with open(path, 'r') as file:
         messages = json.load(file)
 
     # return the json information

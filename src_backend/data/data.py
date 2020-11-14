@@ -53,6 +53,12 @@ def return_users():
 
     # open the pickle file
     path = os.getcwd() + '/src_backend/data/users.p'
+
+    # create file if it doesn't exist
+    if not os.path.exists(path):
+        with open(path, 'wb') as file:
+            pickle.dump([], file)
+
     with open(path, 'rb') as file:
         users = pickle.load(file)
 

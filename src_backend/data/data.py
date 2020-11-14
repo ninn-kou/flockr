@@ -243,7 +243,7 @@ def return_messages():
     path = os.getcwd() + '/src_backend/data/messages.json'
     if not os.path.exists(path):
         with open(path, 'w') as file:
-            json.dump({}, file)
+            json.dump([], file)
 
     # open the json file
     with open(path, 'r') as file:

@@ -289,7 +289,7 @@ def test_standup_send():
     channel.channel_invite(u1_token, channel_1_id, u2_id)
     channel.channel_invite(u1_token, channel_1_id, u3_id)
     #start a standup
-    standup.standup_start(u1_token, channel_1_id, 1)
+    standup.standup_start(u1_token, channel_1_id, 2)
     
     standup.standup_send(u1_token, channel_1_id, 'WE')
     standup.standup_send(u2_token, channel_1_id, 'ARE')
@@ -300,7 +300,7 @@ def test_standup_send():
     
     assert m_l == 'FirstN1: WE\nFirstN2: ARE\nFirstN3: FRIENDS\n'
     
-    time.sleep(2)
+    time.sleep(3)
 
 def test_standup_all_message_sent_out():
     '''check if the message in message package has been sent out after ending'''

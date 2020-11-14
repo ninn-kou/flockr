@@ -101,7 +101,7 @@ def user_profile_setemail(token, email):
 
     user = check_in_users('email', data.return_users(), email)
     if user is not None:
-        raise InputError('1')
+        raise InputError('Cannot use this email repeating :(')
 
     user = check_in_users('email', data.return_users(), email_now)
 

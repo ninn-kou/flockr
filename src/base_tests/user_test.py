@@ -13,6 +13,21 @@ from base.error import InputError
 from base.other import clear
 import base.auth as auth
 
+################################################################################
+################################################################################
+##
+##    Yuhan Yan's work:
+##    25 October, 2020
+##
+##      - user_profile(token, u_id));
+##      - user_profile_setname(token, name_first, name_last);
+##      - user_profile_setemail(token, email);
+##      - user_profile_sethandle(token, handle_str);
+##      - and all tests for these functions.
+##
+################################################################################
+################################################################################
+
 def test_user_profile_correct_return():
     ''' checks correct return from login'''
     clear()

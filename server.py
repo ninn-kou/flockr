@@ -12,17 +12,17 @@ from json import dumps, dump
 from flask import Flask
 from flask_cors import CORS
 
-import src_backend.base.auth as auth
+import src.base.auth as auth
 
-import src_backend.server.auth_http as auth_http
-import src_backend.server.channel_http as channel_http
-import src_backend.server.channels_http as channels_http
-import src_backend.server.echo_http as echo_http
-import src_backend.server.message_http as message_http
-import src_backend.server.other_http as other_http
-import src_backend.server.user_http as user_http
-import src_backend.data.data as data
-import src_backend.server.standup_http as standup_http
+import src.server.auth_http as auth_http
+import src.server.channel_http as channel_http
+import src.server.channels_http as channels_http
+import src.server.echo_http as echo_http
+import src.server.message_http as message_http
+import src.server.other_http as other_http
+import src.server.user_http as user_http
+import src.data.data as data
+import src.server.standup_http as standup_http
 
 def default_handler(err):
     ''' system error handler '''
@@ -48,7 +48,7 @@ def save_port(port):
 
     # check if the file already exists
     # if not, create it
-    path = os.getcwd() + '/src_backend/data/port.json'
+    path = os.getcwd() + '/src/data/port.json'
 
     # dump port into it
     with open(path, 'w') as file:

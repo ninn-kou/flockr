@@ -12,6 +12,8 @@ from json import dumps, dump
 from flask import Flask
 from flask_cors import CORS
 
+import src_backend.base.auth as auth
+
 import src_backend.server.auth_http as auth_http
 import src_backend.server.channel_http as channel_http
 import src_backend.server.channels_http as channels_http
@@ -75,4 +77,5 @@ if __name__ == "__main__":
     port = find_free_port()
     print(port)
     save_port(port)
+    auth.read_jwt_secret()
     APP.run(port=port, threaded=True)

@@ -4,14 +4,14 @@ __pycache__/
 *$py.class
 
 # persistent data storage
-*.json
-*.p
-!gmail_token.p
-quickstart.py
-src/data/JWT_SECRET.p
-src/data/JWT_SECRET.txt
-src/data/profiles
-src/base_tests/uploadphoto_test/*_cropped.jpg
+# *.json
+# *.p
+# !gmail_token.p
+# quickstart.py
+# src/data/JWT_SECRET.p
+# src/data/JWT_SECRET.txt
+# src/data/profiles
+# src/base_tests/uploadphoto_test/*_cropped.jpg
 
 # C extensions
 *.so

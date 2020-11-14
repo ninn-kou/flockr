@@ -77,5 +77,5 @@ if __name__ == "__main__":
     port = find_free_port()
     print(port)
     save_port(port)
-    # auth.read_jwt_secret()
+    auth.read_jwt_secret()
     APP.run(port=port, threaded=True)

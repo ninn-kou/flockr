@@ -177,7 +177,7 @@ def return_channels():
     channels = None
 
     # if file doesn't exist, create it
-    path = os.getcwd() + 'src_backend/data/channels.json'
+    path = os.getcwd() + '/src_backend/data/channels.json'
     if not os.path.exists(path):
         with open(path, 'w') as file:
             json.dump([], file)
@@ -240,7 +240,7 @@ def return_messages():
     messages = None
 
     # if file doesn't exist, create it
-    path = os.getcwd() + 'src_backend/data/channels.json'
+    path = os.getcwd() + '/src_backend/data/channels.json'
     if not os.path.exists(path):
         with open(path, 'w') as file:
             json.dump([], file)

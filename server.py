@@ -77,4 +77,5 @@ if __name__ == "__main__":
     port = find_free_port()
     print(port)
     save_port(port)
+    auth
     APP.run(port=port, threaded=True)

@@ -171,7 +171,7 @@ def test_user_profile_handle_input_error_invalid_handle():
 def url():
     ''' start server and create url'''
     url_re = re.compile(r' \* Running on ([^ ]*)')
-    path = os.getcwd() + "src_backend/base_tests/uploadphoto_test/upload_server.py"
+    path = os.getcwd() + "/src_backend/base_tests/uploadphoto_test/upload_server.py"
     server = Popen(["python3", path], stderr=PIPE, stdout=PIPE)
     line = server.stderr.readline()
     local_url = url_re.match(line.decode())

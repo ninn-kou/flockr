@@ -12,9 +12,15 @@ import requests
 
 import pytest
 
+<<<<<<< HEAD:src/server_test/other_http_test.py
 import data.data as data
 import base.other as other
 import server.other_http as other_http
+=======
+import src.data.data as data
+import src.base.other as other
+import src.server.other_http as other_http
+>>>>>>> deployment:src_backend/server_test/other_http_test.py
 
 
 # copy-pasted this straight out of echo_http_test.py

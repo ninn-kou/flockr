@@ -15,7 +15,11 @@ import requests
 
 import pytest
 
+<<<<<<< HEAD:src/server_test/auth_http_test.py
 import data.data as data
+=======
+import src.data.data as data
+>>>>>>> deployment:src_backend/server_test/auth_http_test.py
 
 # copy-pasted this straight out of echo_http_test.py
 # Use this fixture to get the URL of the server. It starts the server for you,

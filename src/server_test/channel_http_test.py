@@ -21,10 +21,17 @@ import random
 
 import pytest
 
+<<<<<<< HEAD:src/server_test/channel_http_test.py
 import data.data as data
 from base_tests.channel_test import msg_send
 from base.other import clear
 from server.channel_http import details, invite
+=======
+import src.data.data as data
+from src.base_tests.channel_test import msg_send
+from src.base.other import clear
+from src.server.channel_http import details, invite
+>>>>>>> deployment:src_backend/server_test/channel_http_test.py
 
 # copy-pasted this straight out of echo_http_test.py
 # Use this fixture to get the URL of the server. It starts the server for you,

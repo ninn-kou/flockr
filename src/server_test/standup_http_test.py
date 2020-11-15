@@ -8,8 +8,13 @@ import requests
 from datetime import timezone, datetime
 import pytest
 
+<<<<<<< HEAD:src/server_test/standup_http_test.py
 import data.data as data
 from base.other import clear
+=======
+import src.data.data as data
+from src.base.other import clear
+>>>>>>> deployment:src_backend/server_test/standup_http_test.py
 
 
 # copy-pasted this straight out of echo_http_test.py

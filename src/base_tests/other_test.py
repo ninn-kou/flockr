@@ -1,6 +1,7 @@
 '''Tests for other.py'''
 import random
 import pytest
+<<<<<<< HEAD:src/base_tests/other_test.py
 import base.auth as auth
 import base.other as other
 import base.message as message
@@ -8,6 +9,15 @@ import base.channel as channel
 import base.channels as channels
 from base.error import InputError, AccessError
 import data.data as data
+=======
+import src.base.auth as auth
+import src.base.other as other
+import src.base.message as message
+import src.base.channel as channel
+import src.base.channels as channels
+from src.base.error import InputError, AccessError
+import src.data.data as data
+>>>>>>> deployment:src_backend/base_tests/other_test.py
 
 def test_owner_from_token():
     other.clear()

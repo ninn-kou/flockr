@@ -1,3 +1,4 @@
+<<<<<<< HEAD:src/base_tests/channels_test.py
 import base.auth as auth
 import base.channels as channels
 import pytest
@@ -6,6 +7,16 @@ from base.error import InputError
 import base.channel as channel
 import random
 from base.other import clear
+=======
+import src.base.auth as auth
+import src.base.channels as channels
+import pytest
+import src.data.data as data
+from src.base.error import InputError
+import src.base.channel as channel
+import random
+from src.base.other import clear
+>>>>>>> deployment:src_backend/base_tests/channels_test.py
 
 def test_owner_from_token():
     clear()

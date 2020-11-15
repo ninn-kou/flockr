@@ -6,10 +6,17 @@ from time import sleep
 import json
 import requests
 import pytest
+<<<<<<< HEAD:src/server_test/user_http_test.py
 from server_test.channel_http_test import send_request_json
 from base_tests.user_test import compare_images
 import data.data as data
 import base.auth as auth
+=======
+from src.server_test.channel_http_test import send_request_json
+from src.base_tests.user_test import compare_images
+import src.data.data as data
+import src.base.auth as auth
+>>>>>>> deployment:src_backend/server_test/user_http_test.py
 from PIL import Image
 
 # copy-pasted this straight out of echo_http_test.py

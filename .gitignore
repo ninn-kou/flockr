@@ -12,6 +12,7 @@ src/data/JWT_SECRET.p
 src/data/JWT_SECRET.txt
 src/data/profiles
 src/base_tests/uploadphoto_test/*_cropped.jpg
+*.log
 
 # C extensions
 *.so

@@ -3,6 +3,7 @@ import random
 import string
 import time
 import datetime
+<<<<<<< HEAD:src/base_tests/standup_test.py
 import base.auth as auth
 import base.channels as channels
 import pytest
@@ -11,6 +12,16 @@ from base.error import InputError, AccessError
 import base.channel as channel
 from base.other import clear
 import base.standup as standup
+=======
+import src.base.auth as auth
+import src.base.channels as channels
+import pytest
+import src.data.data as data
+from src.base.error import InputError, AccessError
+import src.base.channel as channel
+from src.base.other import clear
+import src.base.standup as standup
+>>>>>>> deployment:src_backend/base_tests/standup_test.py
 
 def time_difference(timeint1, timeint2):
     '''find the difference between two timestr'''

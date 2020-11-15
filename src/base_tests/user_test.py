@@ -7,6 +7,7 @@ from PIL import Image
 import pytest
 import requests
 
+<<<<<<< HEAD:src/base_tests/user_test.py
 import data.data as data
 import base.user as user
 from base.error import InputError
@@ -27,6 +28,13 @@ import base.auth as auth
 ##
 ################################################################################
 ################################################################################
+=======
+import src.data.data as data
+import src.base.user as user
+from src.base.error import InputError
+from src.base.other import clear
+import src.base.auth as auth
+>>>>>>> deployment:src_backend/base_tests/user_test.py
 
 def test_user_profile_correct_return():
     ''' checks correct return from login'''
@@ -185,7 +193,12 @@ def test_user_profile_handle_input_error_invalid_handle():
 def url():
     ''' start server and create url'''
     url_re = re.compile(r' \* Running on ([^ ]*)')
+<<<<<<< HEAD:src/base_tests/user_test.py
     server = Popen(["python3", "src/base_tests/uploadphoto_test/upload_server.py"], stderr=PIPE, stdout=PIPE)
+=======
+    path = os.getcwd() + "/src/base_tests/uploadphoto_test/upload_server.py"
+    server = Popen(["python3", path], stderr=PIPE, stdout=PIPE)
+>>>>>>> deployment:src_backend/base_tests/user_test.py
     line = server.stderr.readline()
     local_url = url_re.match(line.decode())
     if local_url:

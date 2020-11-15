@@ -1,7 +1,5 @@
 '''
 Test Server to deliver cropped and uncropped images
-
-This does not contribute to the 
 '''
 
 from json import dumps

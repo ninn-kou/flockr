@@ -128,21 +128,21 @@ def test_standup_start_http(url):
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
     channels = create_channels(url, user1.get('token'), True, 1)
-    
+
     #start a standup and get the return item
     resp = send_request('POST', url, 'standup/start', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'length': 2
     })
-    
+
     #get the current time
     now = datetime.utcnow()
     timestamp = int(now.replace(tzinfo=timezone.utc).timestamp())
-    
+
     assert resp['time_finish'] == timestamp + 2
     sleep(2)
-    
+
 def test_standup_active_http(url):
     '''test for the is_active funtion of the standup'''
     # clear out the databases
@@ -157,27 +157,27 @@ def test_standup_active_http(url):
         'channel_id': channels[0].get('channel_id'),
     })
     '''
-    resp1 = json.loads(requests.get(url + '/standup/active', 
+    resp1 = json.loads(requests.get(url + '/standup/active',
     params = {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
-    }).text)    
+    }).text)
     assert resp1['is_active'] == False
-    
+
     #start a standup
     send_request('POST', url, 'standup/start', {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
         'length': 1
     })
-    resp2 = json.loads(requests.get(url + '/standup/active', 
+    resp2 = json.loads(requests.get(url + '/standup/active',
     params = {
         'token': user1.get('token'),
         'channel_id': channels[0].get('channel_id'),
-    }).text)    
+    }).text)
     assert resp2['is_active'] == True
     sleep(2)
-    
+
 def test_standup_send_http(url):
     '''test for the is_active funtion of the standup'''
     # clear out the databases
@@ -186,11 +186,11 @@ def test_standup_send_http(url):
     # register a new user and create a new channel
     user1 = register_user(url, 'test@example.com', 'emilyisshort', 'Emily', 'Luo')
     channels = create_channels(url, user1.get('token'), True, 1)
-    
+
     # invite second user to invite
     user2 = register_user(url, 'test2@example.com', 'emilyisshort2', 'Emily2', 'Luo2')
     invite_user(url, user1, channels[0].get('channel_id'), user2)
-    
+
     #start a standup and get the return item
     send_request('POST', url, 'standup/start', {
         'token': user1.get('token'),

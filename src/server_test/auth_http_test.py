@@ -142,7 +142,7 @@ def test_passwordreset_request(url):
 
 def get_reset_code(u_id):
     ''' helper function to get the password code '''
-    
+
     for user in data.return_users():
         if user['u_id'] == u_id:
             return user.get('password_reset')

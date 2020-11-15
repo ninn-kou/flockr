@@ -372,4 +372,3 @@ def return_password_reset_email():
     with open('src/data/password_reset_email.txt', 'r') as file:
         email = file.read()
         return email
-    

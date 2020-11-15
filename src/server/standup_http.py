@@ -13,7 +13,7 @@ def start_su():
         int(input_obj.get('length'))
     )
     return jsonify(output)
-    
+
 @STANDUPHTTP.route('/active', methods = ['GET'])
 def is_active():
     input_obj = request.args
@@ -22,7 +22,7 @@ def is_active():
         int(input_obj.get('channel_id'))
     )
     return jsonify(output)
-    
+
 @STANDUPHTTP.route('/send', methods = ['POST'])
 def package_send():
     input_obj = request.json

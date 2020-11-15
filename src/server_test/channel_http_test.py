@@ -122,7 +122,7 @@ def create_random_message(characters, i):
     for _ in range(length):
         character = random.choice(characters)
         msg += character
-    
+
     # add number to end of message
     # ensures messages are unique
     msg += str(i)
@@ -141,7 +141,7 @@ def send_random_messages(channel_id, num):
         if channel['channel_id'] == channel_id:
             focus_channel = channel
             break
-    
+
     # add random messages to list
     messages = []
     for i in range(num):
@@ -153,13 +153,13 @@ def send_random_messages(channel_id, num):
         'time_created': i,
         }
         messages.append(return_message)
-    
+
     # add the message to channel
     for i in channels:
         if i['channel_id'] == channel_id:
             i['messages'] = messages
             break
-    
+
     # add that to persistent storage
     data.replace_channels(channels)
 
@@ -183,15 +183,15 @@ def check_in_index(url, user1, user2, channel, index):
 
 def check_user_list(user_list_1, user_list_2):
     '''
-    Compare sets of user_ids 
-    
+    Compare sets of user_ids
+
     This doesn't actually work right now
     '''
     # add u_ids to list
     user_id_1 = []
     for user in user_list_1:
         user_id_1.append(user.get('u_id'))
-    
+
     user_id_2 = []
     for user in user_list_2:
         user_id_2.append(user.get('u_id'))
@@ -286,7 +286,7 @@ def test_messages(url):
     })
 
     # make sure the messages are the same
-    assert (set(resp['messages'][start_index: start_index + interval]) 
+    assert (set(resp['messages'][start_index: start_index + interval])
         == set(messages[max_index - start_index: max_index - (start_index + interval)]))
 
 def test_leave(url):

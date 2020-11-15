@@ -168,7 +168,7 @@ def test_userpermission_change(url):
         'permission_id': 1
     })
     #i = other.users/all(u1_token)
-    
+
     i = data.return_users()
     i_user1 = i[0]
     i_user2 = i[1]

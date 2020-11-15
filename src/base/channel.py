@@ -208,7 +208,7 @@ def channel_messages(token, channel_id, start):
         2. AccessError
             - the authorised user is not in this channel.
     """
-    end = start + 50
+    end = -1
 
     auth_id = token_into_user_id(token)     # InputError 1: invalid token.
     if auth_id == -1:
@@ -225,12 +225,10 @@ def channel_messages(token, channel_id, start):
     if num_msgs < start:                    # InputError 4: the start >= total messages.
         raise InputError(' the start >= total messages')
 
-    if num_msgs == start:                   # Case 5: no message from start.
-        end = -1
-
     return_msg = []                         # Case 6: messages is more than 50, get top.
     if num_msgs > (start + 50):
         return_msg = channel_got['message'][start: start + 51]
+        end = start + 50
     else:                                  # Case 7: Get all messages which in (0, 50].
         return_msg = channel_got['message'][start:]
 

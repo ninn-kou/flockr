@@ -252,9 +252,9 @@ def test_search_case_insensitive():
 
     i = other.search(u1_token, 'the winner').get('messages')
     assert len(i) == 3
-    assert i[0]['message'] == 'Tomorrow, I will be the wiNNer.'
+    assert i[0]['message'] == 'Tomorrow, I will be the Winner.'
     assert i[1]['message'] == 'Yesterday, I was the winner.'
-    assert i[2]['message'] == 'Today, I am the Winner.'
+    assert i[2]['message'] == 'Today, I am the wiNNer.'
 
 def test_search_whitespace_insensitive():
     ''' this function checks for whitespace insensitivity when it comes to message search '''
@@ -277,6 +277,6 @@ def test_search_whitespace_insensitive():
 
     i = other.search(u1_token, 'the winner').get('messages')
     assert len(i) == 3
-    assert i[0]['message'] == 'Tomorrow, I will be the nwiNNer.'
+    assert i[0]['message'] == 'Tomorrow, I\t will be the W  inner.'
     assert i[1]['message'] == 'Yesterday, I was the winn    er.'
-    assert i[2]['message'] == 'Today, I am the W  inner.'
+    assert i[2]['message'] == 'Today, I am the \nwiNNer.'

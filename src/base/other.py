@@ -82,13 +82,21 @@ def search(token, query_str):
             if id_from == j['u_id']:
                 chan_list.append(i['channel_id'])
 
-    # make the queury string to all_lower
+    # make the query string to all_lower
+    # this will make query case insensitive
     query_str = query_str.lower()
+
+    # make query string to ignore whitespace
+    query_str = "".join(query_str.split())
 
     messages = data.return_messages()
     for i in messages:
         if i['channel_id'] in chan_list:   # focus on the channels which is joinned by the user
-            if query_str in i['message']:
+            
+            # make the message lowercase and ignoring whitespace
+            working_msg = "".join(i['message'].lower().split())
+
+            if query_str in working_msg:
                 added_message = {
                     "message_id" : i['message_id'],
                     "u_id" : i['u_id'],

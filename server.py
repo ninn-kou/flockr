@@ -74,4 +74,5 @@ if __name__ == "__main__":
     port = find_free_port()
     print(port)
     save_port(port)
+    auth.read_jwt_secret() # to create the jwt_secret file
     APP.run(port=port)

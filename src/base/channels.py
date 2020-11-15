@@ -2,15 +2,9 @@
 functions of create a new channel and return the specific channel
 '''
 import random
-<<<<<<< HEAD:src/base/channels.py
-import data.data as data
-from base.error import InputError
-from base.auth import decode_token
-=======
 import src.data.data as data
 from src.base.error import InputError
 from src.base.auth import decode_token
->>>>>>> deployment:src_backend/base/channels.py
 
 ################################################################################
 ################################################################################

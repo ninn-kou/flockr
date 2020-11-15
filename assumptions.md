@@ -114,3 +114,4 @@ Most recent changing log for this Markdown document here:
 - assumes that everything is a localhost url.
 
 ## 3. Iteration 3
+- can be deployed to heroku as is

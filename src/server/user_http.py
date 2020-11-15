@@ -3,15 +3,9 @@ from os import path
 from flask import Blueprint, request, jsonify
 from flask.helpers import send_file
 
-<<<<<<< HEAD:src/server/user_http.py
-import base.user as userB
-from base.auth import decode_token
-import data.data as data
-=======
 import src.base.user as userB
 from src.base.auth import decode_token
 import src.data.data as data
->>>>>>> deployment:src_backend/server/user_http.py
 
 USERHTTP = Blueprint('user', __name__)
 
@@ -95,11 +89,7 @@ def uploadphoto():
     )
 
     # get the cropped photo path and return it
-<<<<<<< HEAD:src/server/user_http.py
-    cropped = 'data/profiles/' + u_id + '.jpg'
-=======
     cropped = 'src/data/profiles/' + u_id + '.jpg'
->>>>>>> deployment:src_backend/server/user_http.py
 
     # updata the user profile_img_url
     user = decode_token(r.get('token'))

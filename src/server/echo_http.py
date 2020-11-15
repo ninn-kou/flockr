@@ -4,11 +4,7 @@ Sanity check for http
 
 from flask import Blueprint, request, jsonify
 
-<<<<<<< HEAD:src/server/echo_http.py
-from base.error import InputError
-=======
 from src.base.error import InputError
->>>>>>> deployment:src_backend/server/echo_http.py
 
 ECHOHTTP = Blueprint('echo', __name__)
 

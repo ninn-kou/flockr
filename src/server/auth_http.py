@@ -7,11 +7,7 @@ All url appends are prepended with auth/
 
 from flask import Blueprint, request, jsonify
 
-<<<<<<< HEAD:src/server/auth_http.py
-import base.auth as auth
-=======
 import src.base.auth as auth
->>>>>>> deployment:src_backend/server/auth_http.py
 
 AUTHHTTP = Blueprint('auth', __name__)
 

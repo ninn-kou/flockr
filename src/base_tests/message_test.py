@@ -1,15 +1,6 @@
 ''' this file is using for pytest of base/message.py .'''
 from datetime import timezone, datetime
 import pytest
-<<<<<<< HEAD:src/base_tests/message_test.py
-from base.channel import channel_invite, channel_messages, channel_addowner
-from base.channels import channels_create
-from base.auth import auth_login, auth_register, auth_logout
-from base.message import message_send, message_remove, message_edit
-from base.message import message_sendlater, message_pin, message_unpin,  message_react, message_unreact
-from base.error import InputError, AccessError
-import base.other as other
-=======
 from src.base.channel import channel_invite, channel_messages, channel_addowner
 from src.base.channels import channels_create
 from src.base.auth import auth_login, auth_register, auth_logout
@@ -17,7 +8,6 @@ from src.base.message import message_send, message_remove, message_edit
 from src.base.message import message_sendlater, message_pin, message_unpin,  message_react, message_unreact
 from src.base.error import InputError, AccessError
 import src.base.other as other
->>>>>>> deployment:src_backend/base_tests/message_test.py
 
 
 

@@ -3,15 +3,9 @@
 '''
 from datetime import timezone, datetime
 import time
-<<<<<<< HEAD:src/base/message.py
-import data.data as data
-from base.auth import decode_token
-from base.error import InputError, AccessError
-=======
 import src.data.data as data
 from src.base.auth import decode_token
 from src.base.error import InputError, AccessError
->>>>>>> deployment:src_backend/base/message.py
 
 
 ################################################################################

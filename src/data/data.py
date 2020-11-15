@@ -14,11 +14,7 @@ import pickle
 from PIL import Image
 from flask import request
 
-<<<<<<< HEAD:src/data/data.py
-from base.error import InputError
-=======
 from src.base.error import InputError
->>>>>>> deployment:src_backend/data/data.py
 
 def users_notes():
     '''
@@ -56,9 +52,6 @@ def return_users():
     users = None
 
     # open the pickle file
-<<<<<<< HEAD:src/data/data.py
-    with open('src/data/users.p', 'rb') as file:
-=======
     path = os.getcwd() + '/src/data/users.p'
 
     # create file if it doesn't exist
@@ -67,7 +60,6 @@ def return_users():
             pickle.dump([], file)
 
     with open(path, 'rb') as file:
->>>>>>> deployment:src_backend/data/data.py
         users = pickle.load(file)
 
     # return the json information
@@ -80,12 +72,8 @@ def update_user(u_id, index, value):
     users = None
 
     # open current pickle file
-<<<<<<< HEAD:src/data/data.py
-    with open('src/data/users.p', 'rb') as file:
-=======
     path = os.getcwd() + '/src/data/users.p'
     with open(path, 'rb') as file:
->>>>>>> deployment:src_backend/data/data.py
         users = pickle.load(file)
 
     for user in users:
@@ -102,12 +90,8 @@ def append_users(user):
     users = None
 
     # open current pickle file
-<<<<<<< HEAD:src/data/data.py
-    with open('src/data/users.p', 'rb') as file:
-=======
     path = os.getcwd() + '/src/data/users.p'
     with open(path, 'rb') as file:
->>>>>>> deployment:src_backend/data/data.py
         users = pickle.load(file)
 
     # append the user
@@ -121,23 +105,15 @@ def clear_users():
     ''' clear out users file '''
 
     # write json to file
-<<<<<<< HEAD:src/data/data.py
-    with open('src/data/users.p', 'wb') as file:
-=======
     path = os.getcwd() + '/src/data/users.p'
     with open(path, 'wb') as file:
->>>>>>> deployment:src_backend/data/data.py
         pickle.dump([], file)
 
 def updateByEmail(user, email):
     ''' update users by email '''
 
-<<<<<<< HEAD:src/data/data.py
-    with open('src/data/users.p', 'rb') as file:
-=======
     path = os.getcwd() + '/src/data/users.p'
     with open(path, 'rb') as file:
->>>>>>> deployment:src_backend/data/data.py
         users = pickle.load(file)
 
     newusers = []
@@ -204,15 +180,12 @@ def return_channels():
     # declare users outside
     channels = None
 
-<<<<<<< HEAD:src/data/data.py
-=======
     # if file doesn't exist, create it
     path = os.getcwd() + '/src/data/channels.json'
     if not os.path.exists(path):
         with open(path, 'w') as file:
             json.dump([], file)
 
->>>>>>> deployment:src_backend/data/data.py
     # open the json file
     with open('src/data/channels.json', 'r') as file:
         channels = json.load(file)
@@ -270,15 +243,12 @@ def return_messages():
     # declare messages outside
     messages = None
 
-<<<<<<< HEAD:src/data/data.py
-=======
     # if file doesn't exist, create it
     path = os.getcwd() + '/src/data/messages.json'
     if not os.path.exists(path):
         with open(path, 'w') as file:
             json.dump([], file)
 
->>>>>>> deployment:src_backend/data/data.py
     # open the json file
     with open('src/data/messages.json', 'r') as file:
         messages = json.load(file)

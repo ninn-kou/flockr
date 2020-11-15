@@ -1,14 +1,4 @@
 # this file is using for pytest of channel.py .
-<<<<<<< HEAD:src/base_tests/channel_test.py
-from base.channel import channel_invite, channel_details, channel_messages, channel_leave, channel_join, channel_addowner, channel_removeowner
-from base.channels import channels_create
-from base.message import message_send
-from base.auth import auth_login, auth_register, auth_logout
-from base.error import InputError, AccessError
-import data.data as data
-import pytest
-import base.other as other
-=======
 from src.base.channel import channel_invite, channel_details, channel_messages, channel_leave, channel_join, channel_addowner, channel_removeowner
 from src.base.channels import channels_create
 from src.base.message import message_send
@@ -17,7 +7,6 @@ from src.base.error import InputError, AccessError
 import src.data.data as data
 import pytest
 import src.base.other as other
->>>>>>> deployment:src_backend/base_tests/channel_test.py
 # from base.message import message_send
 
 

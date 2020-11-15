@@ -6,13 +6,8 @@ All URL appends are prepended with "other/"
 '''
 
 from flask import Blueprint, request, jsonify
-<<<<<<< HEAD:src/server/other_http.py
-import base.other as other
-import data.data as data
-=======
 import src.base.other as other
 import src.data.data as data
->>>>>>> deployment:src_backend/server/other_http.py
 
 OTHERHTTP = Blueprint('other', __name__)
 

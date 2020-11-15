@@ -7,7 +7,7 @@ All url appends are prepended with channels/
 
 from flask import Blueprint, request, jsonify
 
-import base.channels as channels
+import src.base.channels as channels
 
 CHANNELSHTTP = Blueprint('channels', __name__)
 

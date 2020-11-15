@@ -2,9 +2,9 @@
 functions of create a new channel and return the specific channel
 '''
 import random
-import data.data as data
-from base.error import InputError
-from base.auth import decode_token
+import src.data.data as data
+from src.base.error import InputError
+from src.base.auth import decode_token
 
 ################################################################################
 ################################################################################
@@ -26,15 +26,23 @@ def channels_list(token):
     """Need to fix implementation """
 
     # find the token
-    i = owner_from_token(token)
-    user_id = i['u_id']
+    u_id = owner_from_token(token).get('u_id')
 
-    channel_list = []
-    for i in range(len(data.return_channels())):     # Use loops to check if user in channel.
-        for j in range(len(data.return_channels()[i]['all_members'])):
-            if data.return_channels()[i]['all_members'][j]['u_id'] == user_id:
-                channel_list.append(data.return_channels()[i])
-    return {'channels': channel_list}
+    channel_temp = data.return_channels()
+
+    list_channel = []
+
+    for i in channel_temp:
+        for j in i['all_members']:
+            if u_id == j['u_id']:
+                temp = {
+                    'channel_id': i['channel_id'],
+                    'name': i['name'],
+                }
+                list_channel.append(temp)
+    return {
+        'channels': list_channel,
+    }
 
 
 def channels_listall(token):
@@ -42,14 +50,32 @@ def channels_listall(token):
 
     # check that token exists
     owner_from_token(token)
+    channel_temp = data.return_channels()
+    all_channels = []
 
-    return {'channels': data.return_channels()}
+    for i in channel_temp:
+        temp = {
+            'channel_id': i['channel_id'],
+            'name': i['name'],
+        }
+        all_channels.append(temp)
+
+    return {
+        'channels': all_channels,
+    }
+
+
 
 def create_channel_id(channels):
     """Create a random channel id."""
                                             # Randomly generated a 32 bit unsigned int.
                                             # Check if this int is unique.
     channel_id = random.randint(0, 0xFFFFFFFF)
+    for i in channels:
+        if i['channel_id'] is channel_id:
+            channel_id = create_channel_id(i)
+            break
+
     return channel_id
 
 
@@ -63,6 +89,11 @@ def channels_create(token, name, is_public):
     owner_fn = i['name_first']
     owner_ln = i['name_last']
 
+    standup = {
+        'finish_time':-1,
+        'message_package':'',
+    }
+
     channel_id = create_channel_id(data.return_channels())
     channel_new = {                         # Initialize the new channel.
         'name': name,
@@ -72,6 +103,8 @@ def channels_create(token, name, is_public):
                 'u_id': owner_id,
                 'name_first': owner_fn,
                 'name_last': owner_ln,
+                'profile_img_url':''
+
             }
         ],
         'all_members': [
@@ -79,11 +112,15 @@ def channels_create(token, name, is_public):
                 'u_id': owner_id,
                 'name_first': owner_fn,
                 'name_last': owner_ln,
+                'profile_img_url':''
             }
         ],
         'is_public': is_public,
-        'message':[]
+        'message':[],
+        'standup': standup
     }
 
     data.append_channels(channel_new)       # Add this new channel into data.
-    return {'channel_id': channel_id}
+    return {
+        'channel_id': channel_id
+    }

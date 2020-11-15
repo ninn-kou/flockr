@@ -13,13 +13,13 @@ import signal
 from time import sleep
 import json
 import requests
-from base.channel import channel_invite
-from base.auth import JWT_SECRET
+from src.base.channel import channel_invite
+from src.base.auth import JWT_SECRET
 
 import pytest
 
-import data.data as data
-from base.other import clear
+import src.data.data as data
+from src.base.other import clear
 
 # copy-pasted this straight out of echo_http_test.py
 # Use this fixture to get the URL of the server. It starts the server for you,
@@ -28,7 +28,7 @@ from base.other import clear
 def url():
     ''' start server and create url'''
     url_re = re.compile(r' \* Running on ([^ ]*)')
-    server = Popen(["python3", "src/server.py"], stderr=PIPE, stdout=PIPE)
+    server = Popen(["python3", "server.py"], stderr=PIPE, stdout=PIPE)
     line = server.stderr.readline()
     local_url = url_re.match(line.decode())
     if local_url:

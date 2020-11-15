@@ -1,11 +1,11 @@
-import base.auth as auth
-import base.channels as channels
+import src.base.auth as auth
+import src.base.channels as channels
 import pytest
-import data.data as data
-from base.error import InputError
-import base.channel as channel
+import src.data.data as data
+from src.base.error import InputError
+import src.base.channel as channel
 import random
-from base.other import clear
+from src.base.other import clear
 
 def test_owner_from_token():
     clear()
@@ -34,8 +34,14 @@ def test_channels_create():
     assert data.return_channels()[-1]['name'] == 'team'
     assert data.return_channels()[-1]['channel_id'] == channel_1_id
     assert data.return_channels()[-1]['is_public'] == True
-    assert data.return_channels()[-1]['owner_members'] == [{'u_id':u1_id,'name_first':'FirstN','name_last':'LastN'}]
-    assert data.return_channels()[-1]['all_members'] == [{'u_id':u1_id,'name_first':'FirstN','name_last':'LastN'}]
+    assert data.return_channels()[-1]['owner_members'][0]['u_id'] == u1_id
+    assert data.return_channels()[-1]['owner_members'][0]['name_first'] == 'FirstN'
+    assert data.return_channels()[-1]['owner_members'][0]['name_last'] == 'LastN'
+
+    assert data.return_channels()[-1]['all_members'][0]['u_id'] == u1_id
+    assert data.return_channels()[-1]['all_members'][0]['name_first'] == 'FirstN'
+    assert data.return_channels()[-1]['all_members'][0]['name_last'] == 'LastN'
+
 
 def test_channels_listall():
     clear()
@@ -43,12 +49,10 @@ def test_channels_listall():
     #create two user and take their id and token
     user1 = auth.auth_register('1234@test.com', 'password', 'FirstN', 'LastN')
     user1 = auth.auth_login('1234@test.com', 'password')
-    u1_id = user1['u_id']
     u1_token = user1['token']
 
     user2 = auth.auth_register('2345@test.com', 'password', 'FirstN2', 'LastN2')
     user2 = auth.auth_login('2345@test.com', 'password')
-    u2_id = user2['u_id']
     u2_token = user2['token']
 
     #create a channel by user1 in channels and return its channel id
@@ -58,54 +62,17 @@ def test_channels_listall():
     channel_2_id = channels.channels_create(u2_token,'team2',True).get('channel_id')
 
     #check if the function return them all
-
-    assert channels.channels_listall(u1_token).get('channels') == [
-        {
-            'name':'team',
-            'channel_id':channel_1_id,
-            'owner_members':[
-                {
-                    'u_id': u1_id,
-                    'name_first': 'FirstN',
-                    'name_last': 'LastN'
-                }
-            ],
-            'all_members':[
-                {
-                    'u_id': u1_id,
-                    'name_first': 'FirstN',
-                    'name_last': 'LastN'
-                }
-            ],
-            'is_public':True,
-            'message':[]
-
-        } , {
-            'name':'team2',
-            'channel_id':channel_2_id,
-            'owner_members':[
-                {
-                    'u_id': u2_id,
-                    'name_first': 'FirstN2',
-                    'name_last': 'LastN2'
-                }
-            ],
-            'all_members':[
-                {
-                    'u_id': u2_id,
-                    'name_first': 'FirstN2',
-                    'name_last': 'LastN2'
-                }
-            ],
-            'is_public':True,
-            'message':[]
-        }
-    ]
+    l_test = channels.channels_listall(u1_token).get('channels')
+    assert len(l_test) == 2
+    assert l_test[0]['channel_id'] == channel_1_id
+    assert l_test[1]['channel_id'] == channel_2_id
+    assert l_test[0]['name'] == 'team'
+    assert l_test[1]['name'] == 'team2'
 
 def test_channels_list():
     '''
     channels_list rewritten by Joseph to make it match spec
-    
+
     Needs to return all channels where user1 is a member
     '''
     clear()
@@ -139,7 +106,7 @@ def test_channels_list():
 
     # user 2 should have 3 channels visible
     assert len(auth_channels2) == (len(user2_channels) + len(public_channels))
-    
+
     # authorised channels for user3
     auth_channels3 = channels.channels_list(token3).get('channels')
 

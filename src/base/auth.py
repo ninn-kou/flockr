@@ -8,17 +8,24 @@ import hashlib
 import os.path
 import pickle
 import jwt
+import datetime
 from jwt import DecodeError
-from email.utils import parseaddr
 
-import data.data as data
-from base.error import InputError
+import base64
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
-def create_secret():
-    """Create a 50 character long ascii string for token."""
+from googleapiclient.discovery import build
+
+import src.data.data as data
+from src.base.error import InputError
+
+def create_secret(token_length, whitespace = True):
+    """Create a specified length character long ascii string for token."""
     # Create list of random characters and length of token.
-    valid_characters = string.ascii_letters + string.digits + string.punctuation + string.whitespace
-    token_length = 50
+    valid_characters = string.ascii_letters + string.digits
+    if whitespace:
+        valid_characters += string.punctuation + string.whitespace
 
     # create token of that length and with specified characters
     return "".join(random.choices(valid_characters, k = token_length))
@@ -28,11 +35,10 @@ def read_jwt_secret():
 
     # check if token file exists
     # create a new one if it doesn't
-    if os.path.isfile('src/data/JWT_SECRET.p') is False:
-        with open('src/data/JWT_SECRET.p', 'wb') as file:
-            new_token = ''
-            for _ in range(50):
-                new_token += create_secret()
+    jwt_path = os.getcwd() + '/src/data/JWT_SECRET.p'
+    if os.path.isfile(jwt_path) is False:
+        with open(jwt_path, 'wb') as file:
+            new_token = create_secret(10000)
             pickle.dump(new_token, file)
 
     # read token_secret from file
@@ -51,7 +57,6 @@ def regex_email_check(email):
     Not using the given regex method as it tells me that my own
     actual email is not a real email
     """
-
 
     regex = r"\"?([-a-zA-Z0-9.`?{}]+@\w+\.\w+)\"?"  
     # regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
@@ -209,7 +214,7 @@ def auth_register(email, password, name_first, name_last):
 
     # Create variables for new user
     u_id = create_u_id(data.return_users())
-    session_secret = create_secret()
+    session_secret = create_secret(50)
     token = create_token(u_id, session_secret)
     handle = handle_generator(name_first, name_last, u_id)
     password = hash_(password)
@@ -223,14 +228,15 @@ def auth_register(email, password, name_first, name_last):
         'handle_str': handle,
         'password': password,
         'permission_id': permission_id,
-        'session_secret': session_secret
+        'session_secret': session_secret,
+        'profile_img_url':'',
     }
     data.append_users(user)
 
     # Creates an object with u_id and token.
     token_object = {
         'u_id': u_id,
-        'token': token
+        'token': token,
     }
     return token_object
 
@@ -245,7 +251,7 @@ def auth_login(email, password):
 
     # If not stored, raise an error.
     if focus_user is None:
-        raise InputError('Email Is Used By Another User')
+        raise InputError('Email is not for a registered user')
 
     # Check password is correct
     if focus_user['password'] != hash_(password):
@@ -253,7 +259,7 @@ def auth_login(email, password):
 
     # Creates a token
     u_id = focus_user['u_id']
-    session_secret = create_secret()
+    session_secret = create_secret(50)
     token = create_token(u_id, session_secret)
 
     # update the session_secret in stored users
@@ -261,7 +267,7 @@ def auth_login(email, password):
 
     token_object = {
         'u_id': u_id,
-        'token': token
+        'token': token,
     }
 
     return token_object
@@ -280,3 +286,118 @@ def auth_logout(token):
     # if user has been found while decoding the token,
     # the process worked 100%
     return {'is_success': True}
+
+def create_message(sender, to, subject, message_text):
+    """Create a message for an email.
+
+    Args:
+    sender: Email address of the sender.
+    to: Email address of the receiver.
+    subject: The subject of the email message.
+    message_text: The text of the email message.
+
+    Returns:
+    An object containing a base64url encoded email object.
+    """
+
+    message = MIMEMultipart()
+    message['to'] = to
+    message['from'] = sender
+    message['subject'] = subject
+    msg = MIMEText(message_text, 'html')
+    message.attach(msg)
+
+    return {'raw': base64.urlsafe_b64encode(message.as_string().encode()).decode()}
+
+def send_message(service, user_id, message):
+    """Send an email message.
+
+    Args:
+    service: Authorized Gmail API service instance.
+    user_id: User's email address. The special value "me"
+    can be used to indicate the authenticated user.
+    message: Message to be sent.
+
+    Returns:
+    Sent Message.
+    """
+    message = (service.users().messages().send(userId=user_id, body=message)
+            .execute())
+    return message
+
+def send_email(email, html):
+    
+    # authorise gmail
+    path = os.getcwd() + '/src/data/gmail_token.p'
+    with open(path, 'rb') as auth_token:
+        creds = pickle.load(auth_token)
+    
+    gmail = build('gmail', 'v1', credentials=creds)
+
+    # create the email
+    msg = create_message(
+        'joseph@josephjeo.ng', # hi, please don't destroy me
+        email,    # the person receiving email
+        'Your Flockr Password Reset Code',
+        html
+    )
+
+    # send the email
+    send_message(gmail, 'me', msg)
+
+def passwordreset_request(email):
+    ''' password reseting '''
+
+    # find the user in question
+    focus_user = None
+    for user in data.return_users():
+        if user['email'] == email:
+            focus_user = user
+            break
+    if focus_user is None:
+        raise InputError('This is an incorrect email')
+
+    # create the secret code
+    code = create_secret(10, whitespace=False)
+
+    # store the code
+    u_id = focus_user['u_id']
+    data.update_user(u_id, 'password_reset', {
+        'origin': datetime.datetime.utcnow(),
+        'code': code
+    })
+
+    # get the html formatted
+    html = data.return_password_reset_email().format(
+        PREVIEWTEXT = 'This is your password reset code',
+        FIRSTNAME = focus_user.get('name_first'),
+        CODE = code
+    )
+
+    # send the email
+    send_email(email, html)
+    return {}
+
+def passwordreset_reset(reset_code, new_password):
+    ''' check if reset_code is correct '''
+
+    # check that password is valid length
+    if len(new_password) < 6:
+        raise InputError('Password Too Short')
+    now = datetime.datetime.utcnow()
+
+    # check that the code stored was the same as given code
+    focus_user = None
+    for user in data.return_users():
+        if (user.get('password_reset').get('code') == reset_code
+        and abs((now - user.get('password_reset').get('origin')).total_seconds()) < 500):
+            focus_user = user
+            break
+    # raise input error if person is faulty
+    if focus_user is None:
+        raise InputError('Invalid Reset Code')
+
+    # store the new password
+    data.update_user(focus_user['u_id'], 'password', hash_(new_password))
+
+    return {}

@@ -7,7 +7,7 @@ All url appends are prepended with auth/
 
 from flask import Blueprint, request, jsonify
 
-import base.auth as auth
+import src.base.auth as auth
 
 AUTHHTTP = Blueprint('auth', __name__)
 
@@ -52,6 +52,35 @@ def logout():
 
     success = auth.auth_logout(
         user.get('token')
+    )
+
+    # return token object as json
+    return jsonify(success)
+
+@AUTHHTTP.route('/passwordreset/request', methods = ['POST'])
+def passwordreset_request():
+    ''' requests a reset email '''
+
+    # get the user from json
+    user = request.json
+
+    success = auth.passwordreset_request(
+        user.get('email')
+    )
+
+    # return token object as json
+    return jsonify(success)
+
+@AUTHHTTP.route('/passwordreset/reset', methods = ['POST'])
+def passwordreset_reset():
+    ''' resets password '''
+
+    # get the user from json
+    user = request.json
+
+    success = auth.passwordreset_reset(
+        user.get('reset_code'),
+        user.get('new_password')
     )
 
     # return token object as json

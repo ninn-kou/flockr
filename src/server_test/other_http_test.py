@@ -12,9 +12,10 @@ import requests
 
 import pytest
 
-import data.data as data
-import base.other as other
-import server.other_http as other_http
+import src.data.data as data
+import src.base.other as other
+import src.server.other_http as other_http
+
 
 # copy-pasted this straight out of echo_http_test.py
 # Use this fixture to get the URL of the server. It starts the server for you,
@@ -23,7 +24,7 @@ import server.other_http as other_http
 def url():
     ''' start server and create url'''
     url_re = re.compile(r' \* Running on ([^ ]*)')
-    server = Popen(["python3", "src/server.py"], stderr=PIPE, stdout=PIPE)
+    server = Popen(["python3", "server.py"], stderr=PIPE, stdout=PIPE)
     line = server.stderr.readline()
     local_url = url_re.match(line.decode())
     if local_url:
@@ -145,7 +146,7 @@ def test_user_all(url):
     #i = other.users/all(u1_token)
     i = send_request_params('GET', url, 'users/all', {
         'token': user1.get('token'),
-    })
+    }).get('users')
 
     assert u1_token != u2_token != u3_token != u4_token
     assert len(i) == 4
@@ -167,9 +168,8 @@ def test_userpermission_change(url):
         'permission_id': 1
     })
     #i = other.users/all(u1_token)
-    i = send_request_params('GET', url, 'users/all', {
-        'token': user1.get('token'),
-    })
+    
+    i = data.return_users()
     i_user1 = i[0]
     i_user2 = i[1]
     assert i_user1['permission_id'] == 1
@@ -209,11 +209,10 @@ def test_search(url):
         'message': "If you are tired, you need go sleep."
     })
 
-    resp = send_request('GET', url, 'search', {
+    resp = json.loads(requests.get(url + '/search',
+    params = {
         'token': user1.get('token'),
         'query_str': 'tired'
-    })
-
+    }).text).get('messages')
     assert len(resp) == 2
-
 

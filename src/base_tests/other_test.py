@@ -230,3 +230,53 @@ def test_search_in_several_channel():
     assert i[4]['message'] == 'Tomorrow, I will be the winner.'
     assert i[5]['message'] == 'Yesterday, I was the winner.'
     assert i[6]['message'] == 'Today, I am the winner.'
+
+def test_search_case_insensitive():
+    ''' this function checks for case insensitivity when it comes to message search '''
+    other.clear()
+    #initialise the channels list
+    #create the first user and take their token
+    user1 = auth.auth_register('12345@test.com', 'password', 'FirstN', 'LastN')
+    user1 = auth.auth_login('12345@test.com', 'password')
+    u1_token = user1['token']
+
+    # create a channel for testing
+    channel_test_id1 = channels.channels_create(u1_token, "channel_test1", True).get('channel_id')
+    # add some message to one channel
+    # the case is different in this case
+    message.message_send(u1_token, channel_test_id1, 'Today, I am the wiNNer.')         #t
+    message.message_send(u1_token, channel_test_id1, 'What about you?')                 #f
+    message.message_send(u1_token, channel_test_id1, 'Yesterday, I was the winner.')    #t
+    message.message_send(u1_token, channel_test_id1, 'Cool!')                           #f
+    message.message_send(u1_token, channel_test_id1, 'Tomorrow, I will be the Winner.') #t
+
+    i = other.search(u1_token, 'the winner').get('messages')
+    assert len(i) == 3
+    assert i[0]['message'] == 'Tomorrow, I will be the Winner.'
+    assert i[1]['message'] == 'Yesterday, I was the winner.'
+    assert i[2]['message'] == 'Today, I am the wiNNer.'
+
+def test_search_whitespace_insensitive():
+    ''' this function checks for whitespace insensitivity when it comes to message search '''
+    other.clear()
+    #initialise the channels list
+    #create the first user and take their token
+    user1 = auth.auth_register('12345@test.com', 'password', 'FirstN', 'LastN')
+    user1 = auth.auth_login('12345@test.com', 'password')
+    u1_token = user1['token']
+
+    # create a channel for testing
+    channel_test_id1 = channels.channels_create(u1_token, "channel_test1", True).get('channel_id')
+    # add some message to one channel
+    # the case is different in this case
+    message.message_send(u1_token, channel_test_id1, 'Today, I am the \nwiNNer.')         #t
+    message.message_send(u1_token, channel_test_id1, 'What about you?')                 #f
+    message.message_send(u1_token, channel_test_id1, 'Yesterday, I was the winn    er.')    #t
+    message.message_send(u1_token, channel_test_id1, 'Cool!')                           #f
+    message.message_send(u1_token, channel_test_id1, 'Tomorrow, I\t will be the W  inner.') #t
+
+    i = other.search(u1_token, 'the winner').get('messages')
+    assert len(i) == 3
+    assert i[0]['message'] == 'Tomorrow, I\t will be the W  inner.'
+    assert i[1]['message'] == 'Yesterday, I was the winn    er.'
+    assert i[2]['message'] == 'Today, I am the \nwiNNer.'

@@ -82,6 +82,9 @@ def search(token, query_str):
             if id_from == j['u_id']:
                 chan_list.append(i['channel_id'])
 
+    # make the queury string to all_lower
+    query_str = query_str.lower()
+
     messages = data.return_messages()
     for i in messages:
         if i['channel_id'] in chan_list:   # focus on the channels which is joinned by the user

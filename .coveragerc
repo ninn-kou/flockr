@@ -1,0 +1,14 @@
+# .coveragerc to control coverage.py
+[run]
+branch = True
+source =
+    .
+    src
+omit =
+    test_*.py
+    *_test.py
+    src/server.py
+    src/server/*
+    src/clear.py
+    src/base_tests/uploadphoto_test/upload_server.py
+    quickstart.py

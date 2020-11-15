@@ -251,7 +251,7 @@ def auth_login(email, password):
 
     # If not stored, raise an error.
     if focus_user is None:
-        raise InputError('Email Is Used By Another User')
+        raise InputError('Email is not for a registered user')
 
     # Check password is correct
     if focus_user['password'] != hash_(password):

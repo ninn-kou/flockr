@@ -178,7 +178,7 @@ def test_channel_message_return_negative_one():
 ###########################################################################################
 
 # case 2: return 50; check the end return alway (start + 50) when message less than 50
-def test_channel_message_return50_end():
+def test_channel_message_return_nege_one_end():
     '''
     this test using for check if the channel function can return correctly
 
@@ -199,7 +199,7 @@ def test_channel_message_return50_end():
 
     check_work_msg = channel_messages(u_token1, channel_test_id, 0)
     #0< number && number <= 50: exist messages after start and no more than 50 messages.
-    assert check_work_msg['end'] == 50
+    assert check_work_msg['end'] == -1
 
     auth_logout(u_token1)
 ###########################################################################################
@@ -231,6 +231,7 @@ def test_channel_message_newest_one_index():
     # check the uodatest msg in [0] is the last update one.
     check_work_msg = channel_messages(u_token1, channel_test_id, 0)
     assert check_work_msg['messages'][0]['message'] == 'the next one'
+    assert check_work_msg['end'] == 50
 
     auth_logout(u_token1)
 ###########################################################################################

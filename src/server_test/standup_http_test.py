@@ -8,8 +8,8 @@ import requests
 from datetime import timezone, datetime
 import pytest
 
-import data.data as data
-from base.other import clear
+import src.data.data as data
+from src.base.other import clear
 
 
 # copy-pasted this straight out of echo_http_test.py
@@ -19,7 +19,7 @@ from base.other import clear
 def url():
     ''' start server and create url'''
     url_re = re.compile(r' \* Running on ([^ ]*)')
-    server = Popen(["python3", "src/server.py"], stderr=PIPE, stdout=PIPE)
+    server = Popen(["python3", "server.py"], stderr=PIPE, stdout=PIPE)
     line = server.stderr.readline()
     local_url = url_re.match(line.decode())
     if local_url:

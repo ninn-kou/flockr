@@ -3,11 +3,11 @@ import json
 import time
 import datetime
 import threading
-import data.data as data
-import base.channel as channel_addowner
-import base.message as message
-from base.auth import decode_token
-from base.error import InputError, AccessError
+import src.data.data as data
+import src.base.channel as channel_addowner
+import src.base.message as message
+from src.base.auth import decode_token
+from src.base.error import InputError, AccessError
 
 def token_into_user_id(token):
     """Transfer the token into the user id."""

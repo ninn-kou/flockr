@@ -3,9 +3,9 @@
 '''
 #import jwt, JWT_SECRET, AccessError
 
-import data.data as data
-from base.error import InputError
-from base.auth import decode_token
+import src.data.data as data
+from src.base.error import InputError
+from src.base.auth import decode_token
 
 ################################################################################
 ################################################################################

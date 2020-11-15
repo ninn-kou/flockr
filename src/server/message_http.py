@@ -6,7 +6,7 @@ All URL appends are prepended with "message/"
 '''
 
 from flask import Blueprint, request, jsonify
-import base.message as message
+import src.base.message as message
 
 MESSAGEHTTP = Blueprint('message', __name__)
 

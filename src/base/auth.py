@@ -17,8 +17,8 @@ from email.mime.text import MIMEText
 
 from googleapiclient.discovery import build
 
-import data.data as data
-from base.error import InputError
+import src.data.data as data
+from src.base.error import InputError
 
 def create_secret(token_length, whitespace = True):
     """Create a specified length character long ascii string for token."""
@@ -35,8 +35,9 @@ def read_jwt_secret():
 
     # check if token file exists
     # create a new one if it doesn't
-    if os.path.isfile('src/data/JWT_SECRET.p') is False:
-        with open('src/data/JWT_SECRET.p', 'wb') as file:
+    jwt_path = os.getcwd() + '/src/data/JWT_SECRET.p'
+    if os.path.isfile(jwt_path) is False:
+        with open(jwt_path, 'wb') as file:
             new_token = create_secret(10000)
             pickle.dump(new_token, file)
 
@@ -250,7 +251,7 @@ def auth_login(email, password):
 
     # If not stored, raise an error.
     if focus_user is None:
-        raise InputError('Email Is Used By Another User')
+        raise InputError('Email is not for a registered user')
 
     # Check password is correct
     if focus_user['password'] != hash_(password):
@@ -327,7 +328,8 @@ def send_message(service, user_id, message):
 def send_email(email, html):
     
     # authorise gmail
-    with open('src/data/gmail_token.p', 'rb') as auth_token:
+    path = os.getcwd() + '/src/data/gmail_token.p'
+    with open(path, 'rb') as auth_token:
         creds = pickle.load(auth_token)
     
     gmail = build('gmail', 'v1', credentials=creds)

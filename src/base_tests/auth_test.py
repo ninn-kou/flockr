@@ -5,10 +5,10 @@ from datetime import timedelta
 import pytest
 import datetime
 
-import data.data as data
-import base.auth as auth
-from base.error import InputError
-from base.other import clear
+import src.data.data as data
+import src.base.auth as auth
+from src.base.error import InputError
+from src.base.other import clear
 
 def coverate_notes():
     """

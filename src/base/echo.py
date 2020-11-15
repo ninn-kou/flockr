@@ -2,7 +2,7 @@
     For sanity test in echo_http_test.py
 '''
 
-from base.error import InputError
+from src.base.error import InputError
 
 def echo(value):
     ''' echo back if value is echo'''

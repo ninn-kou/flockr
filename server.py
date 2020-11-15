@@ -10,15 +10,17 @@ from json import dumps, dump
 from flask import Flask
 from flask_cors import CORS
 
-import server.auth_http as auth_http
-import server.channel_http as channel_http
-import server.channels_http as channels_http
-import server.echo_http as echo_http
-import server.message_http as message_http
-import server.other_http as other_http
-import server.user_http as user_http
-import data.data as data
-import server.standup_http as standup_http
+import src.base.auth as auth
+
+import src.server.auth_http as auth_http
+import src.server.channel_http as channel_http
+import src.server.channels_http as channels_http
+import src.server.echo_http as echo_http
+import src.server.message_http as message_http
+import src.server.other_http as other_http
+import src.server.user_http as user_http
+import src.data.data as data
+import src.server.standup_http as standup_http
 
 def default_handler(err):
     ''' system error handler '''
@@ -44,9 +46,6 @@ def save_port(port):
     # check if the file already exists
     # if not, create it
     path = os.getcwd() + '/src/data/port.json'
-    # if not os.path.exists(path):
-    #     f = open(path, 'w')
-    #     f.close()
 
     # dump port into it
     with open(path, 'w') as file:
@@ -75,4 +74,5 @@ if __name__ == "__main__":
     port = find_free_port()
     print(port)
     save_port(port)
+    auth.read_jwt_secret() # to create the jwt_secret file
     APP.run(port=port)

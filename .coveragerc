@@ -7,8 +7,10 @@ source =
 omit =
     test_*.py
     *_test.py
-    src/server.py
+    server.py
     src/server/*
     src/clear.py
     src/base_tests/uploadphoto_test/upload_server.py
     quickstart.py
+    MYENV/*
+    venv/*

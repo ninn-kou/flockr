@@ -1,7 +1,7 @@
 '''Some other useful functions'''
-import data.data as data
-from base.auth import decode_token
-from base.error import InputError, AccessError
+import src.data.data as data
+from src.base.auth import decode_token
+from src.base.error import InputError, AccessError
 
 
 def owner_from_token(token):

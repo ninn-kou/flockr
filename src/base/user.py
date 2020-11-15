@@ -2,9 +2,9 @@
 import requests
 from PIL import Image
 
-import data.data as data
-from base.auth import check_in_users, regex_email_check, decode_token
-from base.error import InputError
+import src.data.data as data
+from src.base.auth import check_in_users, regex_email_check, decode_token
+from src.base.error import InputError
 
 ################################################################################
 ################################################################################

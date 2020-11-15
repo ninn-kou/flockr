@@ -7,8 +7,8 @@ All url appends are prepended with auth/
 
 from flask import Blueprint, request, jsonify
 
-import base.channel as channel
-import data.data as data
+import src.base.channel as channel
+import src.data.data as data
 
 CHANNELHTTP = Blueprint('channel', __name__)
 

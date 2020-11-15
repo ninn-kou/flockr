@@ -3,8 +3,8 @@
 '''
 import pytest
 
-import base.echo as echo
-from base.error import InputError
+import src.base.echo as echo
+from src.base.error import InputError
 
 def test_echo():
     ''' test echo sanity check'''

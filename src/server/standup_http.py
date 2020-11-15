@@ -1,6 +1,6 @@
 '''http functions'''
 from flask import Blueprint, request, jsonify
-import base.standup as standup
+import src.base.standup as standup
 
 STANDUPHTTP = Blueprint('standup', __name__)
 

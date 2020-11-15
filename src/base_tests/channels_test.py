@@ -1,11 +1,11 @@
-import base.auth as auth
-import base.channels as channels
+import src.base.auth as auth
+import src.base.channels as channels
 import pytest
-import data.data as data
-from base.error import InputError
-import base.channel as channel
+import src.data.data as data
+from src.base.error import InputError
+import src.base.channel as channel
 import random
-from base.other import clear
+from src.base.other import clear
 
 def test_owner_from_token():
     clear()

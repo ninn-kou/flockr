@@ -1,23 +1,69 @@
-# COMP1531 Major Project
+# COMP1531 Major Project, 2020 Term 3
 
-## Changelog
+## README FIRST
 
-* 28-10: Adding password reset as routes not automatically auth checking
-* 29-10: 6.1 section updated with corrected types
+* [1\. Aims](#1-aims)
+* [2\. Overview](#2-overview)
+* [3\. Iteration 1: Basic functionality and tests](#3-iteration-1-basic-functionality-and-tests)
+  * [3\.1\. Task](#31-task)
+  * [3\.2\. Implementing and testing features](#32-implementing-and-testing-features)
+  * [3\.3\. File Structure and stub code](#33-file-structure-and-stub-code)
+    * [3\.3\.1\. auth\.py and tokens](#331-authpy-and-tokens)
+    * [3\.3\.2 Test writing guidelines](#332-test-writing-guidelines)
+  * [3\.4\. Storing data](#34-storing-data)
+  * [3\.5\. Submission](#35-submission)
+  * [3\.6\. Marking Criteria](#36-marking-criteria)
+  * [3\.7\. Demonstration](#37-demonstration)
+* [4\. Iteration 2](#4-iteration-2)
+  * [4\.1\. Task](#41-task)
+  * [4\.2\. Implementing and testing features](#42-implementing-and-testing-features)
+  * [4\.3\. Recommended approach](#43-recommended-approach)
+  * [4\.4\. Storing data](#44-storing-data)
+  * [4\.5\. Submission](#45-submission)
+  * [4\.6\. Marking Criteria](#46-marking-criteria)
+  * [4\.7\. Demonstration](#47-demonstration)
+* [5\. Iteration 3](#5-iteration-3)
+  * [5\.1\. Task](#51-task)
+  * [5\.2\. How to implement and test features](#52-how-to-implement-and-test-features)
+  * [5\.3\. Planning for the next problems to solve](#53-planning-for-the-next-problems-to-solve)
+    * [[Requirements] Elicitation](#requirements-elicitation)
+    * [[Requirements] Analysis &amp; Specification \- Use Cases](#requirements-analysis--specification---use-cases)
+    * [[Requirements] Validation](#requirements-validation)
+    * [[Design] Interface Design](#design-interface-design)
+    * [[Design] Conceptual Modelling (State)](#design-conceptual-modelling-state)
+  * [5\.4\. Marking Criteria](#54-marking-criteria)
+  * [5\.5\. Storing data](#55-storing-data)
+  * [5\.6\. Submission](#56-submission)
+  * [5\.7\. Demonstration](#57-demonstration)
+  * [5\.8\. Extra Features Suggestions](#58-extra-features-suggestions)
+    * [Frontend](#frontend)
+    * [Databases](#databases)
+    * [Object\-Oriented Programming](#object-oriented-programming)
+    * [Deployment](#deployment)
+* [6\. Interface specifications](#6-interface-specifications)
+  * [6\.1\. Data types](#61-data-types)
+  * [6\.2\. Interface](#62-interface)
+  * [6\.3\. Errors for all functions](#63-errors-for-all-functions)
+  * [6\.4\. Token](#64-token)
+  * [6\.5\. Pagination](#65-pagination)
+  * [6\.6\. Permissions](#66-permissions)
+  * [6\.7\. Working with the frontend](#67-working-with-the-frontend)
+    * [6\.7\.1](#671)
+    * [6\.7\.2\. Error raising for the frontend](#672-error-raising-for-the-frontend)
+  * [6\.8\. Reacts](#68-reacts)
+  * [6\.9\. Standups](#69-standups)
+  * [6\.10\. profile\_img\_url &amp; image uploads](#610-profile_img_url--image-uploads)
+  * [6\.11\. Other Points](#611-other-points)
+* [7\. Due Dates and Weightings](#7-due-dates-and-weightings)
+* [8\. Other Expectations](#8-other-expectations)
+  * [8\.1\. Progress check\-in](#81-progress-check-in)
+  * [8\.2\. Code contribution](#82-code-contribution)
+  * [8\.3\. Documentation contribution](#83-documentation-contribution)
+  * [8\.4\. Peer Assessment](#84-peer-assessment)
+  * [8\.5\. Attendance](#85-attendance)
+* [9\. Plagiarism](#9-plagiarism)
 
-## Contents
-
-  1. Aims
-  2. Overview
-  3. Iteration 1: Basic functionality and tests
-  4. Iteration 2: Not yet released
-  5. Iteration 3: Not yet released
-  6. Interface specifications
-  7. Due Dates and Weightings
-  8. Other Expectations
-  9. Plagiarism
-
-## 1. Aims:
+## 1. Aims
 
 * To provide students with hands on experience testing, developing, and maintaining a backend server in python.
 * To develop students' problem solving skills in relation to the software development lifecycle.
@@ -64,11 +110,258 @@ The specific capabilities that need to be built for this project are described i
 
 ## 3. Iteration 1: Basic functionality and tests
 
-Complete. Please see commit history to view old iteration info.
+### 3.1. Task
+
+In this iteration, you are expected to:
+
+1. Write tests for and implement the basic functionality of Flockr. The basic functionality is defined as the `auth_*`, `channel_*`, and `channels_*` capabilities/functions, as per the interface section below.
+
+   Test files you add should all be in the form `*_test.py`.
+
+2. Write down any assumptions that you feel you are making in your interpretation of the specification.
+
+   The marking will be heavily biased toward how well you follow good practices and work together as a team. Just having a "working" solution at the end is not, on its own, sufficient to even get a passing mark.
+
+   The `assumptions.md` file described above should be in the root of your repository. If you've not written markdown before (which we assume most of you haven't), it's not necessary to research the format. Markdown is essentially plain text with a few extra features for basic formatting. You can just stick with plain text if you find that easier.
+
+   Do NOT attempt to try and write or start a web server. Don't overthink how these functions are meant to connect to a frontend yet. That is for the next iteration. In this iteration you are just focusing on the basic backend functionality.
+
+3. Follow best practices for git, project management, and effective teamwork, as discussed in lectures.
+
+### 3.2. Implementing and testing features
+
+You should first approach this project by considering its distinct "features". Each feature should add some meaningful functionality to the project, but still be as small as possible. You should aim to size features as the smallest amount of functionality that adds value without making the project more unstable. For each feature you should:
+
+1. Create a new branch.
+2. Write tests for that feature and commit them to the branch.
+3. Implement that feature.
+4. Make any changes to the tests such that they pass with the given implementation. You should not have to do a lot here. If you find that you are, you're not spending enough time on step 2.
+5. Consider any assumptions you made in the previous steps and add them to `assumptions.md`.
+6. Create a merge request for the branch.
+7. Get someone in your team who **did not** work on the feature to review the merge request.
+8. Fix any issues identified in the review.
+9. Merge the merge request into master.
+
+For this project, a feature is typically sized somewhere between a single function, and a whole file of functions (e.g. `auth.py`). It is up to you and your team to decide what each feature is.
+
+There is no requirement that each feature be implemented by only one person. In fact, we encourage you to work together closely on features, especially to help those who may still be coming to grips with python.
+
+Please pay careful attention to the following:
+
+* We want to see **evidence that you wrote your tests before writing the implementation**. As noted above, the commits containing your initial tests should appear *before* your implementation for every feature branch. If we don't see this evidence, we will assume you did not write your tests first and your mark will be reduced.
+* Merging in merge requests with failing pipelines is **very bad practice**. Not only does this interfere with your teams ability to work on different features at the same time, and thus slow down development, it is something you will be penalised for in marking.
+* Similarly, merging in branches with untested features is also **very bad practice**. We will assume, and you should too, that any code without tests does not work.
+* Pushing directly to `master` is not possible for this repo. The only way to get code into master is via a merge request. If you discover you have a bug in `master` that got through testing, create a bugfix branch and merge that in via a merge request.
+
+### 3.3. File Structure and stub code
+
+The tests you write should be as small and independent as possible. This makes it easier to identify why a particular test may be failing. Similarly, try to make it clear what each test is testing for. Meaningful test names and documentation help with this. An example of how to structure tests has been done in:
+
+* `/src/echo.py`
+* `/src/echo_test.py`
+
+The echo functionality is tested, both for correct behaviour and for failing behaviour. As echo is relatively simple functionality, only 2 tests are required. For the larger features, you will need many tests to account for many different behaviours.
+
+A number of files have been added to your `/src/` folder in your repository. These files are:
+ * `auth.py`
+ * `channel.py`
+ * `channels.py`
+ * `user.py` (not *required* for iteration 1)
+ * `message.py` (not *required* for iteration 1)
+ * `other.py` (all except `clear` are not *required* for iteration 1)
+
+They do not contain any real implementation, but do contain some stub code to give you a feel for what the different functions should return. You will replace these stubs with actual implementations as you develop.
+
+#### 3.3.1. `auth.py` and tokens
+
+Elements of securely storing passwords, and returning intelligent tokens, are not required for iteration 1. You can simply store passwords plainly, and tokens can just be a user's "ID" or "email" (up to you). We will discuss ways to improve the quality and methods of these capabilities in iteration 2.
+
+More information about tokens can be found in `6.4`.
+
+#### 3.3.2 Test writing guidelines
+
+To test basic functionality you will likely need code like:
+
+```python
+result = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Hayden', 'Everest')
+auth.auth_login('validemail@gmail.com', '123abc!@#') # Expect to work since we registered
+```
+
+and
+
+```python
+result = auth.auth_register('validemail@gmail.com', '123abc!@#', 'Hayden', 'Everest')
+with pytest.raises(InputError) as e:
+    auth.auth_login('didntusethis@gmail.com', '123abcd!@#') # Expect fail since never registered
+```
+
+However, when deciding how to structure your tests, keep in mind the following:
+
+* Your tests should be *black box* unit tests.
+  * Black box means they should not depend your implementation, but rather *any* working implementation. You should design your tests such that if they were run against another group's backend they would still pass
+  * Unit tests mean the tests focus on testing particular functions, rather than the system as a whole. Certain unit tests will depend on other tests succeeding. It's OK to write tests that are only a valid test if other functions are correct (e.g. to test `channel` functions you can assume that `auth` is implemented correctly).
+* Avoid writing your tests such that they need to be run in a particular order. That can make it hard to identify what exactly is failing.
+* Consider resetting the state of the application (e.g. deleting all users, channels, messages, etc.) at the start of every test. That way you know none of them are accidentally dependent on an earlier test. You can add an extra function for this that is run at the beginning of each test.
+* If you find yourself needing similar code at the start of a series of tests, consider using a fixture to avoid repetition.
+
+### 3.4. Storing data
+
+Nearly all of the functions will likely have to reference some "data source" to store information. E.G. If you register two users, create two channels, and then add a user to a channel, all of that information needs to be "stored" somewhere. The most important thing for iteration 1 is not to overthink this problem.
+
+Firstly, you do **not have to use an SQL database, or something like firebase**.
+
+Secondly, you don't need to make anything persist. What that means is that if you run all your pytests, and then run them again later, the data is OK to be "fresh" every time you run `pytest`. We will cover persistence in another iteration.
+
+Our recommended approach is simply using a global variable, or series of global variables, and having your functions use and import them. For example, you could define a structure in a file that is empty, and as functions are called it populates and fills up like the one below:
+
+```python
+data = {
+    'users': [
+        {
+            'id': 1,
+            'name' : 'user1',
+        },
+        {
+            'id': 2,
+            'name' : 'user2',
+        },
+    ],
+    'channels': [
+        {
+            'id': 1,
+            'name' : 'channel1',
+        },
+        {
+            'id': 2,
+            'name' : 'channel2',
+        },
+    ],
+}
+```
+
+### 3.5. Submission
+
+This iteration is due to be submitted at 8pm Sunday 4th October (**week 3**). You will then be demonstrating this in your week 4 lab. All team members **must** attend this lab session, or they will not receive a mark.
+
+At the due date provided, we will automatically collect and submit the code that is on the `master` branch of your repository. If the deadline is approaching and you have features that are either untested or failing their tests, **DO NOT MERGE IN THOSE MERGE REQUESTS**. Your tutor will look at unmerged branches and may allocate some reduced marks for incomplete functionality, but `master` should only contain working code.
+
+### 3.6. Marking Criteria
+
+|Section|Weighting|Criteria|
+|---|---|---|
+|Python|40%| <ul><li>Demonstrated an understanding of good test **coverage**</li><li>Demonstrated an understanding of the importance of **clarity** on the communication of test purposes</li><li>Appropriate use of python data structures (lists, dictionaries, etc.)</li><li>Demonstrated an understanding of thoughtful test **design**</li><li>Performance against an automatic marking system</li></ul>|
+|Git Practices|20%|<ul><li>Meaningful and informative git commit names being used</li><li>Effective use of merge requests (from branches being made) across the team (as covered in lectures)</li></ul>|
+|Project Management|20%|<ul><li>Effective use of course-provided flock, demonstrating an ability to communicate and manage effectivelly digitally</li><li>Use of task board on Gitlab to track and manage tasks</li><li>Effective use of agile methods such as standups</li></ul>|
+|Teamwork|10%|<ul><li>A generally equal contribution between team members</li><li>Clear evidence of reflection on group's performance and state of the team, with initiative to improve in future iterations</li></ul>|
+|Assumptions markdown file|10%|<ul><li>Clear and obvious effort and time gone into thinking about possible assumptions that are being made when interpreting the specification</li></ul>|
+
+For this and for all future milestones, you should consider the other expectations as outlined in section 8 below.
+
+### 3.7. Demonstration
+
+When you demonstrate this iteration in your week 4 lab, it will consist of a 15 minute Q&A in front of your tutorial class via zoom. Webcams are required to be on during this Q&A (your phone is a good alternative if your laptop/desktop doesn't have a webcam).
 
 ## 4. Iteration 2
 
-Complete. Please see commit history to view old iteration info.
+### 4.1. Task
+
+**NOTE:** In merging the instructions for this iteration into your repo, you may get a failed pipeline. This is most likely because your code is not pylint compliant. If this is the case, that is the *first* thing you should address for this iteration. It is important you have a *stable* master branch before proceeding to add additional features.
+
+In this iteration, more features were added to the specification, and the focus has been changed to HTTP endpoints. Many of the theory surrounding iteration 2 will be covered in week 4-6 lectures. Note that there will still be 1 or 2 features of the frontend that will not work because the routes will not appear until iteration 3.
+
+In this iteration, you are expected to:
+
+1. Implement and test the HTTP Flask server according to the entire interface provided in the specification.
+
+    Part of this section may be automarked.
+
+    Pylint has been added to your continuous integration file, meaning that code that isn't pylint compliant will now fail the pipeline. The provided `.pylintrc` file is *very* lenient, so there is no reason you should have to disable any additional checks.
+
+    Additionally, CI pipelines will measure *branch* coverage for all `.py` files that aren't tests. The coverage percentage for master is visible in a badge at the top of this repo and changes in coverage will appear in Merge Requests. Do note that coverage of `server.py` is not measured, nor will what is executed by your HTTP tests. This is because, when running HTTP tests, the server is run in a separate process.
+
+    Your implementation should build upon your work in iteration 1, and ideally your HTTP layer is just a wrapper for underlying functions you've written that handle the logic. Your implementation will rely on topics taught in week 4 (HTTP servers and testing) as well as week 5 (authentication and authorisation).
+
+    You can structure your tests however you choose, as long as they are appended with `_test.py`. It's important you consider how to separate (or combine) your integration tests from iteration 1 with the extra integration tests (HTTP with requests library) in iteration 2. You will be marked on both tests being present/used in this iteration. **An example of a HTTP test has been provided for you in `src/echo_http_test.py`**.
+
+2. Continue demonstrating effective project management and effective git usage
+
+    Part of this section may be automarked.
+
+    You will be heavily marked for your use of thoughtful project management and use of git effectively. The degree to which your team works effectively will also be assessed.
+
+To run the server you should always use the command
+
+```bash
+python3 src/server.py
+```
+
+This will start the server on the next available port. If you get any errors relating to `flask_cors`, ensure you have installed all the necessary Python libraries for this course (the list of libraries was updated for this iteration). You can do this with:
+
+```bash
+pip3 install $(curl https://www.cse.unsw.edu.au/~cs1531/20T3/requirements.txt)
+```
+
+A frontend has been built by Sally & Bob that you can use in this iteration, and use your backend to power it (note: an incomplete backend will mean the frontend cannot work). **You can, if you wish, make changes to the frontend code, but it is not required for this iteration.** The source code for the frontend is only provided for your own fun or curiosity.
+
+### 4.2. Implementing and testing features
+
+You should first approach this project by considering its distinct "features". Each feature should add some meaningful functionality to the project, but still be as small as possible. You should aim to size features as the smallest amount of functionality that adds value without making the project more unstable. For each feature you should:
+
+1. Create a new branch.
+2. Write tests for that feature and commit them to the branch.
+3. Implement that feature.
+4. Make any changes to the tests such that they pass with the given implementation. You should not have to do a lot here. If you find that you are, you're not spending enough time on step 2.
+5. Create a merge request for the branch.
+6. Get someone in your team who **did not** work on the feature to review the merge request. When reviewing, **not only should you ensure the new feature has tests that pass, but you should also check that the coverage percentage has not been significantly reduced.**
+7. Fix any issues identified in the review.
+8. Merge the merge request into master.
+
+For this project, a feature is typically sized somewhere between a single function, and a whole file of functions (e.g. `auth.py`). It is up to you and your team to decide what each feature is.
+
+There is no requirement that each feature be implemented by only one person. In fact, we encourage you to work together closely on features, especially to help those who may still be coming to grips with python.
+
+Please pay careful attention to the following:
+
+Your tests, keep in mind the following:
+* We want to see **evidence that you wrote your tests before writing the implementation**. As noted above, the commits containing your initial tests should appear *before* your implementation for every feature branch. If we don't see this evidence, we will assume you did not write your tests first and your mark will be reduced.
+* You should have black-box tests for all tests required (i.e. testing each function/endpoint). However, you are also welcome to write whitebox unit tests in this iteration if you see that as important.
+* Merging in merge requests with failing pipelines is **very bad practice**. Not only does this interfere with your teams ability to work on different features at the same time, and thus slow down development, it is something you will be penalised for in marking.
+* Similarly, merging in branches with untested features is also **very bad practice**. We will assume, and you should too, that any code without tests does not work.
+* Pushing directly to `master` is not possible for this repo. The only way to get code into master is via a merge request. If you discover you have a bug in `master` that got through testing, create a bugfix branch and merge that in via a merge request.
+
+### 4.3. Recommended approach
+
+Our recommendation with this iteration is that you:
+
+1. Start out trying to implement the new functions the same way you did in iteration 1 (a series of implemented functions, categorised in files, with black-box pytests testing them).
+2. Write another layer of HTTP tests that test the inputs/outputs on routes according to the specific, and while writing tests for each component/feature, write the Flask route/endpoint for that feature too.
+
+This approach means that you can essentially finish the project/testing logic without worrying about HTTP, and then simply wrap the HTTP/Flask layer on top of it at the end.
+
+### 4.4. Storing data
+
+You are not required to store data persistently in this iteration. However, basic persistence will be covered in lectures and you are welcome to implement this if you find it convenient.
+
+### 4.5. Submission
+
+This iteration is due to be submitted at 8pm Monday 26th October (**week 7**). You will then be demonstrating this in your week 7 lab. All team members **must** attend this lab session, or they will not receive a mark.
+
+At the due date provided, we will automatically collect and submit the code that is on the `master` branch of your repository. If the deadline is approaching and you have features that are either untested or failing their tests, **DO NOT MERGE IN THOSE MERGE REQUESTS**. Your tutor will look at unmerged branches and may allocate some reduced marks for incomplete functionality, but `master` should only contain working code.
+
+### 4.6. Marking Criteria
+
+|Section|Weighting|Criteria|
+|---|---|---|
+|Testing|30%|<ul><li>Distinct use of unit tests for any helper functions you write, integration tests on the functions used in iteration 1, and integration/system tests on the HTTP endpoints</li><li>Tests provide excellent test **coverage** with the coverage tool</li><li>Demonstrated an understanding of the importance of **clarity** on the communication of test purposes</li><li>Demonstrated an understanding of thoughtful test **design**</li><li>Performance against an automatic marking syste<m/li><li>Compliance with standard pylint requirements</li></ul>|
+|Implementation|40%|<ul><li>Correctly implemented entire backend server interface that satisfies requirements</li><li>Pythonic programming approach (where possible)</li><li>Thought out code design</li><li>Compliance with standard pylint requirements</li></ul>|
+|Git practices & Project Management|20%|<ul><li>Meaningful and informative git commit names being used</li><li>Effective use of merge requests (from branches being made) across the team</li><li>Effective use of course-provided flockr, demonstrating an ability to communicate and manage effectivelly digitally</li><li>Use of task board on Gitlab to track and manage tasks</li><li>Effective use of agile methods such as standups</li></ul>|
+|Teamwork|10%|<ul><li>A generally equal contribution between team members</li><li>Clear evidence of reflection on group's performance and state of the team, with initiative to improve in future iterations</li></ul>|
+
+For this and for all future milestones, you should consider the other expectations as outlined in section 8 below.
+
+### 4.7. Demonstration
+
+When you demonstrate this iteration in your week 7 lab, it will consist of a 15 minute Q&A in front of your tutorial class via zoom. Webcams are required to be on during this Q&A (your phone is a good alternative if your laptop/desktop doesn't have a webcam).
 
 ## 5. Iteration 3
 
@@ -155,7 +448,7 @@ N.B. If you don't know how to produce a PDF, you can easily make one in google d
 
 Find 2-3 people to interview as target users. Target users are people who currently use a tool like flockr, or intend to. Collect their name and email address.
 
-Develop a series of questions to ask these target users to understand what *problems* they might have with teamwork-driven communication tools that are currently unsolved by flockr. Give these questions to your target users and record their answers. 
+Develop a series of questions to ask these target users to understand what *problems* they might have with teamwork-driven communication tools that are currently unsolved by flockr. Give these questions to your target users and record their answers.
 
 #### [Requirements] Analysis & Specification - Use Cases
 
@@ -207,7 +500,7 @@ When you demonstrate this iteration in your week 10 lab, it will consist of a 15
 ### 5.8. Extra Features Suggestions
 
 #### Frontend
-​
+
 **Hangman on Frontend**
 ​
 After a game of Hangman has been started any user in the channel can type /guess X where X is an individual letter. If that letter is contained in the word or phrase they're trying to guess, the app should indicate where it occurs. If it does not occur, more of the hangman is drawn. There is a lot of flexibility in how you achieve this. It can be done only by modifying the backend and relying on messages to communicate the state of the game (e.g. after making a guess, the "Hangman" posts a message with a drawing of the hangman in ASCII/emoji art). Alternatively you can modify the frontend, if you want to experiment with fancier graphics.
@@ -224,20 +517,20 @@ InputError when:u_id does not refer to a valid user
 AccessError whenThe authorised user is not an owner of the slackr
 ​
 Given a User by their user ID, remove the user from the slackr.
-​
+
 #### Databases
-​
+
 Implementing persistence using a form of database. Ways to do this in python include:
-    * Using the `sqlite3` or `peewee` or `psycopg2` modules to run SQL queries on a local .db file, for people studying/have studied COMP3311 may find this integrates well
-    * Using the `sqlite3` or `peewee` or `psycopg2` to run SQL queries on a local .db file OR a remote database (using Postgresql or MySQL)
-​
+    - Using the `sqlite3` or `peewee` or `psycopg2` modules to run SQL queries on a local .db file, for people studying/have studied COMP3311 may find this integrates well.
+    - Using the `sqlite3` or `peewee` or `psycopg2` to run SQL queries on a local .db file OR a remote database (using Postgresql or MySQL).
+
 #### Object-Oriented Programming
-​
+
 Refactor your code so it is stored in objects instead of dictionaries (if it's not already) and make use of OO concepts taught in lectures to pass data around the backend.
-​
+
 #### Deployment
-​
-Deploying your project using heroku or something similar (not sure if this is possible/allowed)
+
+Deploying your project using heroku or something similar (not sure if this is possible/allowed).
 
 ## 6. Interface specifications
 
@@ -268,8 +561,6 @@ These interface specifications come from Sally and Bob, who are building the fro
 |(outputs only) named exactly **channels**|List of dictionaries, where each dictionary contains types { channel_id, name }|
 |(outputs only) name ends in **members**|List of dictionaries, where each dictionary contains types { u_id, name_first, name_last, profile_img_url }|
 |(outputs only) name ends in **reacts**|List of dictionaries, where each dictionary contains types { react_id, u_ids, is_this_user_reacted } where react_id is the id of a react, and u_ids is a list of user id's of people who've reacted for that react. is_this_user_reacted is whether or not the authorised user has been one of the reacts to this post|
-
-
 
 ### 6.2. Interface
 
@@ -334,18 +625,19 @@ Passwords must be stored in an encrypted form, and tokens must use JWTs (or simi
 The behaviour in which channel_messages returns data is called **pagination**. It's a commonly used method when it comes to getting theoretially unbounded amounts of data from a server to display on a page in chunks. M0ost of the timelines you know and love - Facebook, Instagram, LinkedIn - do this.
 
 For example, if we imagine a user with token "12345" is trying to read messages from channel with ID 6, and this channel has 124 messages in it, 3 calls from the client to the server would be made. These calls, and their corresponding return values would be:
- * channel_messages("12345", 6, 0) => { [messages], 0, 50 }
- * channel_messages("12345", 6, 50) => { [messages], 50, 100 }
- * channel_messages("12345", 6, 100) => { [messages], 100, -1 }
+  * channel_messages("12345", 6, 0) => { [messages], 0, 50 }
+  * channel_messages("12345", 6, 50) => { [messages], 50, 100 }
+  * channel_messages("12345", 6, 100) => { [messages], 100, -1 }
 
-### 6.6. Permissions:
- * Members in a channel have one of two channel permissions.
-   1) Owner of the channel (the person who created it, and whoever else that creator adds)
-   2) Members of the channel
- * Flockr users have two global permissions
-   1) Owners (permission id 1), who can also modify other owners' permissions.
-   2) Members (permission id 2), who do not have any special permissions
-* All flockr users are members by default, except for the very first user who signs up, who is an owner
+### 6.6. Permissions
+
+  * Members in a channel have one of two channel permissions.
+    1) Owner of the channel (the person who created it, and whoever else that creator adds)
+    2) Members of the channel
+  * Flockr users have two global permissions
+    1) Owners (permission id 1), who can also modify other owners' permissions.
+    2) Members (permission id 2), who do not have any special permissions
+  * All flockr users are members by default, except for the very first user who signs up, who is an owner
 
 A user's primary permissions are their global permissions. Then the channel permissions are layered on top. For example:
 * An owner of flockr has owner permissions in every channel they've joined
@@ -354,13 +646,13 @@ A user's primary permissions are their global permissions. Then the channel perm
 
 ### 6.7. Working with the frontend
 
-There is a SINGLE repository available for all students at https://gitlab.cse.unsw.edu.au/COMP1531/20T3/project-frontend. You can clone this frontend locally. The course notice said you will receive your own copy of this, however, that isn't necessary anymore since most groups will not modify the frontend repo. If you'd like to modify the frontend repo (i.e. teach yourself some frontend), please FORK the repository.
+There is a SINGLE repository available for all students at <https://gitlab.cse.unsw.edu.au/COMP1531/20T3/project-frontend>. You can clone this frontend locally. The course notice said you will receive your own copy of this, however, that isn't necessary anymore since most groups will not modify the frontend repo. If you'd like to modify the frontend repo (i.e. teach yourself some frontend), please FORK the repository.
 
 If you run the frontend at the same time as your flask server is running on the backend, then you can power the frontend via your backend.
 
-#### 6.7.1.
+#### 6.7.1
 
-A working example of the frontend can be used at http://flockr-unsw.herokuapp.com/
+A working example of the frontend can be used at <http://flockr-unsw.herokuapp.com/>.
 
 The data is reset daily, but you can use this link to play around and get a feel for how the application should behave.
 
@@ -408,7 +700,7 @@ Standups can be started on the frontend by typing "/standup X", where X is the n
 
 ### 6.10. profile_img_url & image uploads
 
-For outputs with data pertaining to a user, a profile_img_url is present. When images are uploaded for a user profile, after processing them you should store them on the server such that your server now locally has a copy of the cropped image of the original file linked. Then, the profile_img_url should be a URL to the server, such as http://localhost:5001/imgurl/adfnajnerkn23k4234.jpg (a unique url you generate).
+For outputs with data pertaining to a user, a profile_img_url is present. When images are uploaded for a user profile, after processing them you should store them on the server such that your server now locally has a copy of the cropped image of the original file linked. Then, the profile_img_url should be a URL to the server, such as <http://localhost:5001/imgurl/adfnajnerkn23k4234.jpg> (a unique url you generate).
 
 Note: This is most likely the most challenging part of the project. Don't get lost in this, we would strongly recommend most teams complete this capability *last*.
 

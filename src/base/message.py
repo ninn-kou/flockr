@@ -1,6 +1,7 @@
-'''
-    messages.py written by Xingyu Tan.
-'''
+"""
+messages.py written by Xingyu Tan.
+"""
+
 from datetime import timezone, datetime
 import time
 import src.data.data as data
@@ -19,8 +20,9 @@ from src.base.error import InputError, AccessError
 ##      - message_remove(token, message_id);
 ##      - message_edit(token, message_id, message);
 ##      - and all tests for these functions.
+##
 ##    Xingyu TAN's work:
-##    05 NOV., 2020
+##    05 November, 2020
 ##
 ##      - some helper functions;
 ##      - message_sendlater
@@ -78,10 +80,7 @@ def change_msg_pin(msg, sign):
     data.replace_messages(messages)
 
 def if_auth_owner(u_id, channel_id):
-    """
-    check if the u_id is the owner of the channel
-    or the owner of flocker
-    """
+    """check if the u_id is the owner of the channel or the owner of flockr."""
     test = False
     # check if it is the owener of flocker
     if check_permission(u_id) == 1:
@@ -96,9 +95,7 @@ def if_auth_owner(u_id, channel_id):
     return test
 
 def if_auth_is_message_channel_owner(u_id, channel_id):
-    """
-    check if the u_id is the owner of the channel
-    """
+    """Check if the u_id is the owner of the channel."""
     test = False
     # check if it is the owener of channel
     channel_got = find_channel(channel_id)
@@ -126,7 +123,7 @@ def delete_msg_in_list(msg):
     data.replace_messages(messages)
 
 def adding_message(return_message, channel_id):
-    '''adding given return_message in the whole list'''
+    """Adding given return_message in the whole list."""
     # get the channels
     channels = data.return_channels()
     # add user into memory
@@ -159,7 +156,7 @@ def token_into_user_id(token):
     return au_id
 
 def check_permission(user_id):
-    '''check if given u_id person is permission one'''
+    """Check if given u_id person is permission one."""
     permission_check = 2
     for i in data.return_users():
         if i['u_id'] == user_id:
@@ -183,15 +180,46 @@ def find_one_in_channel(channel, u_id):
             return True
     return False
 
+def find_one_in_message(message, u_id):
+    reacts = message["reacts"][0]
+    if u_id in reacts['u_ids']:
+        return True
+    return False
+
+def edit_msg_react_in_list(msg, uid, method):
+    """Interate the messages list by its id, return the message after edit."""
+    # get the channels
+    channels = data.return_channels()
+    messages = data.return_messages()
+
+    # modify in channel
+    for i in channels:
+        if i['channel_id'] == msg['channel_id']:
+            for temp in i['message']:
+                if temp['message_id'] == msg['message_id']:
+                    if method == 'add':
+                        temp['reacts'][0]["u_ids"].append(int(uid))
+                    elif method == 'delete':
+                        temp['reacts'][0]["u_ids"].remove(int(uid))
+    # modify in msg.json
+    for temp in messages:
+        if temp['message_id'] == msg['message_id']:
+            if method == 'add':
+                temp['reacts'][0]["u_ids"].append(int(uid))
+            elif method == 'delete':
+                temp['reacts'][0]["u_ids"].remove(int(uid))
+
+    # add it to memory
+    data.replace_channels(channels)
+    data.replace_messages(messages)
+
 
 ############################################################
 #       message_send(token, channel_id, message)
 #       written by Xingyu TAN
 ############################################################
 def message_send(token, channel_id, message):
-    """
-    message_send()
-    Send a message from authorised_user to the channel specified by channel_id
+    """Send a message from authorised_user to the channel specified by channel_id.
 
     Args:
         token: the token of the sender.
@@ -199,17 +227,14 @@ def message_send(token, channel_id, message):
         message: the message we send.
 
     RETURNS:
-    { message_id }
-
+        {message_id}
 
     THEREFORE, TEST EVERYTHING BELOW:
     1. inputError
-    - Message is more than 1000 characters
-
+      - Message is more than 1000 characters.
     2. accessError
-    - the authorised user has not joined the channel they are trying to post to
-    - cannot find the channel_id
-
+      - The authorised user has not joined the channel they are trying to post to.
+      - Cannot find the channel_id.
     """
 
     # InputError 1: invalid token.
@@ -259,30 +284,28 @@ def message_send(token, channel_id, message):
     return {
         'message_id': new_msg_id,
     }
+
+
 ############################################################
 #       message_remove(token, message_id)
 #       written by Xingyu TAN
 ############################################################
 def message_remove(token, message_id):
-    """
-    message_remove()
-    Given a message_id for a message, this message is removed from the channel
+    """Given a message_id for a message, this message is removed from the channel.
 
     Args:
         token: the token of the people who authority.
         channel_id: the channel which is the target of message.
 
     RETURNS:
-    {}
-
+        {}
 
     THEREFORE, TEST EVERYTHING BELOW:
     1. inputError
-    - Message id is not exist
-
+      - Message id is not exist.
     2. accessError excluding
-    - Message with message_id was sent by the authorised user making this reques
-    - The authorised user is an owner of this channel or the flockr
+      - Message with message_id was sent by the authorised user making this reques.
+      - The authorised user is an owner of this channel or the flockr.
     """
 
     # InputError 1: invalid token.
@@ -305,36 +328,34 @@ def message_remove(token, message_id):
     # Case 4: no error, delete the message
     delete_msg_in_list(message_using)
     return {}
+
+
 ############################################################
 #       message_edit(token, message_id, message)
 #       written by Xingyu TAN
 ############################################################
 def message_edit(token, message_id, message):
-    '''
-    message_edit()
-    Given a message, update it's text with new text.
+    """Given a message, update it's text with new text.
+
     If the new message is an empty string, the message is deleted.
 
     Args:
         token: the token of the people who edit it.
         channel_id: the channel which is the target of message.
         message: the new message.
-    RETURNS:
-    { }
 
+    RETURNS:
+        {}
 
     THEREFORE, TEST EVERYTHING BELOW:
-    1. inputError
-    - None
-
-    2. accessError
-    - the authorised user is the message sender
-    - the authorised user is the owener of flocker or channel
-
-    3. if the new message is empty
-    - delete the message
-
-    '''
+    1. InputError
+      - None
+    2. AccessError
+      - The authorised user is the message sender.
+      - The authorised user is the owener of flockr or channel.
+    3. If the new message is empty
+      - Delete the message.
+    """
     # AccessError 1: excluding message sender and channel_owner
     auth_id = token_into_user_id(token)
     message_using = find_message(message_id)
@@ -351,34 +372,34 @@ def message_edit(token, message_id, message):
     else:
         edit_msg_in_list(message_using, message)
     return {}
+
+
 ############################################################
 #       message_sendlater(token, channel_id, message, time_sent)
 #       written by Xingyu TAN
 ############################################################
 def message_sendlater(token, channel_id, message, time_sent):
-    '''
-    message_sendlater()
-    Send a message from authorised_user to the channel specified
-    by channel_id automatically at a specified time in the future
+    """Send a message from authorised_user to the channel specified by channel_id automatically at a specified time in the future.
+
     Args:
         token: the token of the people who edit it.
         channel_id: the channel which is the target of message.
         message: the new message.
         time_sent: when the msg would be sent
-    RETURNS:
-    return {
-        'message_id': new_msg_id,
-    }
 
+    RETURNS:
+        return {
+            'message_id': new_msg_id,
+        }
 
     THEREFORE, TEST EVERYTHING BELOW:
-    1. inputError
-    - Channel ID is not a valid channel
-    - Message is more than 1000 characters
-    - Time sent is a time in the past
-    2. accessError
-    when:  the authorised user has not joined the channel they are trying to post to
-    '''
+    1. InputError
+      - Channel ID is not a valid channel
+      - Message is more than 1000 characters
+      - Time sent is a time in the past
+    2. AccessError
+      - when the authorised user has not joined the channel they are trying to post to.
+    """
     # InputError 1: invalid token.
     auth_id = token_into_user_id(token)
     if auth_id == -1:
@@ -430,65 +451,30 @@ def message_sendlater(token, channel_id, message, time_sent):
     return {
         'message_id': new_msg_id,
     }
-############################################################
-#       helper function for react features
-############################################################
-def find_one_in_message(message, u_id):
-    reacts = message["reacts"][0]
-    if u_id in reacts['u_ids']:
-        return True
-    return False
 
-def edit_msg_react_in_list(msg, uid, method):
-    """Interate the messages list by its id, return the message after edit."""
-    # get the channels
-    channels = data.return_channels()
-    messages = data.return_messages()
-
-    # modify in channel
-    for i in channels:
-        if i['channel_id'] == msg['channel_id']:
-            for temp in i['message']:
-                if temp['message_id'] == msg['message_id']:
-                    if method == 'add':
-                        temp['reacts'][0]["u_ids"].append(int(uid))
-                    elif method == 'delete':
-                        temp['reacts'][0]["u_ids"].remove(int(uid))
-    # modify in msg.json
-    for temp in messages:
-        if temp['message_id'] == msg['message_id']:
-            if method == 'add':
-                temp['reacts'][0]["u_ids"].append(int(uid))
-            elif method == 'delete':
-                temp['reacts'][0]["u_ids"].remove(int(uid))
-
-    # add it to memory
-    data.replace_channels(channels)
-    data.replace_messages(messages)
 
 ############################################################
 #       message_react(token, message_id, react_id)
 #       written by Yuhan Yan
 ############################################################
 def message_react(token, message_id, react_id):
-    '''
-    message_react()
-    Given a message within a channel the authorised user is part of,
-    add a "react" to that particular message
+    """Given a message within a channel the authorised user is part of, add a "react" to that particular message.
+
     Args:
         token: the token of the people who edit it.
         channel_id: the channel which is the target of message.
         message_id: the specific message.
         react_id: the react_id is always 1 for thumbs up
+
     RETURNS:
-    return {}
+        {}
 
     THEREFORE, TEST EVERYTHING BELOW:
     1. inputError
-    - message_id is not a valid message within a channel that the authorised user has joined
-    - react_id is not a valid React ID. The only valid react ID the frontend has is 1
-    - TMessage with ID message_id already contains an active React with ID react_id from the authorised user
-    '''
+      - Message_id is not a valid message within a channel that the authorised user has joined.
+      - React_id is not a valid React ID. The only valid react ID the frontend has is 1.
+      - Message with ID message_id already contains an active React with ID react_id from the authorised user.
+    """
     # InputError 1: invalid token.
     auth_id = token_into_user_id(token)
     if auth_id == -1:
@@ -507,29 +493,29 @@ def message_react(token, message_id, react_id):
 
     edit_msg_react_in_list(message_got, auth_id, 'add')
     return {}
+
+
 ############################################################
 #       message_react(token, message_id, react_id)
 #       written by Yuhan Yan
 ############################################################
-'''
-    message_unreact()
-    Given a message within a channel the authorised user is part of, 
-    remove a "react" to that particular message
+def message_unreact(token, message_id, react_id):
+    """Given a message within a channel the authorised user is part of, remove a "react" to that particular message.
+
     Args:
         token: the token of the people who edit it.
         channel_id: the channel which is the target of message.
         message_id: the specific message.
         react_id: the react_id is always 1 for thumbs up
     RETURNS:
-    return {}
+        {}
 
     THEREFORE, TEST EVERYTHING BELOW:
-    1. inputError
-    - message_id is not a valid message within a channel that the authorised user has joined
-    - react_id is not a valid React ID. The only valid react ID the frontend has is 1
-    - Message with ID message_id does not contain an active React with ID react_id
-'''
-def message_unreact(token, message_id, react_id):
+    1. InputError
+      - Message_id is not a valid message within a channel that the authorised user has joined.
+      - react_id is not a valid React ID. The only valid react ID the frontend has is 1.
+      - Message with ID message_id does not contain an active React with ID react_id.
+    """
     auth_id = token_into_user_id(token)
     if auth_id == -1:
         raise InputError(description='invalid token.')
@@ -548,31 +534,30 @@ def message_unreact(token, message_id, react_id):
     edit_msg_react_in_list(message_got, auth_id, 'delete')
     return {}
 
+
 ############################################################
 #       message_pin(token, message_id)
 #       written by Xingyu TAN
 ############################################################
 def message_pin(token, message_id):
-    '''
-    message_pin()
-    Given a message within a channel, mark it as "pinned"
-    to be given special display treatment by the frontend
+    """Given a message within a channel, mark it as "pinned" to be given special display treatment by the frontend.
+
     Args:
         token: the token of the people who edit it.
         message_id: the new message.
 
     RETURNS:
-    return {}
+        {}
 
     THEREFORE, TEST EVERYTHING BELOW:
-    1. inputError
-    - message_id is not a valid message
-    - message is already pinned
-    - token invalid
-    2. accessError
-    - The authorised user is not a member of the channel that the message is within
-    - The authorised user is not an owner
-    '''
+    1. InputError
+      - Message_id is not a valid message.
+      - Message is already pinned.
+      - Token invalid.
+    2. AccessError
+      - The authorised user is not a member of the channel that the message is within.
+      - The authorised user is not an owner.
+    """
     # InputError 1: invalid token.
     auth_id = token_into_user_id(token)
     if auth_id == -1:
@@ -599,29 +584,29 @@ def message_pin(token, message_id):
     change_msg_pin(message_using, True)
     return {}
 
+
 ############################################################
 #       message_unpin(token, message_id)
 #       written by Xingyu TAN
 ############################################################
 def message_unpin(token, message_id):
-    '''
-    message_unpin()
-    Given a message within a channel, remove it's mark as unpinned
+    """Given a message within a channel, remove it's mark as unpinned.
+
     Args:
         token: the token of the people who edit it.
         message_id: the new message.
 
     RETURNS:
-    return {}
+        {}
 
     THEREFORE, TEST EVERYTHING BELOW:
-    1. inputError
-    - message_id is not a valid message
-    - message is already unpinned
-    2. accessError
-    - The authorised user is not a member of the channel that the message is within
-    - The authorised user is not an owner
-    '''
+    1. InputError
+      - Message_id is not a valid message.
+      - Message is already unpinned.
+    2. AccessError
+      - The authorised user is not a member of the channel that the message is within.
+      - The authorised user is not an owner.
+    """
     # InputError 1: invalid token.
     auth_id = token_into_user_id(token)
     if auth_id == -1:

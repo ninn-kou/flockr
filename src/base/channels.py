@@ -1,6 +1,6 @@
-'''
-functions of create a new channel and return the specific channel
-'''
+"""
+Functions of create a new channel and return the specific channel.
+"""
 import random
 import src.data.data as data
 from src.base.error import InputError
@@ -15,7 +15,7 @@ from src.base.auth import decode_token
 ################################################################################
 
 def owner_from_token(token):
-    ''' find owner from token'''
+    """Find owner by token."""
     user = decode_token(token)
     if user is None:
         raise InputError("Couldn't Decode Token")
@@ -23,7 +23,7 @@ def owner_from_token(token):
     return user
 
 def channels_list(token):
-    """Need to fix implementation """
+    """Need to fix implementation."""
 
     # find the token
     u_id = owner_from_token(token).get('u_id')
@@ -46,7 +46,7 @@ def channels_list(token):
 
 
 def channels_listall(token):
-    """just return all channels? sure about that?"""
+    """Just return all channels? Sure about that?"""
 
     # check that token exists
     owner_from_token(token)

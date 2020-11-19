@@ -1,4 +1,5 @@
-"""Yuhan Yan has done all the user.py and the related tests."""
+"""user.py written by Yuhan Yan."""
+
 import requests
 from PIL import Image
 
@@ -22,7 +23,7 @@ from src.base.error import InputError
 ################################################################################
 
 def user_profile(token, u_id):
-    """For a valid user, returns information about their user_id, email, first name, last name, and handle
+    """For a valid user, returns information about their user_id, email, first name, last name, and handle.
 
     Raises:
         1. InputError
@@ -58,7 +59,7 @@ def user_profile(token, u_id):
 
 
 def user_profile_setname(token, name_first, name_last):
-    """Update the authorised user's first and last name
+    """Update the authorised user's first and last name.
 
     Raises:
         1. InputError
@@ -85,7 +86,7 @@ def user_profile_setname(token, name_first, name_last):
     return {}
 
 def user_profile_setemail(token, email):
-    """Update the authorised user's email address
+    """Update the authorised user's email address.
 
     Raises:
         1. InputError
@@ -111,7 +112,7 @@ def user_profile_setemail(token, email):
 
 
 def user_profile_sethandle(token, handle_str):
-    """Update the authorised user's handle (i.e. display name)
+    """Update the authorised user's handle (i.e. display name).
 
     Raises:
         1. InputError
@@ -131,12 +132,11 @@ def user_profile_sethandle(token, handle_str):
     return {}
 
 def user_profile_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
-    '''
-    Given a URL of an image on the internet, crops the image within bounds (x_start, y_start)
-    and (x_end, y_end). Position (0,0) is the top left.
+    """Upload the photo.
 
-    It will save this file to be served
-    '''
+    Given a URL of an image on the internet, crops the image within bounds (x_start, y_start)
+    and (x_end, y_end). Position (0,0) is the top left. It will save this file to be served.
+    """
     # find the user specified
     user = decode_token(token)
 
@@ -167,7 +167,6 @@ def user_profile_uploadphoto(token, img_url, x_start, y_start, x_end, y_end):
 
     # crop the image
     cropped = img.crop((x_start, y_start, x_end, y_end))
-
     #  save image to directory
     data.save_image(cropped, user['u_id'])
 

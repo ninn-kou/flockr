@@ -1,3 +1,3 @@
-'''
-here to make folder into module
-'''
+"""
+Convert the folder into a module.
+"""

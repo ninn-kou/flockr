@@ -1,8 +1,8 @@
-'''
-    channel.py written by Xingyu Tan, Yuhan Yan and Hao Ren.
-'''
-#import jwt, JWT_SECRET, AccessError
+"""
+channel.py written by Xingyu Tan, Yuhan Yan and Hao Ren.
+"""
 
+#import jwt, JWT_SECRET, AccessError
 import src.data.data as data
 from src.base.error import InputError
 from src.base.auth import decode_token
@@ -63,7 +63,7 @@ def find_channel(channel_id):
     return answer
 
 def check_permission(user_id):
-    '''check if given u_id person is permission one'''
+    """check if given u_id person is permission one"""
     permission_check = 1
     for i in data.return_users():
         if i['u_id'] == user_id:

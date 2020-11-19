@@ -1,11 +1,11 @@
-'''Some other useful functions'''
+"""All other useful functions used in the flockr."""
+
 import src.data.data as data
 from src.base.auth import decode_token
 from src.base.error import InputError, AccessError
 
-
 def owner_from_token(token):
-    ''' find owner from token'''
+    """Find owner from token."""
     user = decode_token(token)
     if user is None:
         raise InputError("Couldn't Decode Token")
@@ -13,18 +13,16 @@ def owner_from_token(token):
     return user
 
 def clear():
-    ''' clear the backend state '''
-
+    """Clear the backend state."""
     data.clear_channels()
     data.clear_messages()
     data.clear_users()
     data.clear_profiles()
 
 def users_all(token):
-    '''return all of the users list'''
+    """Return all of the users list."""
     # check that token exists
     owner_from_token(token)
-
     users = data.return_users()
     list_users = []
 
@@ -37,7 +35,6 @@ def users_all(token):
             'handle_str': i['handle_str'],
             'profile_img_url': '',
         }
-
         list_users.append(user)
 
     return {
@@ -46,7 +43,7 @@ def users_all(token):
 
 
 def admin_userpermission_change(token, u_id, permission_id):
-    '''change the permission if the admin is a owner'''
+    """Change the permission if the admin is a owner."""
     i = owner_from_token(token)                     # check that token exists
 
     users = data.return_users()
@@ -70,7 +67,7 @@ def admin_userpermission_change(token, u_id, permission_id):
     return {}
 
 def search(token, query_str):
-    '''search the message with the specific query_str'''
+    """Search the message with the specific query_str."""
     # check that token exists
     user = owner_from_token(token)
     id_from = user.get('u_id')
@@ -85,14 +82,12 @@ def search(token, query_str):
     # make the query string to all_lower
     # this will make query case insensitive
     query_str = query_str.lower()
-
     # make query string to ignore whitespace
     query_str = "".join(query_str.split())
 
     messages = data.return_messages()
     for i in messages:
         if i['channel_id'] in chan_list:   # focus on the channels which is joinned by the user
-            
             # make the message lowercase and ignoring whitespace
             working_msg = "".join(i['message'].lower().split())
 
@@ -114,5 +109,3 @@ def search(token, query_str):
     return {
         'messages': mes_list
     }
-
-

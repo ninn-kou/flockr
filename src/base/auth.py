@@ -1,6 +1,7 @@
-'''
-    auth.py written by Joseph Jeong.
-'''
+"""
+auth.py written by Joseph Jeong and Hao Ren.
+"""
+
 import re
 import random
 import string
@@ -10,11 +11,9 @@ import pickle
 import jwt
 import datetime
 from jwt import DecodeError
-
 import base64
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-
 from googleapiclient.discovery import build
 
 import src.data.data as data
@@ -31,7 +30,7 @@ def create_secret(token_length, whitespace = True):
     return "".join(random.choices(valid_characters, k = token_length))
 
 def read_jwt_secret():
-    ''' read token_secret from file '''
+    """Read token_secret from file."""
 
     # check if token file exists
     # create a new one if it doesn't
@@ -55,10 +54,9 @@ def regex_email_check(email):
     """
     Check that the email is validly formatted email.
     Not using the given regex method as it tells me that my own
-    actual email is not a real email
+    actual email is not a real email.
     """
-
-    regex = r"\"?([-a-zA-Z0-9.`?{}]+@\w+\.\w+)\"?"  
+    regex = r"\"?([-a-zA-Z0-9.`?{}]+@\w+\.\w+)\"?"
     # regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 
     if re.search(regex, email) is None:
@@ -91,7 +89,7 @@ def create_u_id(users):
 def handle_generator(name_first, name_last, u_id):
     """
     Generates a unique handle.
-    Much simpler than the thing I had before
+    Much simpler than the thing I had before.
     """
 
     # Create base concatenation.
@@ -131,7 +129,7 @@ def auth_register_error_check(email, password, name_first, name_last):
         raise InputError('Last Name Incorrect Length')
 
 def hash_(_input):
-    ''' create a hash with input'''
+    """ create a hash with input"""
 
     # create the hash
     _hash = hashlib.sha256(_input.encode()).hexdigest()
@@ -139,21 +137,17 @@ def hash_(_input):
     return _hash
 
 def create_token(u_id, session_secret):
-    '''
-    encode email in jwt object
+    """Encode email in jwt object.
 
-    The u_id is is in the public header
-    This is used to identify the user's session_secret
-
-    the session_secret is only valid once per login
-    it is in an encrypted dict
-    when logged out, the stored session_session is replaced with None
-
-    There is also a JWT_SECRET that is used to decrypt the object
-
-    Therefore, the user needs both the JWT_SECRET and session_secret
-    to validate their login
-    '''
+    - The u_id is is in the public header.
+    - This is used to identify the user's session_secret.
+    - The session_secret is only valid once per login.
+    - It is in an encrypted dict.
+    - When logged out, the stored session_session is replaced with None.
+    - There is also a JWT_SECRET that is used to decrypt the object.
+    - Therefore, the user needs both the JWT_SECRET and session_secret
+      to validate their login.
+    """
 
     # payload includes email
     headers = {'u_id': u_id}
@@ -166,10 +160,9 @@ def create_token(u_id, session_secret):
     return encoded
 
 def decode_token(token):
-    '''
-    Return user dict from given token
-    If incorrect token or user is inputted, it returns None
-    '''
+    """Return user dict from given token.
+    If incorrect token or user is inputted, it returns None.
+    """
 
     # firstly get public u_id from header
     try:
@@ -196,7 +189,7 @@ def decode_token(token):
     return focus_user
 
 def determine_permission_id():
-    ''' check first user to add permission id '''
+    """Check first user to add permission id."""
     id = 2
     # check if user list is empty
     if not data.return_users():
@@ -207,7 +200,7 @@ def determine_permission_id():
     return id
 
 def auth_register(email, password, name_first, name_last):
-    """ Function to register a new user to the program."""
+    """Function to register a new user to the program."""
 
     # check for errors in input
     auth_register_error_check(email, password, name_first, name_last)
@@ -241,7 +234,7 @@ def auth_register(email, password, name_first, name_last):
     return token_object
 
 def auth_login(email, password):
-    """ Used to log user into program."""
+    """Used to log user into program."""
 
     # check if email is valid.
     regex_email_check(email)
@@ -326,12 +319,15 @@ def send_message(service, user_id, message):
     return message
 
 def send_email(email, html):
-    
-    # authorise gmail
+    """Email sending part.
+    As a teamwork, we used Joseph's personal email address to test.
+    Please change this function when deployment.
+    """
+    # Authorise Gmail.,
     path = os.getcwd() + '/src/data/gmail_token.p'
     with open(path, 'rb') as auth_token:
         creds = pickle.load(auth_token)
-    
+
     gmail = build('gmail', 'v1', credentials=creds)
 
     # create the email
@@ -346,7 +342,7 @@ def send_email(email, html):
     send_message(gmail, 'me', msg)
 
 def passwordreset_request(email):
-    ''' password reseting '''
+    """Password reseting request."""
 
     # find the user in question
     focus_user = None
@@ -379,7 +375,7 @@ def passwordreset_request(email):
     return {}
 
 def passwordreset_reset(reset_code, new_password):
-    ''' check if reset_code is correct '''
+    """Check if reset_code is correct."""
 
     # check that password is valid length
     if len(new_password) < 6:

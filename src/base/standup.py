@@ -1,4 +1,5 @@
-'''functions for standup'''
+"""Functions for standup."""
+
 import json
 import time
 import datetime
@@ -11,7 +12,6 @@ from src.base.error import InputError, AccessError
 
 def token_into_user_id(token):
     """Transfer the token into the user id."""
-
     user = decode_token(token)
     if user is None:
         return -1
@@ -20,13 +20,11 @@ def token_into_user_id(token):
     return au_id
 
 def token_into_name(token):
-    """Transfer the token into the first name"""
-
+    """Transfer the token into the first name."""
     user = decode_token(token)
     if user is None:
         return ''
     au_fname = user.get('name_first')
-
     return au_fname
 
 def find_channel(channel_id):
@@ -39,11 +37,10 @@ def find_channel(channel_id):
     return answer
 
 def time_difference(timeint1, timeint2):
-    '''find the difference between two timestr'''
+    """Find the difference between two timestr."""
     return int(timeint1 - timeint2)
 
 def send_message_package(token, channel_id):
-
     m = find_channel(channel_id)['standup']['message_package']
     message.message_send(token, channel_id, m)
 
@@ -71,7 +68,6 @@ def standup_start(token, channel_id, length):
 
     #last_time = datetime.datetime.strptime(f_time,'%Y-%m-%d %H:%M:%S')
     next_time = timestamp + length
-
     data.change_finish_time(channel_id, next_time)
 
     #send the message at the end of the standup
@@ -82,7 +78,6 @@ def standup_start(token, channel_id, length):
     }
 
 def standup_active(token, channel_id):
-
     channel_got = find_channel(channel_id)  #  invalid channel_id.
     if channel_got is None:
         raise InputError(description='invalid channel_id')
@@ -127,4 +122,3 @@ def standup_send(token, channel_id, message):
     data.message_package_add(channel_id, mess_send)
 
     return {}
-

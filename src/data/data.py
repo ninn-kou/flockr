@@ -1,11 +1,8 @@
-'''
-A collection of data structures used between programs
-
-accessed from root/src
-
-The approach taken in this file is terrible memory inefficient
-However, it allows for basic persistent storage
-'''
+"""Accessed from 'root/src'.
+A collection of data structures used between programs.
+The approach taken in this file is terrible memory inefficient.
+However, it allows for basic persistent storage.
+"""
 
 import json
 import os
@@ -17,11 +14,9 @@ from flask import request
 from src.base.error import InputError
 
 def users_notes():
-    '''
-    initialise users as a global variable
+    """Initialise users as a global variable.
 
-    The User Data Structure
-    Stored Like This:
+    The User Data Structure stored Like This:
     users = [
         user: {
             'u_id':
@@ -43,14 +38,12 @@ def users_notes():
     - auth_register needs to be changed, so that the very first user has p_id = 1
     everyone else is created p_id = 2
     - need to make token thing
-    '''
+    """
 
 def return_users():
-    ''' return all the users in the file '''
-
+    """Return all the users in the file."""
     # declare users outside
     users = None
-
     # open the pickle file
     path = os.getcwd() + '/src/data/users.p'
 
@@ -66,8 +59,7 @@ def return_users():
     return users
 
 def update_user(u_id, index, value):
-    ''' update index of a user'''
-
+    """Update index of a user."""
     # declare users outside
     users = None
 
@@ -84,8 +76,7 @@ def update_user(u_id, index, value):
         pickle.dump(users, file)
 
 def append_users(user):
-    ''' append user to list '''
-
+    """Append user to list."""
     # declare users outside
     users = None
 
@@ -102,7 +93,7 @@ def append_users(user):
         pickle.dump(users, file)
 
 def clear_users():
-    ''' clear out users file '''
+    """Clear out users file."""
 
     # write json to file
     path = os.getcwd() + '/src/data/users.p'
@@ -110,7 +101,7 @@ def clear_users():
         pickle.dump([], file)
 
 def updateByEmail(user, email):
-    ''' update users by email '''
+    """Update users by email."""
 
     path = os.getcwd() + '/src/data/users.p'
     with open(path, 'rb') as file:
@@ -128,13 +119,10 @@ def updateByEmail(user, email):
 def add_password_reset(u_id):
     pass
 
-
-##########################################################################################
-
 def return_channels():
-    ''' return the channels list
+    """Return the channels list.
 
-    the struct using for channel
+    The struct using for channel:
     channels = [
         {
             'name': 'Hayden',
@@ -173,13 +161,9 @@ def return_channels():
             ]
         }
     ]
-
-
-    '''
-
+    """
     # declare users outside
     channels = None
-
     # if file doesn't exist, create it
     path = os.getcwd() + '/src/data/channels.json'
     if not os.path.exists(path):
@@ -189,46 +173,40 @@ def return_channels():
     # open the json file
     with open('src/data/channels.json', 'r') as file:
         channels = json.load(file)
-
     # return the json information
     return channels
 
 def append_channels(channel):
-    ''' append user to list '''
-
+    """Append user to list."""
     # declare users outside
     channels = None
-
     # open current json file
     with open('src/data/channels.json', 'r') as file:
         channels = json.load(file)
 
     # append the user
     channels.append(channel)
-
     # write json to file
     with open('src/data/channels.json', 'w') as file:
         json.dump(channels, file)
 
 def replace_channels(channels):
-    ''' replace persistent database with input'''
-
+    """Replace persistent database with input."""
     # write json to file
     with open('src/data/channels.json', 'w') as file:
         json.dump(channels, file)
 
 def clear_channels():
-    ''' clear out channels file '''
-
+    """Clear out channels file."""
     # write json to file
     with open('src/data/channels.json', 'w') as file:
         json.dump([], file)
 
 
 def return_messages():
-    ''' return the messages list
+    """Return the messages list.
 
-    the struct using for messages
+    The struct using for messages:
     'messages':[
         {
             'message_id': 1,
@@ -238,8 +216,7 @@ def return_messages():
             'time_created': 1582426789,
         },
     ]
-
-    '''
+    """
     # declare messages outside
     messages = None
 
@@ -252,49 +229,45 @@ def return_messages():
     # open the json file
     with open('src/data/messages.json', 'r') as file:
         messages = json.load(file)
-
     # return the json information
     return messages
 
 def insert_messages(message):
-    ''' insert_messages to list '''
-
+    """Insert messages to list."""
     # declare message outside
     messages = None
-
     # open current json file
     with open('src/data/messages.json', 'r') as file:
         messages = json.load(file)
 
     # append the user
     messages.insert(0, message)
-
     # write json to file
     with open('src/data/messages.json', 'w') as file:
         json.dump(messages, file)
 
 def replace_messages(message):
-    ''' replace persistent database with input'''
+    """Replace persistent database with input."""
 
     # write json to file
     with open('src/data/messages.json', 'w') as file:
         json.dump(message, file)
 
 def clear_messages():
-    ''' clear out channels file '''
+    """Clear out channels file."""
 
     # write json to file
     with open('src/data/messages.json', 'w') as file:
         json.dump([], file)
 
 def clear_profiles():
-    ''' delete user profile pictures '''
+    """Delete user profile pictures."""
     files = glob.glob('src/data/profiles/*')
     for f in files:
         os.remove(f)
 
 def save_image(image, u_id):
-    ''' save an image in the profiles directory'''
+    """Save an image in the profiles directory."""
     path = os.getcwd() + '/src/data/profiles/'
     if not os.path.exists(path):
         os.mkdir(path)
@@ -302,10 +275,8 @@ def save_image(image, u_id):
     image.save(path)
 
 def get_profile_photo_path(u_id):
-    ''' returns a profile picture path, and url from the u_id '''
-
+    """Returns a profile picture path, and url from the u_id."""
     path = os.getcwd() + '/src/data/profiles/' + u_id + '.jpg'
-
     # make sure path is valid
     try:
         Image.open(path)
@@ -314,15 +285,14 @@ def get_profile_photo_path(u_id):
     return path
 
 def get_profile_photo_url(u_id):
-    ''' returns the profile photo url '''
+    """Returns the profile photo url."""
     path = os.getcwd() + '/src/data/profiles/' + str(u_id) + '.jpg'
     if not os.path.isfile(path):
         return ''
     return str(request.url_root) + 'user/profile/photo/' + str(u_id)
 
 def change_finish_time(channel_id, time_int):
-    '''change the finich time of the channel'''
-
+    """Change the finiSh time of the channel."""
     with open('src/data/channels.json', 'r') as file:
         channels = json.load(file)
 
@@ -337,8 +307,7 @@ def change_finish_time(channel_id, time_int):
         json.dump(channels, file)
 
 def message_package_add(channel_id, message):
-    '''add the message in the message_package'''
-
+    """Add the message in the message_package."""
     with open('src/data/channels.json', 'r') as file:
         channels = json.load(file)
 
@@ -352,8 +321,7 @@ def message_package_add(channel_id, message):
         json.dump(channels, file)
 
 def message_package_empty(channel_id):
-    '''empty the message of the specific channel'''
-
+    """Make the message of the specific channel empty."""
     with open('src/data/channels.json', 'r') as file:
         channels = json.load(file)
 
@@ -367,7 +335,7 @@ def message_package_empty(channel_id):
         json.dump(channels, file)
 
 def return_password_reset_email():
-    ''' returns the text of the password_reset_email.txt '''
+    """Return the text of the password_reset_email.txt."""
 
     with open('src/data/password_reset_email.txt', 'r') as file:
         email = file.read()

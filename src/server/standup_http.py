@@ -1,5 +1,11 @@
-'''http functions'''
+"""
+standup_http.py written by Xingyu Tan.
+
+All URL appends are prepended with `standup/`.
+"""
+
 from flask import Blueprint, request, jsonify
+
 import src.base.standup as standup
 
 STANDUPHTTP = Blueprint('standup', __name__)
@@ -32,4 +38,3 @@ def package_send():
         input_obj.get('message')
     )
     return {}
-

@@ -1,5 +1,4 @@
-'''
-here to make folder into module
-
-using users.p as it needs to store datetime objects
-'''
+"""
+Convert the folder into a module.
+Using users.p as it needs to store datetime objects.
+"""

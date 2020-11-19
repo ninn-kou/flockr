@@ -1,6 +1,40 @@
-# COMP1531 Major Project, 2020 Term 3
+# Flockr: COMP1531 Major Project, 20T3
 
 ## README FIRST
+
+Welcome to our team based major project in course COMP1531, Software Engineering Foundations, 2020 Term 3. The current version has been edited by myself for further improvement, and extra features adding. For the original team working codes on November 2020, you can click to below hyperlinks to visit three iterations separately. All "Iteration 2" works were based on iteration 1; similarly, all "Iteration 3" works were based on iteration 2. After the deadline of this project, I copied this repository into my GitHub page and did a lot of extra jobs. In that case, there might be a massive difference between the University assignment and my improvement.
+
+Please note that copy any types of coping codes might cause misconduct or academic discipline by your institution. All rights reserved by our team, which has been shown below.
+
+### TODO
+
+- Change the email sending features to remove Joseph's personal information.
+- Style improvements for testing files.
+- All documents should be renamed, rewritten, and classified.
+- Deployment.
+- Extra features.
+
+### Changelog
+
+- **20 Nov:** README.md updated. Three introduction parts of iterations had been adding into this file, and some extra information had been provided.
+
+### Team 4, Thursday 13 Orange
+
+| Team Members  | E-mail Addresses                 |
+|---------------|----------------------------------|
+| Hao Ren       | hao.ren1@student.unsw.edu.au     |
+| Xingyu Tan    | xingyu.tan@student.unsw.edu.au   |
+| Yuhan Yan     | yuhan.yan1@student.unsw.edu.au   |
+| Liuyuzi He    | liuyuzi.he@student.unsw.edu.au   |
+| Joseph Jeong  | joseph.jeong@student.unsw.edu.au |
+
+### Iteration 1, 2 and 3
+
+<https://github.com/flying-yogurt/flockr/tree/04oct_iteration_1_archive>
+<https://github.com/flying-yogurt/flockr/tree/26oct_iteration_2_archive>
+<https://github.com/flying-yogurt/flockr/tree/15nov_iteration_3_archive>
+
+### Table of Contents
 
 * [1\. Aims](#1-aims)
 * [2\. Overview](#2-overview)

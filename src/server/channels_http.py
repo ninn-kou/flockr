@@ -1,9 +1,9 @@
-'''
-Joseph Jeong 20 OCT 2020
+"""
+channels_http.py written by Liuyuzi He.
 
-Just experimenting with how Flask works at the moment
-All url appends are prepended with channels/
-'''
+Just experimenting with how Flask works at the moment.
+All url appends are prepended with `channels/`
+"""
 
 from flask import Blueprint, request, jsonify
 
@@ -13,8 +13,7 @@ CHANNELSHTTP = Blueprint('channels', __name__)
 
 @CHANNELSHTTP.route('/create', methods = ['POST'])
 def create():
-    ''' creates a new channel'''
-
+    """Create a new channel."""
     input_obj = request.json
 
     output = channels.channels_create(
@@ -22,12 +21,11 @@ def create():
         input_obj.get('name'),
         input_obj.get('is_public')
     )
-
     return jsonify(output)
 
 @CHANNELSHTTP.route('/listall', methods = ['GET'])
 def listall():
-    '''lists all channels that exist'''
+    """List all channels that exist."""
 
     # I will never understand why they did this
     input_obj = request.args
@@ -40,12 +38,10 @@ def listall():
 
 @CHANNELSHTTP.route('/list', methods = ['GET'])
 def list():
-    '''lists all channels that exist'''
-
+    """List all channels that exist."""
     input_obj = request.args
 
     output = channels.channels_list(
         input_obj.get('token')
     )
-
     return jsonify(output)

@@ -1,4 +1,9 @@
-""" Yuhan Yan created this on 2020.10.25"""
+"""
+user_http.py written by Hao Ren, and Yuhan Yan.
+
+All URL appends are prepended with `user/`.
+"""
+
 from os import path
 from flask import Blueprint, request, jsonify
 from flask.helpers import send_file
@@ -11,8 +16,6 @@ USERHTTP = Blueprint('user', __name__)
 
 @USERHTTP.route('/', methods = ['GET'])
 def profile():
-    ''' registers a new user'''
-
     # get the user from json
     token = request.args.get("token")
     u_id = request.args.get("u_id")
@@ -26,8 +29,6 @@ def profile():
 
 @USERHTTP.route('/setname', methods = ['PUT'])
 def setname():
-    ''' logs the user in'''
-
     # get the user from json
     user = request.json
 
@@ -36,13 +37,10 @@ def setname():
         user.get('name_first'),
         user.get('name_last'),
     )
-
     return jsonify(success)
 
 @USERHTTP.route('/setemail', methods = ['PUT'])
 def setemail():
-    ''' logs the user out'''
-
     # get the user from json
     user = request.json
 
@@ -50,14 +48,10 @@ def setemail():
         user.get('token'),
         user.get('email')
     )
-
     return jsonify(success)
-
 
 @USERHTTP.route('/sethandle', methods = ['PUT'])
 def sethandle():
-    ''' logs the user out'''
-
     # get the user from json
     user = request.json
 
@@ -71,8 +65,6 @@ def sethandle():
 
 @USERHTTP.route('/uploadphoto', methods = ['POST'])
 def uploadphoto():
-    ''' uploads a photo '''
-
     # get the request json
     r = request.json
     user = decode_token(r.get('token'))
@@ -87,7 +79,6 @@ def uploadphoto():
         r.get('x_end'),
         r.get('y_end')
     )
-
     # get the cropped photo path and return it
     cropped = 'src/data/profiles/' + u_id + '.jpg'
 
@@ -100,8 +91,6 @@ def uploadphoto():
 
 @USERHTTP.route('/photo/<u_id>', methods = ['GET'])
 def photo(u_id):
-    ''' return the photo involved '''
-
     # check the photo path
     path = data.get_profile_photo_path(u_id)
 

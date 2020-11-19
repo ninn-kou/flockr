@@ -1,9 +1,9 @@
-'''
-Joseph Jeong 15 OCT 2020
+"""
+channel_http.py written by Xingyu Tan, Yuhan Yan, Liuyuzi He, Hao Ren and Joseph Jeong.
 
-Just experimenting with how Flask works at the moment
-All url appends are prepended with auth/
-'''
+Just experimenting with how Flask works at the moment.
+All url appends are prepended with `auth/`,
+"""
 
 from flask import Blueprint, request, jsonify
 
@@ -14,8 +14,7 @@ CHANNELHTTP = Blueprint('channel', __name__)
 
 @CHANNELHTTP.route('/invite', methods = ['POST'])
 def invite():
-    ''' invites user to new channel'''
-
+    """Invites user to new channel."""
     input_obj = request.json
 
     channel.channel_invite(
@@ -23,13 +22,11 @@ def invite():
         int(input_obj.get('channel_id')),
         input_obj.get('u_id')
     )
-
     return {}
 
 @CHANNELHTTP.route('/details', methods = ['GET'])
 def details():
-    ''' gets details about specific channel'''
-
+    """Gets details about specific channel."""
     input_obj = request.args
 
     output = channel.channel_details(
@@ -40,14 +37,11 @@ def details():
         i['profile_img_url'] = data.get_profile_photo_url(i['u_id'])
     for i in output['all_members']:
         i['profile_img_url'] = data.get_profile_photo_url(i['u_id'])
-
-
     return jsonify(output)
 
 @CHANNELHTTP.route('/messages', methods = ['GET'])
 def messages():
-    ''' gets messages from a specific channel '''
-
+    """Gets messages from a specific channel."""
     input_obj = request.args
 
     output = channel.channel_messages(
@@ -55,40 +49,34 @@ def messages():
         int(input_obj.get('channel_id')),
         int(input_obj.get('start'))
     )
-
     return jsonify(output)
 
 @CHANNELHTTP.route('/leave', methods = ['POST'])
 def leave():
-    ''' leaves channel for user '''
-
+    """Leaves channel for user."""
     input_obj = request.json
 
     channel.channel_leave(
         input_obj.get('token'),
         int(input_obj.get('channel_id'))
     )
-
     return {}
 
 @CHANNELHTTP.route('/join', methods = ['POST'])
 def join():
-    ''' join channel for user '''
-
+    """Join channel for user."""
     input_obj = request.json
 
     channel.channel_join(
         input_obj.get('token'),
         int(input_obj.get('channel_id'))
     )
-
     return {}
 
 
 @CHANNELHTTP.route('/addowner', methods = ['POST'])
 def addowner():
-    ''' add a new user as admin '''
-
+    """Add a new user as admin."""
     input_obj = request.json
 
     channel.channel_addowner(
@@ -96,14 +84,12 @@ def addowner():
         int(input_obj.get('channel_id')),
         input_obj.get('u_id')
     )
-
     return {}
 
 
 @CHANNELHTTP.route('/removeowner', methods = ['POST'])
 def removeowner():
-    ''' add a new user as admin '''
-
+    """Remove the owner user."""
     input_obj = request.json
 
     channel.channel_removeowner(
@@ -111,5 +97,4 @@ def removeowner():
         int(input_obj.get('channel_id')),
         input_obj.get('u_id')
     )
-
     return {}

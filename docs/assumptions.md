@@ -106,12 +106,13 @@ Most recent changing log for this Markdown document here:
 
 ### 2.1 message_send()
 
-- for each message send, the new one always the toppest one.
+- For each message send, the new one always the top one.
 
-### Upload User's Photo
+### 2.2 Upload User's Photo
 
-- this function requires the pillow module.
-- assumes that everything is a localhost url.
+- This function requires the pillow module.
+- Assumes that everything is a localhost url.
 
 ## 3. Iteration 3
-- can be deployed to heroku as is
+
+- Can be deployed to heroku as is.

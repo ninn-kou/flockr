@@ -4,11 +4,10 @@
 
 Welcome to our team based major project in course COMP1531, Software Engineering Foundations, 2020 Term 3. The current version has been edited by myself for further improvement, and extra features adding. For the original team working codes on November 2020, you can click to below hyperlinks to visit three iterations separately. All "Iteration 2" works were based on iteration 1; similarly, all "Iteration 3" works were based on iteration 2. After the deadline of this project, I copied this repository into my GitHub page and did a lot of extra jobs. In that case, there might be a massive difference between the University assignment and my improvement.
 
-Please note that copy any types of coping codes might cause misconduct or academic discipline by your institution. All rights reserved by our team, which has been shown below.
+**Please note that any form of plagiarism or copying of code might cause your institution to judge you as academic misconduct or cheating. All rights reserved by our team, which has been shown below.**
 
-### TODO
+### Todo-List
 
-- Change the email sending features to remove Joseph's personal information.
 - Style improvements for testing files.
 - All documents should be renamed, rewritten, and classified.
 - Deployment.

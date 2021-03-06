@@ -332,8 +332,8 @@ def send_email(email, html):
 
     # create the email
     msg = create_message(
-        'joseph@josephjeo.ng', # hi, please don't destroy me
-        email,    # the person receiving email
+        'haoren.2906@gmail.com',
+        email,
         'Your Flockr Password Reset Code',
         html
     )
